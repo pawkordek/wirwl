@@ -1,0 +1,4 @@
+package wirwl
+
+func main() {
+}
