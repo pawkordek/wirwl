@@ -163,7 +163,7 @@ func getEntriesTypesFromTable(transaction *bolt.Tx) ([]string, error) {
 	var types []string
 	bucket := transaction.Bucket([]byte(entriesTypesTableName))
 	if bucket == nil {
-		return nil, errors.New("Entries types table has not been created!")
+		return types, nil
 	}
 	err := bucket.ForEach(func(key, value []byte) error {
 		types = append(types, string(key))
