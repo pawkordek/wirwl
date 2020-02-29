@@ -7,6 +7,8 @@ import (
 	"strconv"
 )
 
+const entriesTypesTableName = "entries_types"
+
 type Entry struct {
 	Id                         int
 	Status                     string
@@ -20,26 +22,26 @@ type Entry struct {
 	MediaType                  string
 }
 
-type dataProvider struct {
+type DataProvider struct {
 	dbPath string
 	db     *bolt.DB
 }
 
-func newDataProvider(dbPath string) *dataProvider {
-	return &dataProvider{dbPath: dbPath}
+func NewDataProvider(dbPath string) *DataProvider {
+	return &DataProvider{dbPath: dbPath}
 }
 
-func (provider *dataProvider) openDb() error {
+func (provider *DataProvider) openDb() error {
 	db, err := bolt.Open(provider.dbPath, 0600, nil)
 	provider.db = db
 	return err
 }
 
-func (provider *dataProvider) closeDb() error {
+func (provider *DataProvider) closeDb() error {
 	return provider.db.Close()
 }
 
-func (provider *dataProvider) SaveEntriesToDb(table string, entries []Entry) error {
+func (provider *DataProvider) SaveEntriesToDb(table string, entries []Entry) error {
 	err := provider.openDb()
 	if err != nil {
 		return err
@@ -57,7 +59,7 @@ func (provider *dataProvider) SaveEntriesToDb(table string, entries []Entry) err
 	return nil
 }
 
-func (provider *dataProvider) saveEntryToTable(table string, entry Entry) error {
+func (provider *DataProvider) saveEntryToTable(table string, entry Entry) error {
 	entryAsJSON, err := json.Marshal(entry)
 	if err != nil {
 		return err
@@ -75,14 +77,14 @@ func (provider *dataProvider) saveEntryToTable(table string, entry Entry) error 
 	return nil
 }
 
-func (provider *dataProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
+func (provider *DataProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
 	err := provider.openDb()
 	if err != nil {
 		return nil, err
 	}
 	var entries [] Entry
 	err = provider.db.View(func(transaction *bolt.Tx) error {
-		entries, err = getDbDataLoadedIntoSlice(transaction, table)
+		entries, err = getEntriesDataFromTable(transaction, table)
 		return err
 	})
 	if err != nil {
@@ -95,7 +97,7 @@ func (provider *dataProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
 	return entries, nil
 }
 
-func getDbDataLoadedIntoSlice(transaction *bolt.Tx, table string) ([]Entry, error) {
+func getEntriesDataFromTable(transaction *bolt.Tx, table string) ([]Entry, error) {
 	var entries []Entry
 	bucket := transaction.Bucket([]byte(table))
 	if bucket == nil {
@@ -111,4 +113,61 @@ func getDbDataLoadedIntoSlice(transaction *bolt.Tx, table string) ([]Entry, erro
 		return nil
 	})
 	return entries, err
+}
+
+func (provider *DataProvider) SaveEntriesTypesToDb(entriesTypes []string) error {
+	err := provider.openDb()
+	if err != nil {
+		return err
+	}
+	for _, entryType := range entriesTypes {
+		err := provider.saveEntryTypeToTable(entryType)
+		if err != nil {
+			return err
+		}
+	}
+	return provider.db.Close()
+}
+
+func (provider *DataProvider) saveEntryTypeToTable(entryType string) error {
+	return provider.db.Update(func(transaction *bolt.Tx) error {
+		bucket, err := transaction.CreateBucketIfNotExists([]byte(entriesTypesTableName))
+		if err != nil {
+			return err
+		}
+		return bucket.Put([]byte(entryType), []byte(entryType))
+	})
+}
+
+func (provider *DataProvider) LoadEntriesTypesFromDb() ([]string, error) {
+	err := provider.openDb()
+	if err != nil {
+		return nil, err
+	}
+	var types []string
+	err = provider.db.View(func(transaction *bolt.Tx) error {
+		types, err = getEntriesTypesFromTable(transaction)
+		return err
+	})
+	if err != nil {
+		return nil, err
+	}
+	err = provider.closeDb()
+	if err != nil {
+		return nil, err
+	}
+	return types, nil
+}
+
+func getEntriesTypesFromTable(transaction *bolt.Tx) ([]string, error) {
+	var types []string
+	bucket := transaction.Bucket([]byte(entriesTypesTableName))
+	if bucket == nil {
+		return nil, errors.New("Entries types table has not been created!")
+	}
+	err := bucket.ForEach(func(key, value []byte) error {
+		types = append(types, string(key))
+		return nil
+	})
+	return types, err
 }
