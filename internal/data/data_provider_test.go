@@ -1,6 +1,7 @@
 package data
 
 import (
+	"errors"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
@@ -19,6 +20,14 @@ func TestDbOperationsOnEntries(t *testing.T) {
 	}
 	assert.Equal(t, entries[0], entriesToSave[0])
 	assert.Equal(t, entries[1], entriesToSave[1])
+	DeleteTestDb()
+}
+
+func TestThatTryingToLoadDataIntoNonExistingTableReturnsError(t *testing.T) {
+	dataProvider := NewDataProvider(TestDbPath)
+	types, err := dataProvider.LoadEntriesFromDb("non existing table")
+	assert.Nil(t, types)
+	assert.Equal(t, err, errors.New("No table with name=non existing table"))
 	DeleteTestDb()
 }
 
