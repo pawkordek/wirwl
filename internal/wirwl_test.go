@@ -44,3 +44,10 @@ func TestThatEntriesTabsWithContentDisplay(t *testing.T) {
 		}
 	}
 }
+
+func TestThatIfThereAreNoEntriesCorrectMessageDisplays(t *testing.T) {
+	app := NewApp(data.EmptyDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	assert.Equal(t, 1, len(app.entriesTabContainer.Items))
+	assert.Equal(t, "No entries", app.entriesTabContainer.Items[0].Text)
+}

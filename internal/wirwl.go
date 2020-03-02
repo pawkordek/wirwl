@@ -57,15 +57,20 @@ func (app *App) loadEntries() {
 
 func (app *App) loadEntriesTypesTabsWithTheirContent() []*widget.TabItem {
 	var tabs []*widget.TabItem
-	app.entriesLabels = make(map[string][]widget.Label, len(app.entries))
-	for entryType, entriesOfCertainType := range app.entries {
-		labels := app.getEntriesNamesAsLabels(entriesOfCertainType)
-		app.entriesLabels[entryType+"s"] = labels
-		labelsAsCanvasObjects := app.getLabelsAsCanvasObjects(labels)
-		tab := widget.NewTabItem(entryType+"s", widget.NewVBox(labelsAsCanvasObjects...))
-		tabs = append(tabs, tab)
+	if len(app.entries) != 0 {
+		app.entriesLabels = make(map[string][]widget.Label, len(app.entries))
+		for entryType, entriesOfCertainType := range app.entries {
+			labels := app.getEntriesNamesAsLabels(entriesOfCertainType)
+			app.entriesLabels[entryType+"s"] = labels
+			labelsAsCanvasObjects := app.getLabelsAsCanvasObjects(labels)
+			tab := widget.NewTabItem(entryType+"s", widget.NewVBox(labelsAsCanvasObjects...))
+			tabs = append(tabs, tab)
+		}
+		return tabs
+	} else {
+		tab := widget.NewTabItem("No entries", widget.NewVBox())
+		return append(tabs, tab)
 	}
-	return tabs
 }
 
 func (app *App) getLabelsAsCanvasObjects(labels []widget.Label) []fyne.CanvasObject {
