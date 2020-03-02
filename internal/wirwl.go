@@ -28,7 +28,9 @@ func (app *App) LoadAndDisplay(fyneApp fyne.App) {
 	app.window = fyneApp.NewWindow("wirwl")
 	app.loadEntries()
 	app.loadEntriesTabContainer()
+	app.resetSelectedEntry()
 	app.window.SetContent(widget.NewVBox(app.entriesTabContainer))
+	app.window.Canvas().SetOnTypedKey(app.onKeyPressed)
 	app.window.ShowAndRun()
 }
 
@@ -36,6 +38,7 @@ func (app *App) loadEntriesTabContainer() {
 	tabs := app.loadEntriesTypesTabsWithTheirContent()
 	if len(tabs) != 0 {
 		app.entriesTabContainer = widget.NewTabContainer(tabs...)
+		app.currentTab = tabs[0].Text
 	}
 }
 
@@ -88,4 +91,40 @@ func (app *App) getEntriesNamesAsLabels(entries []data.Entry) []widget.Label {
 		labels = append(labels, *label)
 	}
 	return labels
+}
+
+func (app *App) resetSelectedEntry() {
+	app.currentEntryNr = 0
+	app.updateCurrentlySelectedEntry()
+}
+
+func (app *App) updateCurrentlySelectedEntry() {
+	for _, label := range app.entriesLabels[app.currentTab] {
+		(&label).TextStyle = fyne.TextStyle{
+			Bold: false,
+		}
+		(&label).Refresh()
+	}
+	label := &app.entriesLabels[app.currentTab][app.currentEntryNr]
+	label.TextStyle = fyne.TextStyle{
+		Bold: true,
+	}
+	label.Refresh()
+}
+
+func (app *App) onKeyPressed(event *fyne.KeyEvent) {
+	if event.Name == fyne.KeyL {
+		app.changeTab(1)
+	}
+	if event.Name == fyne.KeyH {
+		app.changeTab(-1)
+	}
+}
+
+func (app *App) changeTab(byHowManyTabs int) {
+	currentIndex := app.entriesTabContainer.CurrentTabIndex()
+	newIndex := currentIndex + byHowManyTabs
+	app.entriesTabContainer.SelectTabIndex(newIndex)
+	app.currentTab = app.entriesTabContainer.Items[newIndex].Text
+	app.updateCurrentlySelectedEntry()
 }

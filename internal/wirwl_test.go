@@ -1,6 +1,7 @@
 package wirwl
 
 import (
+	"fyne.io/fyne"
 	fyneTest "fyne.io/fyne/test"
 	"github.com/stretchr/testify/assert"
 	"log"
@@ -45,9 +46,28 @@ func TestThatEntriesTabsWithContentDisplay(t *testing.T) {
 	}
 }
 
+func TestSwitchingTabs(t *testing.T) {
+	app := NewApp(data.ExampleDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	assert.Equal(t, fyne.TextStyle{Bold: true}, app.entriesLabels["comics"][0].TextStyle)
+	assert.Equal(t, fyne.TextStyle{Bold: false}, app.entriesLabels["comics"][1].TextStyle)
+	app.SimulateKeyPress(fyne.KeyL)
+	assert.Equal(t, "videos", app.currentTab)
+	assert.Equal(t, fyne.TextStyle{Bold: true}, app.entriesLabels["videos"][0].TextStyle)
+	assert.Equal(t, fyne.TextStyle{Bold: false}, app.entriesLabels["videos"][1].TextStyle)
+	app.SimulateKeyPress(fyne.KeyH)
+	assert.Equal(t, "comics", app.currentTab)
+}
+
 func TestThatIfThereAreNoEntriesCorrectMessageDisplays(t *testing.T) {
 	app := NewApp(data.EmptyDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	assert.Equal(t, 1, len(app.entriesTabContainer.Items))
 	assert.Equal(t, "No entries", app.entriesTabContainer.Items[0].Text)
+}
+
+func (app *App) SimulateKeyPress(key fyne.KeyName) {
+	event := &fyne.KeyEvent{Name: key}
+	onTypedKey := app.window.Canvas().OnTypedKey()
+	onTypedKey(event)
 }
