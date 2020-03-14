@@ -11,7 +11,7 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	dataProvider := data.NewDataProvider(data.ExampleDbPath)
+	dataProvider := data.NewDataProvider("../test/exampleDb.db")
 	entriesTypes := data.GetEntriesTypes()
 	err := dataProvider.SaveEntriesTypesToDb(entriesTypes)
 	if err != nil {
@@ -27,7 +27,9 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	os.Exit(m.Run())
+	exitCode := m.Run()
+	data.DeleteFile(data.ExampleDbPath)
+	os.Exit(exitCode)
 }
 
 func TestThatEntriesTabsWithContentDisplay(t *testing.T) {
