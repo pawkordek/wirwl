@@ -105,11 +105,13 @@ func (app *App) updateCurrentlySelectedEntry() {
 		}
 		(&label).Refresh()
 	}
-	label := &app.entriesLabels[app.currentTab][app.currentEntryNr]
-	label.TextStyle = fyne.TextStyle{
-		Bold: true,
+	if (len(app.entriesLabels[app.currentTab]) > 0) {
+		label := &app.entriesLabels[app.currentTab][app.currentEntryNr]
+		label.TextStyle = fyne.TextStyle{
+			Bold: true,
+		}
+		label.Refresh()
 	}
-	label.Refresh()
 }
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
