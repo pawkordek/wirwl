@@ -62,8 +62,9 @@ func (app *App) loadEntriesTypesTabsWithTheirContent() []*widget.TabItem {
 	var tabs []*widget.TabItem
 	if len(app.entries) != 0 {
 		app.entriesLabels = make(map[string][]widget.Label, len(app.entries))
-		for entryType, entriesOfCertainType := range app.entries {
-			labels := app.getEntriesNamesAsLabels(entriesOfCertainType)
+		orderedEntriesKeys := app.getOrderedEntriesKeys()
+		for _, entryType := range orderedEntriesKeys {
+			labels := app.getEntriesNamesAsLabels(app.entries[entryType])
 			app.entriesLabels[entryType] = labels
 			labelsAsCanvasObjects := app.getLabelsAsCanvasObjects(labels)
 			tab := widget.NewTabItem(entryType, widget.NewVBox(labelsAsCanvasObjects...))
@@ -74,6 +75,15 @@ func (app *App) loadEntriesTypesTabsWithTheirContent() []*widget.TabItem {
 		tab := widget.NewTabItem("No entries", widget.NewVBox())
 		return append(tabs, tab)
 	}
+}
+
+func (app *App) getOrderedEntriesKeys() []string {
+	orderedEntriesKeys := make([]string, 0, len(app.entries))
+	for key, _ := range app.entries {
+		orderedEntriesKeys = append(orderedEntriesKeys, key)
+	}
+	sort.Strings(orderedEntriesKeys)
+	return orderedEntriesKeys
 }
 
 func (app *App) getLabelsAsCanvasObjects(labels []widget.Label) []fyne.CanvasObject {
