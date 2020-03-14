@@ -12,7 +12,6 @@ import (
 type App struct {
 	window              fyne.Window
 	entriesTabContainer *widget.TabContainer
-	currentTab          string
 	currentEntryNr      int
 	entries             map[string][]data.Entry
 	entriesLabels       map[string][]widget.Label
@@ -38,7 +37,6 @@ func (app *App) loadEntriesTabContainer() {
 	tabs := app.loadEntriesTypesTabsWithTheirContent()
 	if len(tabs) != 0 {
 		app.entriesTabContainer = widget.NewTabContainer(tabs...)
-		app.currentTab = tabs[0].Text
 	}
 }
 
@@ -109,19 +107,23 @@ func (app *App) resetSelectedEntry() {
 }
 
 func (app *App) updateCurrentlySelectedEntry() {
-	for _, label := range app.entriesLabels[app.currentTab] {
+	for _, label := range app.entriesLabels[app.getCurrentTabText()] {
 		(&label).TextStyle = fyne.TextStyle{
 			Bold: false,
 		}
 		(&label).Refresh()
 	}
-	if (len(app.entriesLabels[app.currentTab]) > 0) {
-		label := &app.entriesLabels[app.currentTab][app.currentEntryNr]
+	if len(app.entriesLabels[app.getCurrentTabText()]) > 0 {
+		label := &app.entriesLabels[app.getCurrentTabText()][app.currentEntryNr]
 		label.TextStyle = fyne.TextStyle{
 			Bold: true,
 		}
 		label.Refresh()
 	}
+}
+
+func (app *App) getCurrentTabText() string {
+	return app.entriesTabContainer.CurrentTab().Text
 }
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
@@ -151,7 +153,6 @@ func (app *App) selectPreviousTab() {
 
 func (app *App) selectTab(tabNum int) {
 	app.entriesTabContainer.SelectTabIndex(tabNum)
-	app.currentTab = app.entriesTabContainer.Items[tabNum].Text
 	app.updateCurrentlySelectedEntry()
 }
 

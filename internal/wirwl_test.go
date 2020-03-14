@@ -61,19 +61,19 @@ func TestThatEntriesTabsWithContentDisplay(t *testing.T) {
 func TestSwitchingTabs(t *testing.T) {
 	app := NewApp(exampleDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
-	assert.Equal(t, "comics", app.currentTab)
+	assert.Equal(t, "comics", app.getCurrentTabText())
 	app.SimulateKeyPress(fyne.KeyL)
-	assert.Equal(t, "music", app.currentTab)
+	assert.Equal(t, "music", app.getCurrentTabText())
 	app.SimulateKeyPress(fyne.KeyL)
-	assert.Equal(t, "videos", app.currentTab)
+	assert.Equal(t, "videos", app.getCurrentTabText())
 	app.SimulateKeyPress(fyne.KeyL)
-	assert.Equal(t, "comics", app.currentTab)
+	assert.Equal(t, "comics", app.getCurrentTabText())
 	app.SimulateKeyPress(fyne.KeyH)
-	assert.Equal(t, "videos", app.currentTab)
+	assert.Equal(t, "videos", app.getCurrentTabText())
 	app.SimulateKeyPress(fyne.KeyH)
-	assert.Equal(t, "music", app.currentTab)
+	assert.Equal(t, "music", app.getCurrentTabText())
 	app.SimulateKeyPress(fyne.KeyH)
-	assert.Equal(t, "comics", app.currentTab)
+	assert.Equal(t, "comics", app.getCurrentTabText())
 }
 
 func TestEntryHighlightingWhenSwitchingTabs(t *testing.T) {
