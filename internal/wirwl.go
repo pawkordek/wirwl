@@ -116,17 +116,37 @@ func (app *App) updateCurrentlySelectedEntry() {
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 	if event.Name == fyne.KeyL {
-		app.changeTab(1)
+		app.selectNextTab()
 	}
 	if event.Name == fyne.KeyH {
-		app.changeTab(-1)
+		app.selectPreviousTab()
 	}
+}
+
+func (app *App) selectNextTab() {
+	if app.entriesTabContainer.CurrentTabIndex() < len(app.entries)-1 {
+		app.changeTab(1)
+	} else {
+		app.selectTab(0)
+	}
+}
+
+func (app *App) selectPreviousTab() {
+	if app.entriesTabContainer.CurrentTabIndex() > 0 {
+		app.changeTab(-1)
+	} else {
+		app.selectTab(len(app.entriesTabContainer.Items) - 1)
+	}
+}
+
+func (app *App) selectTab(tabNum int) {
+	app.entriesTabContainer.SelectTabIndex(tabNum)
+	app.currentTab = app.entriesTabContainer.Items[tabNum].Text
+	app.updateCurrentlySelectedEntry()
 }
 
 func (app *App) changeTab(byHowManyTabs int) {
 	currentIndex := app.entriesTabContainer.CurrentTabIndex()
 	newIndex := currentIndex + byHowManyTabs
-	app.entriesTabContainer.SelectTabIndex(newIndex)
-	app.currentTab = app.entriesTabContainer.Items[newIndex].Text
-	app.updateCurrentlySelectedEntry()
+	app.selectTab(newIndex)
 }

@@ -29,6 +29,11 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	music := data.GetExampleMusicEntries()
+	err = dataProvider.SaveEntriesToDb("music", music)
+	if err != nil {
+		log.Fatal(err)
+	}
 	exitCode := m.Run()
 	data.DeleteFile(exampleDbPath)
 	os.Exit(exitCode)
@@ -44,6 +49,9 @@ func TestThatEntriesTabsWithContentDisplay(t *testing.T) {
 		} else if tab.Text == "videos" {
 			assert.Equal(t, "some video1", app.entriesLabels["videos"][0].Text)
 			assert.Equal(t, "some video2", app.entriesLabels["videos"][1].Text)
+		} else if tab.Text == "music" {
+			assert.Equal(t, "some music1", app.entriesLabels["music"][0].Text)
+			assert.Equal(t, "some music2", app.entriesLabels["music"][1].Text)
 		} else {
 			assert.Fail(t, "There is an unexpected tab called "+tab.Text+" displayed!")
 		}
@@ -53,14 +61,41 @@ func TestThatEntriesTabsWithContentDisplay(t *testing.T) {
 func TestSwitchingTabs(t *testing.T) {
 	app := NewApp(exampleDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
+	assert.Equal(t, "comics", app.currentTab)
+	app.SimulateKeyPress(fyne.KeyL)
+	assert.Equal(t, "music", app.currentTab)
+	app.SimulateKeyPress(fyne.KeyL)
+	assert.Equal(t, "videos", app.currentTab)
+	app.SimulateKeyPress(fyne.KeyL)
+	assert.Equal(t, "comics", app.currentTab)
+	app.SimulateKeyPress(fyne.KeyH)
+	assert.Equal(t, "videos", app.currentTab)
+	app.SimulateKeyPress(fyne.KeyH)
+	assert.Equal(t, "music", app.currentTab)
+	app.SimulateKeyPress(fyne.KeyH)
+	assert.Equal(t, "comics", app.currentTab)
+}
+
+func TestEntryHighlightingWhenSwitchingTabs(t *testing.T) {
+	app := NewApp(exampleDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
 	assert.Equal(t, fyne.TextStyle{Bold: true}, app.entriesLabels["comics"][0].TextStyle)
 	assert.Equal(t, fyne.TextStyle{Bold: false}, app.entriesLabels["comics"][1].TextStyle)
 	app.SimulateKeyPress(fyne.KeyL)
-	assert.Equal(t, "videos", app.currentTab)
-	assert.Equal(t, fyne.TextStyle{Bold: true}, app.entriesLabels["videos"][0].TextStyle)
-	assert.Equal(t, fyne.TextStyle{Bold: false}, app.entriesLabels["videos"][1].TextStyle)
+	assert.Equal(t, fyne.TextStyle{Bold: true}, app.entriesLabels["music"][0].TextStyle)
+	assert.Equal(t, fyne.TextStyle{Bold: false}, app.entriesLabels["music"][1].TextStyle)
 	app.SimulateKeyPress(fyne.KeyH)
-	assert.Equal(t, "comics", app.currentTab)
+	assert.Equal(t, fyne.TextStyle{Bold: true}, app.entriesLabels["comics"][0].TextStyle)
+	assert.Equal(t, fyne.TextStyle{Bold: false}, app.entriesLabels["comics"][1].TextStyle)
+}
+
+func TestThatApplicationDoesNotCrashWhenTryingToSwitchToATabThatDoesNotExist(t *testing.T) {
+	app := NewApp(exampleDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyL)
+	app.SimulateKeyPress(fyne.KeyL)
+	app.SimulateKeyPress(fyne.KeyH)
+	app.SimulateKeyPress(fyne.KeyH)
 }
 
 func TestThatIfThereAreNoEntriesCorrectMessageDisplays(t *testing.T) {

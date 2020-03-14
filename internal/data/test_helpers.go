@@ -12,6 +12,7 @@ const EmptyDbPath = "../../test/emptyDb.db"
 func GetEntriesTypes() []string {
 	return []string{
 		"comics",
+		"music",
 		"videos",
 	}
 }
@@ -70,6 +71,35 @@ func GetExampleComicEntries() []Entry {
 			Description:                "some description2",
 			Comment:                    "some comment2",
 			MediaType:                  "comic",
+		},
+	}
+}
+
+func GetExampleMusicEntries() []Entry {
+	return []Entry{
+		{
+			Id:                         0,
+			Status:                     "some status",
+			Title:                      "some music1",
+			Completion:                 1,
+			AmountOfElementsToComplete: 2,
+			Score:                      3,
+			Link:                       "some link",
+			Description:                "some description",
+			Comment:                    "some comment",
+			MediaType:                  "music",
+		},
+		{
+			Id:                         1,
+			Status:                     "some status2",
+			Title:                      "some music2",
+			Completion:                 4,
+			AmountOfElementsToComplete: 5,
+			Score:                      6,
+			Link:                       "some link2",
+			Description:                "some description2",
+			Comment:                    "some comment2",
+			MediaType:                  "music",
 		},
 	}
 }
