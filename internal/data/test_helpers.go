@@ -75,9 +75,13 @@ func GetExampleComicEntries() []Entry {
 }
 
 func DeleteTestDb() {
-	_, err := os.Stat(TestDbPath)
+	DeleteFile(TestDbPath)
+}
+
+func DeleteFile(path string) {
+	_, err := os.Stat(path)
 	if !os.IsNotExist(err) {
-		err = os.Remove(TestDbPath)
+		err = os.Remove(path)
 		if err != nil {
 			log.Fatal(err)
 		}
