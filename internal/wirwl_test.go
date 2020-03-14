@@ -106,7 +106,7 @@ func TestThatIfThereAreNoEntriesCorrectMessageDisplays(t *testing.T) {
 	assert.Equal(t, "No entries", app.entriesTabContainer.Items[0].Text)
 }
 
-func TestWhetherEntryInputOpens(t *testing.T) {
+func TestWhetherEntryTypeInputOpens(t *testing.T) {
 	app := NewApp(emptyDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	assert.Equal(t, true, app.addEntryTypePopUp.Hidden)
