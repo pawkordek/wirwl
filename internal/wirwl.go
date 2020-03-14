@@ -50,7 +50,7 @@ func (app *App) loadEntries() {
 	}
 	sort.Strings(entriesTypes)
 	for _, entryType := range entriesTypes {
-		entries, err := app.dataProvider.LoadEntriesFromDb(entryType + "s")
+		entries, err := app.dataProvider.LoadEntriesFromDb(entryType)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -64,9 +64,9 @@ func (app *App) loadEntriesTypesTabsWithTheirContent() []*widget.TabItem {
 		app.entriesLabels = make(map[string][]widget.Label, len(app.entries))
 		for entryType, entriesOfCertainType := range app.entries {
 			labels := app.getEntriesNamesAsLabels(entriesOfCertainType)
-			app.entriesLabels[entryType+"s"] = labels
+			app.entriesLabels[entryType] = labels
 			labelsAsCanvasObjects := app.getLabelsAsCanvasObjects(labels)
-			tab := widget.NewTabItem(entryType+"s", widget.NewVBox(labelsAsCanvasObjects...))
+			tab := widget.NewTabItem(entryType, widget.NewVBox(labelsAsCanvasObjects...))
 			tabs = append(tabs, tab)
 		}
 		return tabs

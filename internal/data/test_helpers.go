@@ -11,8 +11,8 @@ const EmptyDbPath = "../../test/emptyDb.db"
 
 func GetEntriesTypes() []string {
 	return []string{
-		"comic",
-		"video",
+		"comics",
+		"videos",
 	}
 }
 

@@ -35,7 +35,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestThatEntriesTabsWithContentDisplay(t *testing.T) {
-	app := NewApp(data.ExampleDbPath)
+	app := NewApp(exampleDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	for _, tab := range app.entriesTabContainer.Items {
 		if tab.Text == "comics" {
@@ -51,7 +51,7 @@ func TestThatEntriesTabsWithContentDisplay(t *testing.T) {
 }
 
 func TestSwitchingTabs(t *testing.T) {
-	app := NewApp(data.ExampleDbPath)
+	app := NewApp(exampleDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	assert.Equal(t, fyne.TextStyle{Bold: true}, app.entriesLabels["comics"][0].TextStyle)
 	assert.Equal(t, fyne.TextStyle{Bold: false}, app.entriesLabels["comics"][1].TextStyle)
