@@ -10,8 +10,10 @@ import (
 	"wirwl/internal/data"
 )
 
+const exampleDbPath = "../test/exampleDb.db"
+
 func TestMain(m *testing.M) {
-	dataProvider := data.NewDataProvider("../test/exampleDb.db")
+	dataProvider := data.NewDataProvider(exampleDbPath)
 	entriesTypes := data.GetEntriesTypes()
 	err := dataProvider.SaveEntriesTypesToDb(entriesTypes)
 	if err != nil {
@@ -28,7 +30,7 @@ func TestMain(m *testing.M) {
 		log.Fatal(err)
 	}
 	exitCode := m.Run()
-	data.DeleteFile(data.ExampleDbPath)
+	data.DeleteFile(exampleDbPath)
 	os.Exit(exitCode)
 }
 
