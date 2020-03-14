@@ -10,12 +10,16 @@ import (
 )
 
 type App struct {
-	window              fyne.Window
+	fyneApp             fyne.App
+	mainWindow          fyne.Window
+	addEntryTypePopUp   *widget.PopUp
 	entriesTabContainer *widget.TabContainer
 	currentEntryNr      int
 	entries             map[string][]data.Entry
 	entriesLabels       map[string][]widget.Label
 	dataProvider        *data.DataProvider
+	lastKeyPress        fyne.KeyName
+	typeInput           *widget.Entry
 }
 
 func NewApp(entriesPath string) *App {
@@ -23,14 +27,30 @@ func NewApp(entriesPath string) *App {
 }
 
 func (app *App) LoadAndDisplay(fyneApp fyne.App) {
-	fyneApp.Settings().SetTheme(theme.LightTheme())
-	app.window = fyneApp.NewWindow("wirwl")
+	app.fyneApp = fyneApp
+	app.fyneApp.Settings().SetTheme(theme.LightTheme())
+	app.prepareMainWindow()
+	app.mainWindow.ShowAndRun()
+}
+
+func (app *App) prepareMainWindow() {
+	app.mainWindow = app.fyneApp.NewWindow("wirwl")
 	app.loadEntries()
 	app.loadEntriesTabContainer()
 	app.resetSelectedEntry()
-	app.window.SetContent(widget.NewVBox(app.entriesTabContainer))
-	app.window.Canvas().SetOnTypedKey(app.onKeyPressed)
-	app.window.ShowAndRun()
+	app.prepareAddEntryTypePopUp()
+	app.mainWindow.SetContent(widget.NewVBox(app.entriesTabContainer))
+	app.mainWindow.Canvas().SetOnTypedKey(app.onKeyPressed)
+}
+
+func (app *App) prepareAddEntryTypePopUp() {
+	app.typeInput = widget.NewEntry()
+	app.typeInput.SetText("New entry type")
+	popUpTitle := widget.NewLabel("Add new entry type")
+	popUpTitle.Alignment = fyne.TextAlignCenter
+	popUpContent := widget.NewVBox(popUpTitle, app.typeInput)
+	app.addEntryTypePopUp = widget.NewModalPopUp(popUpContent, app.mainWindow.Canvas())
+	app.addEntryTypePopUp.Hide()
 }
 
 func (app *App) loadEntriesTabContainer() {
@@ -133,6 +153,11 @@ func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 	if event.Name == fyne.KeyH {
 		app.selectPreviousTab()
 	}
+	if event.Name == fyne.KeyI && app.lastKeyPress == fyne.KeyT {
+		app.addEntryTypePopUp.Show()
+		app.mainWindow.Canvas().Focus(app.typeInput)
+	}
+	app.lastKeyPress = event.Name
 }
 
 func (app *App) selectNextTab() {

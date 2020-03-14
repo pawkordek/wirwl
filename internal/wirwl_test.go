@@ -11,6 +11,7 @@ import (
 )
 
 const exampleDbPath = "../test/exampleDb.db"
+const emptyDbPath = "../test/emptyDb.db"
 
 func TestMain(m *testing.M) {
 	dataProvider := data.NewDataProvider(exampleDbPath)
@@ -99,14 +100,25 @@ func TestThatApplicationDoesNotCrashWhenTryingToSwitchToATabThatDoesNotExist(t *
 }
 
 func TestThatIfThereAreNoEntriesCorrectMessageDisplays(t *testing.T) {
-	app := NewApp(data.EmptyDbPath)
+	app := NewApp(emptyDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	assert.Equal(t, 1, len(app.entriesTabContainer.Items))
 	assert.Equal(t, "No entries", app.entriesTabContainer.Items[0].Text)
 }
 
+func TestWhetherEntryInputOpens(t *testing.T) {
+	app := NewApp(emptyDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	assert.Equal(t, true, app.addEntryTypePopUp.Hidden)
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyI)
+	assert.Equal(t, true, app.addEntryTypePopUp.Visible())
+	assert.Equal(t, true, app.typeInput.Visible())
+	assert.Equal(t, true, app.typeInput.Focused())
+}
+
 func (app *App) SimulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
-	onTypedKey := app.window.Canvas().OnTypedKey()
+	onTypedKey := app.mainWindow.Canvas().OnTypedKey()
 	onTypedKey(event)
 }
