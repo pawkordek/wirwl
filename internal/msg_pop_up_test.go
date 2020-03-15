@@ -27,3 +27,11 @@ func TestThatMsgGetsSet(t *testing.T) {
 	popUp.SetMsg("Some msg")
 	assert.Equal(t, "Some msg", popUp.msg.Text)
 }
+
+func TestThatDisplayShowsPopUpWithSpecifiedData(t *testing.T) {
+	popUp := newMsgPopUp(test.Canvas())
+	popUp.Display(SuccessPopUp, "some message")
+	assert.True(t, popUp.Visible())
+	assert.Equal(t, "SUCCESS", popUp.title.Text)
+	assert.Equal(t, "some message", popUp.msg.Text)
+}
