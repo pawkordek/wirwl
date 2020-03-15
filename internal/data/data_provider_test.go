@@ -59,3 +59,13 @@ func TestThatTryingToLoadEntriesFromEmptyDbReturnsEmptySlice(t *testing.T) {
 	assert.Nil(t, err)
 	DeleteTestDb()
 }
+
+func TestThatSavingEmptyEntriesSliceCreatesTable(t *testing.T) {
+	dataProvider := NewDataProvider(TestDbPath)
+	err := dataProvider.SaveEntriesToDb("new table", []Entry{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = dataProvider.LoadEntriesFromDb("new table")
+	assert.Nil(t, err)
+}

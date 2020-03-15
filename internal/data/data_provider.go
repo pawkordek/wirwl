@@ -46,10 +46,14 @@ func (provider *DataProvider) SaveEntriesToDb(table string, entries []Entry) err
 	if err != nil {
 		return err
 	}
-	for _, entry := range entries {
-		err := provider.saveEntryToTable(table, entry)
-		if err != nil {
-			return err
+	if len(entries) == 0 {
+		err = provider.createNewTable(table)
+	} else {
+		for _, entry := range entries {
+			err := provider.saveEntryToTable(table, entry)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	err = provider.closeDb()
@@ -57,6 +61,13 @@ func (provider *DataProvider) SaveEntriesToDb(table string, entries []Entry) err
 		return err
 	}
 	return nil
+}
+
+func (provider *DataProvider) createNewTable(name string) error {
+	return provider.db.Update(func(transaction *bolt.Tx) error {
+		_, err := transaction.CreateBucketIfNotExists([]byte(name))
+		return err
+	})
 }
 
 func (provider *DataProvider) saveEntryToTable(table string, entry Entry) error {
