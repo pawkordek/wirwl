@@ -171,6 +171,17 @@ func TestThatAddingNewEntryTypeDoesNotChangeCurrentlyOpenedTab(t *testing.T) {
 	assert.Equal(t, "music", app.getCurrentTabText())
 }
 
+func TestThatAfterAddingNewEntryOpenedTabStillHasTheSameElementHighlighted(t *testing.T) {
+	app := NewApp(exampleDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyI)
+	app.typeInput.Type("type")
+	app.typeInput.SimulateKeyPress(fyne.KeyEnter)
+	assert.Equal(t, fyne.TextStyle{Bold: true}, app.entriesLabels["comics"][0].TextStyle)
+	assert.Equal(t, fyne.TextStyle{Bold: false}, app.entriesLabels["comics"][1].TextStyle)
+}
+
 func (app *App) SimulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
 	onTypedKey := app.mainWindow.Canvas().OnTypedKey()

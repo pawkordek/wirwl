@@ -70,6 +70,7 @@ func (app *App) onTypeInputEnterPressed() {
 		for _, tab := range app.entriesTabContainer.Items {
 			if tab.Text == currentTabText {
 				app.entriesTabContainer.SelectTab(tab)
+				app.updateCurrentlySelectedEntry()
 				break
 			}
 		}
