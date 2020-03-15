@@ -58,6 +58,7 @@ func (app *App) prepareAddEntryTypePopUp() {
 }
 
 func (app *App) onTypeInputEnterPressed() {
+	currentTabText := app.getCurrentTabText()
 	err := app.addNewTab(app.typeInput.Text)
 	app.mainWindow.Canvas().Unfocus()
 	app.addEntryTypePopUp.Hide()
@@ -65,6 +66,13 @@ func (app *App) onTypeInputEnterPressed() {
 	if err != nil {
 		app.errorMsg.SetText(err.Error())
 		app.errorPopUp.Show()
+	} else {
+		for _, tab := range app.entriesTabContainer.Items {
+			if tab.Text == currentTabText {
+				app.entriesTabContainer.SelectTab(tab)
+				break
+			}
+		}
 	}
 }
 

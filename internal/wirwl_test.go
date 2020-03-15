@@ -160,6 +160,17 @@ func TestThatPressingAnyKeyClosesErrorPopUp(t *testing.T) {
 	assert.Equal(t, true, app.errorPopUp.Hidden)
 }
 
+func TestThatAddingNewEntryTypeDoesNotChangeCurrentlyOpenedTab(t *testing.T) {
+	app := NewApp(exampleDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyL)
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyI)
+	app.typeInput.Type("type")
+	app.typeInput.SimulateKeyPress(fyne.KeyEnter)
+	assert.Equal(t, "music", app.getCurrentTabText())
+}
+
 func (app *App) SimulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
 	onTypedKey := app.mainWindow.Canvas().OnTypedKey()
