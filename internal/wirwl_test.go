@@ -145,20 +145,21 @@ func TestThatItIsNotPossibleToAddTheSameEntryTypeTwice(t *testing.T) {
 	app.SimulateKeyPress(fyne.KeyI)
 	app.typeInput.Type("type")
 	app.typeInput.SimulateKeyPress(fyne.KeyEnter)
-	assert.Equal(t, true, app.errorPopUp.Visible())
-	assert.Equal(t, "Entry type with name 'type' already exists.", app.errorMsg.Text)
+	assert.Equal(t, true, app.msgPopUp.Visible())
+	assert.Equal(t, "ERROR", app.msgPopUp.title.Text)
+	assert.Equal(t, "Entry type with name 'type' already exists.", app.msgPopUp.msg.Text)
 	assert.Equal(t, 4, len(app.entriesTabContainer.Items))
 }
 
 func TestThatPressingAnyKeyClosesErrorPopUp(t *testing.T) {
 	app := NewApp(exampleDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
-	app.errorPopUp.Show()
+	app.msgPopUp.Show()
 	app.SimulateKeyPress(fyne.KeyT)
-	assert.Equal(t, true, app.errorPopUp.Hidden)
-	app.errorPopUp.Show()
+	assert.Equal(t, true, app.msgPopUp.Hidden)
+	app.msgPopUp.Show()
 	app.SimulateKeyPress(fyne.KeyReturn)
-	assert.Equal(t, true, app.errorPopUp.Hidden)
+	assert.Equal(t, true, app.msgPopUp.Hidden)
 }
 
 func TestThatAddingNewEntryTypeDoesNotChangeCurrentlyOpenedTab(t *testing.T) {

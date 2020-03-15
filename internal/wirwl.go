@@ -14,8 +14,7 @@ type App struct {
 	fyneApp             fyne.App
 	mainWindow          fyne.Window
 	addEntryTypePopUp   *widget.PopUp
-	errorPopUp          *widget.PopUp
-	errorMsg            *widget.Label
+	msgPopUp            *MsgPopUp
 	entriesTabContainer *widget.TabContainer
 	currentEntryNr      int
 	entries             map[string][]data.Entry
@@ -64,8 +63,9 @@ func (app *App) onTypeInputEnterPressed() {
 	app.addEntryTypePopUp.Hide()
 	app.typeInput.Text = ""
 	if err != nil {
-		app.errorMsg.SetText(err.Error())
-		app.errorPopUp.Show()
+		app.msgPopUp.SetType(ErrorPopUp)
+		app.msgPopUp.SetMsg(err.Error())
+		app.msgPopUp.Show()
 	} else {
 		for _, tab := range app.entriesTabContainer.Items {
 			if tab.Text == currentTabText {
@@ -82,12 +82,8 @@ func (app *App) prepareMainWindowContent() {
 }
 
 func (app *App) prepareErrorPopUp() {
-	app.errorMsg = widget.NewLabel("")
-	title := widget.NewLabel("ERROR!")
-	title.Alignment = fyne.TextAlignCenter
-	content := widget.NewVBox(title, app.errorMsg)
-	app.errorPopUp = widget.NewModalPopUp(content, app.mainWindow.Canvas())
-	app.errorPopUp.Hide()
+	app.msgPopUp = newMsgPopUp(app.mainWindow.Canvas())
+	app.msgPopUp.Hide()
 }
 
 func (app *App) loadEntriesTabContainer() {
@@ -184,8 +180,8 @@ func (app *App) getCurrentTabText() string {
 }
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
-	if app.errorPopUp.Visible() {
-		app.errorPopUp.Hide()
+	if app.msgPopUp.Visible() {
+		app.msgPopUp.Hide()
 	}
 	if event.Name == fyne.KeyL {
 		app.selectNextTab()
