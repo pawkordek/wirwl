@@ -1,6 +1,7 @@
 package wirwl
 
 import (
+	"errors"
 	"fyne.io/fyne"
 	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
@@ -13,6 +14,8 @@ type App struct {
 	fyneApp             fyne.App
 	mainWindow          fyne.Window
 	addEntryTypePopUp   *widget.PopUp
+	errorPopUp          *widget.PopUp
+	errorMsg            *widget.Label
 	entriesTabContainer *widget.TabContainer
 	currentEntryNr      int
 	entries             map[string][]data.Entry
@@ -39,6 +42,7 @@ func (app *App) prepareMainWindow() {
 	app.loadEntriesTabContainer()
 	app.resetSelectedEntry()
 	app.prepareAddEntryTypePopUp()
+	app.prepareErrorPopUp()
 	app.prepareMainWindowContent()
 	app.mainWindow.Canvas().SetOnTypedKey(app.onKeyPressed)
 }
@@ -54,13 +58,27 @@ func (app *App) prepareAddEntryTypePopUp() {
 }
 
 func (app *App) onTypeInputEnterPressed() {
-	app.addNewTab(app.typeInput.Text)
+	err := app.addNewTab(app.typeInput.Text)
 	app.mainWindow.Canvas().Unfocus()
 	app.addEntryTypePopUp.Hide()
+	app.typeInput.Text = ""
+	if err != nil {
+		app.errorMsg.SetText(err.Error())
+		app.errorPopUp.Show()
+	}
 }
 
 func (app *App) prepareMainWindowContent() {
 	app.mainWindow.SetContent(widget.NewVBox(app.entriesTabContainer))
+}
+
+func (app *App) prepareErrorPopUp() {
+	app.errorMsg = widget.NewLabel("")
+	title := widget.NewLabel("ERROR!")
+	title.Alignment = fyne.TextAlignCenter
+	content := widget.NewVBox(title, app.errorMsg)
+	app.errorPopUp = widget.NewModalPopUp(content, app.mainWindow.Canvas())
+	app.errorPopUp.Hide()
 }
 
 func (app *App) loadEntriesTabContainer() {
@@ -157,6 +175,9 @@ func (app *App) getCurrentTabText() string {
 }
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
+	if app.errorPopUp.Visible() {
+		app.errorPopUp.Hide()
+	}
 	if event.Name == fyne.KeyL {
 		app.selectNextTab()
 	}
@@ -197,8 +218,13 @@ func (app *App) changeTab(byHowManyTabs int) {
 	app.selectTab(newIndex)
 }
 
-func (app *App) addNewTab(name string) {
-	app.entries[name] = nil
-	app.loadEntriesTabContainer()
-	app.prepareMainWindowContent()
+func (app *App) addNewTab(name string) error {
+	if _, exists := app.entries[name]; !exists {
+		app.entries[name] = nil
+		app.loadEntriesTabContainer()
+		app.prepareMainWindowContent()
+		return nil
+	} else {
+		return errors.New("Entry type with name '" + name + "' already exists.")
+	}
 }

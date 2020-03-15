@@ -133,6 +133,33 @@ func TestAddingOfNewEntryType(t *testing.T) {
 	assert.Equal(t, true, !app.typeInput.Focused())
 }
 
+func TestThatItIsNotPossibleToAddTheSameEntryTypeTwice(t *testing.T) {
+	app := NewApp(exampleDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyI)
+	app.typeInput.Type("type")
+	app.typeInput.SimulateKeyPress(fyne.KeyEnter)
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyI)
+	app.typeInput.Type("type")
+	app.typeInput.SimulateKeyPress(fyne.KeyEnter)
+	assert.Equal(t, true, app.errorPopUp.Visible())
+	assert.Equal(t, "Entry type with name 'type' already exists.", app.errorMsg.Text)
+	assert.Equal(t, 4, len(app.entriesTabContainer.Items))
+}
+
+func TestThatPressingAnyKeyClosesErrorPopUp(t *testing.T) {
+	app := NewApp(exampleDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.errorPopUp.Show()
+	app.SimulateKeyPress(fyne.KeyT)
+	assert.Equal(t, true, app.errorPopUp.Hidden)
+	app.errorPopUp.Show()
+	app.SimulateKeyPress(fyne.KeyReturn)
+	assert.Equal(t, true, app.errorPopUp.Hidden)
+}
+
 func (app *App) SimulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
 	onTypedKey := app.mainWindow.Canvas().OnTypedKey()
