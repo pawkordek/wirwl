@@ -22,7 +22,13 @@ func (input *Input) SetOnEnterPressed(function func()) {
 }
 
 func (input *Input) TypedKey(key *fyne.KeyEvent) {
-	input.Entry.TypedKey(key)
+	/*If TypedRune function ignores the first key, TypedKey has to do so as well, otherwise input will think
+	there is one more character and crash the application on backspace press.
+	This cannot be tested automatically as this doesn't happen there.
+	*/
+	if input.firstRuneIgnored {
+		input.Entry.TypedKey(key)
+	}
 	if key.Name == fyne.KeyReturn || key.Name == fyne.KeyEnter {
 		input.OnEnterPressed()
 	}
