@@ -12,6 +12,7 @@ import (
 
 const exampleDbPath = "../test/exampleDb.db"
 const emptyDbPath = "../test/emptyDb.db"
+const saveTestDbPath = "../test/saveTestDb.db"
 
 func TestMain(m *testing.M) {
 	dataProvider := data.NewDataProvider(exampleDbPath)
@@ -180,6 +181,21 @@ func TestThatAfterAddingNewEntryOpenedTabStillHasTheSameElementHighlighted(t *te
 	app.typeInput.SimulateKeyPress(fyne.KeyEnter)
 	assert.Equal(t, fyne.TextStyle{Bold: true}, app.entriesLabels["comics"][0].TextStyle)
 	assert.Equal(t, fyne.TextStyle{Bold: false}, app.entriesLabels["comics"][1].TextStyle)
+}
+
+func TestThatSavingChangesWorks(t *testing.T) {
+	data.DeleteFile(saveTestDbPath)
+	app := NewApp(saveTestDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyI)
+	app.typeInput.Type("type")
+	app.typeInput.SimulateKeyPress(fyne.KeyEnter)
+	app.SimulateKeyPress(fyne.KeyS)
+	app = NewApp(saveTestDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	assert.Equal(t, 1, len(app.entriesTabContainer.Items))
+	assert.Equal(t, "type", app.getCurrentTabText())
 }
 
 func (app *App) SimulateKeyPress(key fyne.KeyName) {

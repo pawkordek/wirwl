@@ -189,14 +189,15 @@ func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 	}
 	if event.Name == fyne.KeyL {
 		app.selectNextTab()
-	}
-	if event.Name == fyne.KeyH {
+	} else if event.Name == fyne.KeyH {
 		app.selectPreviousTab()
-	}
-	if event.Name == fyne.KeyI && app.lastKeyPress == fyne.KeyT {
+	} else if event.Name == fyne.KeyI && app.lastKeyPress == fyne.KeyT {
 		app.addEntryTypePopUp.Show()
 		app.mainWindow.Canvas().Focus(app.typeInput)
+	} else if event.Name == fyne.KeyS {
+		app.saveChangesToDb()
 	}
+
 	app.lastKeyPress = event.Name
 }
 
@@ -235,5 +236,21 @@ func (app *App) addNewTab(name string) error {
 		return nil
 	} else {
 		return errors.New("Entry type with name '" + name + "' already exists.")
+	}
+}
+func (app *App) saveChangesToDb() {
+	var types []string
+	for entryType, _ := range app.entries {
+		types = append(types, entryType)
+	}
+	err := app.dataProvider.SaveEntriesTypesToDb(types)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for entryType, entry := range app.entries {
+		err = app.dataProvider.SaveEntriesToDb(entryType, entry)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
