@@ -22,26 +22,33 @@ type Entry struct {
 	MediaType                  string
 }
 
-type DataProvider struct {
+type Provider interface {
+	SaveEntriesToDb(table string, entries []Entry) error
+	LoadEntriesFromDb(table string) ([]Entry, error)
+	SaveEntriesTypesToDb(entriesTypes []string) error
+	LoadEntriesTypesFromDb() ([]string, error)
+}
+
+type BoltProvider struct {
 	dbPath string
 	db     *bolt.DB
 }
 
-func NewDataProvider(dbPath string) *DataProvider {
-	return &DataProvider{dbPath: dbPath}
+func NewBoltProvider(dbPath string) Provider {
+	return &BoltProvider{dbPath: dbPath}
 }
 
-func (provider *DataProvider) openDb() error {
+func (provider *BoltProvider) openDb() error {
 	db, err := bolt.Open(provider.dbPath, 0600, nil)
 	provider.db = db
 	return err
 }
 
-func (provider *DataProvider) closeDb() error {
+func (provider *BoltProvider) closeDb() error {
 	return provider.db.Close()
 }
 
-func (provider *DataProvider) SaveEntriesToDb(table string, entries []Entry) error {
+func (provider *BoltProvider) SaveEntriesToDb(table string, entries []Entry) error {
 	err := provider.openDb()
 	if err != nil {
 		return err
@@ -63,14 +70,14 @@ func (provider *DataProvider) SaveEntriesToDb(table string, entries []Entry) err
 	return nil
 }
 
-func (provider *DataProvider) createNewTable(name string) error {
+func (provider *BoltProvider) createNewTable(name string) error {
 	return provider.db.Update(func(transaction *bolt.Tx) error {
 		_, err := transaction.CreateBucketIfNotExists([]byte(name))
 		return err
 	})
 }
 
-func (provider *DataProvider) saveEntryToTable(table string, entry Entry) error {
+func (provider *BoltProvider) saveEntryToTable(table string, entry Entry) error {
 	entryAsJSON, err := json.Marshal(entry)
 	if err != nil {
 		return err
@@ -88,7 +95,7 @@ func (provider *DataProvider) saveEntryToTable(table string, entry Entry) error 
 	return nil
 }
 
-func (provider *DataProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
+func (provider *BoltProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
 	err := provider.openDb()
 	if err != nil {
 		return nil, err
@@ -126,7 +133,7 @@ func getEntriesDataFromTable(transaction *bolt.Tx, table string) ([]Entry, error
 	return entries, err
 }
 
-func (provider *DataProvider) SaveEntriesTypesToDb(entriesTypes []string) error {
+func (provider *BoltProvider) SaveEntriesTypesToDb(entriesTypes []string) error {
 	err := provider.openDb()
 	if err != nil {
 		return err
@@ -140,7 +147,7 @@ func (provider *DataProvider) SaveEntriesTypesToDb(entriesTypes []string) error 
 	return provider.db.Close()
 }
 
-func (provider *DataProvider) saveEntryTypeToTable(entryType string) error {
+func (provider *BoltProvider) saveEntryTypeToTable(entryType string) error {
 	return provider.db.Update(func(transaction *bolt.Tx) error {
 		bucket, err := transaction.CreateBucketIfNotExists([]byte(entriesTypesTableName))
 		if err != nil {
@@ -150,7 +157,7 @@ func (provider *DataProvider) saveEntryTypeToTable(entryType string) error {
 	})
 }
 
-func (provider *DataProvider) LoadEntriesTypesFromDb() ([]string, error) {
+func (provider *BoltProvider) LoadEntriesTypesFromDb() ([]string, error) {
 	err := provider.openDb()
 	if err != nil {
 		return nil, err

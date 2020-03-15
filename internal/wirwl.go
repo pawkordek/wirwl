@@ -19,13 +19,14 @@ type App struct {
 	currentEntryNr      int
 	entries             map[string][]data.Entry
 	entriesLabels       map[string][]widget.Label
-	dataProvider        *data.DataProvider
+	dataProvider        data.Provider
 	lastKeyPress        fyne.KeyName
 	typeInput           *Input
 }
 
 func NewApp(entriesPath string) *App {
-	return &App{dataProvider: data.NewDataProvider(entriesPath)}
+	provider := data.NewBoltProvider(entriesPath)
+	return &App{dataProvider: provider}
 }
 
 func (app *App) LoadAndDisplay(fyneApp fyne.App) {

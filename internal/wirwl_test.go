@@ -15,7 +15,7 @@ const emptyDbPath = "../test/emptyDb.db"
 const saveTestDbPath = "../test/saveTestDb.db"
 
 func TestMain(m *testing.M) {
-	dataProvider := data.NewDataProvider(exampleDbPath)
+	dataProvider := data.NewBoltProvider(exampleDbPath)
 	entriesTypes := data.GetEntriesTypes()
 	err := dataProvider.SaveEntriesTypesToDb(entriesTypes)
 	if err != nil {
