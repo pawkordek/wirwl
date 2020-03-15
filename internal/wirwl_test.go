@@ -117,6 +117,22 @@ func TestWhetherEntryTypeInputOpens(t *testing.T) {
 	assert.Equal(t, true, app.typeInput.Focused())
 }
 
+func TestAddingOfNewEntryType(t *testing.T) {
+	app := NewApp(exampleDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyI)
+	app.typeInput.Type("new entry type")
+	app.typeInput.SimulateKeyPress(fyne.KeyEnter)
+	assert.Equal(t, 4, len(app.entriesTabContainer.Items))
+	assert.Equal(t, "comics", app.entriesTabContainer.Items[0].Text)
+	assert.Equal(t, "music", app.entriesTabContainer.Items[1].Text)
+	assert.Equal(t, "new entry type", app.entriesTabContainer.Items[2].Text)
+	assert.Equal(t, "videos", app.entriesTabContainer.Items[3].Text)
+	assert.Equal(t, true, app.addEntryTypePopUp.Hidden)
+	assert.Equal(t, true, !app.typeInput.Focused())
+}
+
 func (app *App) SimulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
 	onTypedKey := app.mainWindow.Canvas().OnTypedKey()

@@ -19,7 +19,7 @@ type App struct {
 	entriesLabels       map[string][]widget.Label
 	dataProvider        *data.DataProvider
 	lastKeyPress        fyne.KeyName
-	typeInput           *widget.Entry
+	typeInput           *Input
 }
 
 func NewApp(entriesPath string) *App {
@@ -39,18 +39,28 @@ func (app *App) prepareMainWindow() {
 	app.loadEntriesTabContainer()
 	app.resetSelectedEntry()
 	app.prepareAddEntryTypePopUp()
-	app.mainWindow.SetContent(widget.NewVBox(app.entriesTabContainer))
+	app.prepareMainWindowContent()
 	app.mainWindow.Canvas().SetOnTypedKey(app.onKeyPressed)
 }
 
 func (app *App) prepareAddEntryTypePopUp() {
-	app.typeInput = widget.NewEntry()
-	app.typeInput.SetText("New entry type")
+	app.typeInput = newInput()
+	app.typeInput.SetOnEnterPressed(app.onTypeInputEnterPressed)
 	popUpTitle := widget.NewLabel("Add new entry type")
 	popUpTitle.Alignment = fyne.TextAlignCenter
 	popUpContent := widget.NewVBox(popUpTitle, app.typeInput)
 	app.addEntryTypePopUp = widget.NewModalPopUp(popUpContent, app.mainWindow.Canvas())
 	app.addEntryTypePopUp.Hide()
+}
+
+func (app *App) onTypeInputEnterPressed() {
+	app.addNewTab(app.typeInput.Text)
+	app.mainWindow.Canvas().Unfocus()
+	app.addEntryTypePopUp.Hide()
+}
+
+func (app *App) prepareMainWindowContent() {
+	app.mainWindow.SetContent(widget.NewVBox(app.entriesTabContainer))
 }
 
 func (app *App) loadEntriesTabContainer() {
@@ -185,4 +195,10 @@ func (app *App) changeTab(byHowManyTabs int) {
 	currentIndex := app.entriesTabContainer.CurrentTabIndex()
 	newIndex := currentIndex + byHowManyTabs
 	app.selectTab(newIndex)
+}
+
+func (app *App) addNewTab(name string) {
+	app.entries[name] = nil
+	app.loadEntriesTabContainer()
+	app.prepareMainWindowContent()
 }
