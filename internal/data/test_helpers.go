@@ -1,6 +1,7 @@
 package data
 
 import (
+	"errors"
 	"log"
 	"os"
 )
@@ -145,4 +146,29 @@ func GetTestEntriesToSave() []Entry {
 			MediaType:                  "some media type2",
 		},
 	}
+}
+
+var AlwaysFailingProviderError = errors.New("Error from always failing provider")
+
+type AlwaysFailingProvider struct {
+}
+
+func NewAlwaysFailingProvider() Provider {
+	return &AlwaysFailingProvider{}
+}
+
+func (provider *AlwaysFailingProvider) SaveEntriesToDb(table string, entries []Entry) error {
+	return AlwaysFailingProviderError
+}
+
+func (provider *AlwaysFailingProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
+	return nil, AlwaysFailingProviderError
+}
+
+func (provider *AlwaysFailingProvider) SaveEntriesTypesToDb(entriesTypes []string) error {
+	return AlwaysFailingProviderError
+}
+
+func (provider *AlwaysFailingProvider) LoadEntriesTypesFromDb() ([]string, error) {
+	return nil, AlwaysFailingProviderError
 }

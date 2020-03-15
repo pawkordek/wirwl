@@ -199,6 +199,27 @@ func TestThatSavingChangesWorks(t *testing.T) {
 	assert.Equal(t, "type", app.getCurrentTabText())
 }
 
+func TestThatAfterSavingSuccessfullySuccessDialogDisplays(t *testing.T) {
+	data.DeleteFile(saveTestDbPath)
+	app := NewApp(saveTestDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyS)
+	assert.True(t, app.msgPopUp.Visible())
+	assert.Equal(t, "SUCCESS", app.msgPopUp.title.Text)
+	assert.Equal(t, "Changes saved.", app.msgPopUp.msg.Text)
+}
+
+func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
+	data.DeleteFile(saveTestDbPath)
+	app := NewApp(saveTestDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.dataProvider = data.NewAlwaysFailingProvider()
+	app.SimulateKeyPress(fyne.KeyS)
+	assert.True(t, app.msgPopUp.Visible())
+	assert.Equal(t, "ERROR", app.msgPopUp.title.Text)
+	assert.Equal(t, data.AlwaysFailingProviderError.Error(), app.msgPopUp.msg.Text)
+}
+
 func (app *App) SimulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
 	onTypedKey := app.mainWindow.Canvas().OnTypedKey()
