@@ -1,4 +1,4 @@
-package wirwl
+package widget
 
 import (
 	"fyne.io/fyne"
@@ -11,7 +11,7 @@ type Input struct {
 	firstRuneIgnored bool
 }
 
-func newInput() *Input {
+func NewInput() *Input {
 	input := &Input{}
 	input.ExtendBaseWidget(input)
 	return input

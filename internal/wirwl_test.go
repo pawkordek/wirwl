@@ -142,8 +142,8 @@ func TestThatItIsNotPossibleToAddTheSameEntryTypeTwice(t *testing.T) {
 	app.typeInput.Type("type")
 	app.typeInput.SimulateKeyPress(fyne.KeyEnter)
 	assert.Equal(t, true, app.msgPopUp.Visible())
-	assert.Equal(t, "ERROR", app.msgPopUp.title.Text)
-	assert.Equal(t, "Entry type with name 'type' already exists.", app.msgPopUp.msg.Text)
+	assert.Equal(t, "ERROR", app.msgPopUp.Title())
+	assert.Equal(t, "Entry type with name 'type' already exists.", app.msgPopUp.Msg())
 	assert.Equal(t, 4, len(app.entriesTabContainer.Items))
 }
 
@@ -201,8 +201,8 @@ func TestThatAfterSavingSuccessfullySuccessDialogDisplays(t *testing.T) {
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateKeyPress(fyne.KeyS)
 	assert.True(t, app.msgPopUp.Visible())
-	assert.Equal(t, "SUCCESS", app.msgPopUp.title.Text)
-	assert.Equal(t, "Changes saved.", app.msgPopUp.msg.Text)
+	assert.Equal(t, "SUCCESS", app.msgPopUp.Title())
+	assert.Equal(t, "Changes saved.", app.msgPopUp.Msg())
 }
 
 func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
@@ -212,8 +212,8 @@ func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
 	app.dataProvider = data.NewAlwaysFailingProvider()
 	app.SimulateKeyPress(fyne.KeyS)
 	assert.True(t, app.msgPopUp.Visible())
-	assert.Equal(t, "ERROR", app.msgPopUp.title.Text)
-	assert.Equal(t, data.AlwaysFailingProviderError.Error(), app.msgPopUp.msg.Text)
+	assert.Equal(t, "ERROR", app.msgPopUp.Title())
+	assert.Equal(t, data.AlwaysFailingProviderError.Error(), app.msgPopUp.Msg())
 }
 
 func (app *App) SimulateKeyPress(key fyne.KeyName) {

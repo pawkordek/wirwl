@@ -1,4 +1,4 @@
-package wirwl
+package widget
 
 import (
 	"fyne.io/fyne"
@@ -18,7 +18,7 @@ const (
 	ErrorPopUp   = "error"
 )
 
-func newMsgPopUp(canvas fyne.Canvas) *MsgPopUp {
+func NewMsgPopUp(canvas fyne.Canvas) *MsgPopUp {
 	title := widget.NewLabel("")
 	title.Alignment = fyne.TextAlignCenter
 	msg := widget.NewLabel("")
@@ -27,6 +27,14 @@ func newMsgPopUp(canvas fyne.Canvas) *MsgPopUp {
 	popUp := &MsgPopUp{widget.NewModalPopUp(content, canvas), title, msg}
 	popUp.ExtendBaseWidget(popUp)
 	return popUp
+}
+
+func (popUp *MsgPopUp) Title() string {
+	return popUp.title.Text
+}
+
+func (popUp *MsgPopUp) Msg() string {
+	return popUp.msg.Text
 }
 
 func (popUp *MsgPopUp) SetType(t string) {

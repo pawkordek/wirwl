@@ -1,4 +1,4 @@
-package wirwl
+package widget
 
 import (
 	"fyne.io/fyne/test"
@@ -7,7 +7,7 @@ import (
 )
 
 func TestThatTypeGetsSet(t *testing.T) {
-	popUp := newMsgPopUp(test.Canvas())
+	popUp := NewMsgPopUp(test.Canvas())
 	assert.Equal(t, popUp.title.Text, "")
 	popUp.SetType(InfoPopUp)
 	assert.Equal(t, popUp.title.Text, "INFO")
@@ -22,14 +22,14 @@ func TestThatTypeGetsSet(t *testing.T) {
 }
 
 func TestThatMsgGetsSet(t *testing.T) {
-	popUp := newMsgPopUp(test.Canvas())
+	popUp := NewMsgPopUp(test.Canvas())
 	assert.Equal(t, "", popUp.msg.Text)
 	popUp.SetMsg("Some msg")
 	assert.Equal(t, "Some msg", popUp.msg.Text)
 }
 
 func TestThatDisplayShowsPopUpWithSpecifiedData(t *testing.T) {
-	popUp := newMsgPopUp(test.Canvas())
+	popUp := NewMsgPopUp(test.Canvas())
 	popUp.Display(SuccessPopUp, "some message")
 	assert.True(t, popUp.Visible())
 	assert.Equal(t, "SUCCESS", popUp.title.Text)

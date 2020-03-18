@@ -8,20 +8,21 @@ import (
 	"log"
 	"sort"
 	"wirwl/internal/data"
+	widget2 "wirwl/internal/widget"
 )
 
 type App struct {
 	fyneApp             fyne.App
 	mainWindow          fyne.Window
 	addEntryTypePopUp   *widget.PopUp
-	msgPopUp            *MsgPopUp
+	msgPopUp            *widget2.MsgPopUp
 	entriesTabContainer *widget.TabContainer
 	currentEntryNr      int
 	entries             map[string][]data.Entry
 	entriesLabels       map[string][]widget.Label
 	dataProvider        data.Provider
 	lastKeyPress        fyne.KeyName
-	typeInput           *Input
+	typeInput           *widget2.Input
 }
 
 func NewApp(entriesPath string) *App {
@@ -48,7 +49,7 @@ func (app *App) prepareMainWindow() {
 }
 
 func (app *App) prepareAddEntryTypePopUp() {
-	app.typeInput = newInput()
+	app.typeInput = widget2.NewInput()
 	app.typeInput.SetOnEnterPressed(app.onTypeInputEnterPressed)
 	popUpTitle := widget.NewLabel("Add new entry type")
 	popUpTitle.Alignment = fyne.TextAlignCenter
@@ -64,7 +65,7 @@ func (app *App) onTypeInputEnterPressed() {
 	app.addEntryTypePopUp.Hide()
 	app.typeInput.Text = ""
 	if err != nil {
-		app.msgPopUp.SetType(ErrorPopUp)
+		app.msgPopUp.SetType(widget2.ErrorPopUp)
 		app.msgPopUp.SetMsg(err.Error())
 		app.msgPopUp.Show()
 	} else {
@@ -83,7 +84,7 @@ func (app *App) prepareMainWindowContent() {
 }
 
 func (app *App) prepareErrorPopUp() {
-	app.msgPopUp = newMsgPopUp(app.mainWindow.Canvas())
+	app.msgPopUp = widget2.NewMsgPopUp(app.mainWindow.Canvas())
 	app.msgPopUp.Hide()
 }
 
@@ -194,9 +195,9 @@ func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 	} else if event.Name == fyne.KeyS {
 		err := app.saveChangesToDb()
 		if err != nil {
-			app.msgPopUp.Display(ErrorPopUp, err.Error())
+			app.msgPopUp.Display(widget2.ErrorPopUp, err.Error())
 		} else {
-			app.msgPopUp.Display(SuccessPopUp, "Changes saved.")
+			app.msgPopUp.Display(widget2.SuccessPopUp, "Changes saved.")
 		}
 	}
 
