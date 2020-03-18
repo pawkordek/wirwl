@@ -41,23 +41,19 @@ func TestMain(m *testing.M) {
 	os.Exit(exitCode)
 }
 
-func TestThatEntriesTabsWithContentDisplay(t *testing.T) {
+func TestThatEntriesTabsWithContentDisplayInCorrectOrder(t *testing.T) {
 	app := NewApp(exampleDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
-	for _, tab := range app.entriesTabContainer.Items {
-		if tab.Text == "comics" {
-			assert.Equal(t, "some comic1", app.entriesLabels["comics"][0].Text)
-			assert.Equal(t, "some comic2", app.entriesLabels["comics"][1].Text)
-		} else if tab.Text == "videos" {
-			assert.Equal(t, "some video1", app.entriesLabels["videos"][0].Text)
-			assert.Equal(t, "some video2", app.entriesLabels["videos"][1].Text)
-		} else if tab.Text == "music" {
-			assert.Equal(t, "some music1", app.entriesLabels["music"][0].Text)
-			assert.Equal(t, "some music2", app.entriesLabels["music"][1].Text)
-		} else {
-			assert.Fail(t, "There is an unexpected tab called "+tab.Text+" displayed!")
-		}
-	}
+	assert.Equal(t, 3, len(app.entriesTabContainer.Items))
+	assert.Equal(t, app.entriesTabContainer.Items[0].Text, "comics")
+	assert.Equal(t, "some comic1", app.entriesLabels["comics"][0].Text)
+	assert.Equal(t, "some comic2", app.entriesLabels["comics"][1].Text)
+	assert.Equal(t, app.entriesTabContainer.Items[1].Text, "music")
+	assert.Equal(t, "some video1", app.entriesLabels["videos"][0].Text)
+	assert.Equal(t, "some video2", app.entriesLabels["videos"][1].Text)
+	assert.Equal(t, app.entriesTabContainer.Items[2].Text, "videos")
+	assert.Equal(t, "some music1", app.entriesLabels["music"][0].Text)
+	assert.Equal(t, "some music2", app.entriesLabels["music"][1].Text)
 }
 
 func TestSwitchingTabs(t *testing.T) {
