@@ -29,8 +29,14 @@ func TestThatCancellingWorksCorrectly(t *testing.T) {
 	assert.Equal(t, false, dialog.Focused())
 }
 
-func TestThatDisplayedMessageHasYesOrNoMessageAppended(t *testing.T) {
+func TestThatSetMessageHasYesOrNoMessageAppended(t *testing.T) {
 	dialog := NewConfirmationDialog(test.Canvas())
 	dialog.SetMsg("Some message.")
+	assert.Equal(t, "Some message. (y)es or (n)o?", dialog.Msg())
+}
+
+func TestThatDisplayedMessageHasYesOrNoMessageAppended(t *testing.T) {
+	dialog := NewConfirmationDialog(test.Canvas())
+	dialog.Display("Some message.")
 	assert.Equal(t, "Some message. (y)es or (n)o?", dialog.Msg())
 }

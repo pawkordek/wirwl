@@ -43,6 +43,7 @@ func (dialog *ConfirmationDialog) SetMsg(msg string) {
 }
 
 func (dialog *ConfirmationDialog) Display(msg string) {
+	msg += " (y)es or (n)o?"
 	dialog.MsgPopUp.Display(InfoPopUp, msg)
 	dialog.Canvas.Focus(dialog)
 }
