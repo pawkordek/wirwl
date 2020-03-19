@@ -52,12 +52,8 @@ func (popUp *MsgPopUp) SetType(t string) {
 	}
 }
 
-func (popUp *MsgPopUp) SetMsg(msg string) {
-	popUp.msg.SetText(msg)
-}
-
 func (popUp *MsgPopUp) Display(popUpType string, msg string) {
 	popUp.SetType(popUpType)
-	popUp.SetMsg(msg)
+	popUp.msg.Text = msg
 	popUp.Show()
 }

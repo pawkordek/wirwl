@@ -66,9 +66,7 @@ func (app *App) onTypeInputEnterPressed() {
 	app.addEntryTypePopUp.Hide()
 	app.typeInput.Text = ""
 	if err != nil {
-		app.msgPopUp.SetType(widget2.ErrorPopUp)
-		app.msgPopUp.SetMsg(err.Error())
-		app.msgPopUp.Show()
+		app.msgPopUp.Display(widget2.ErrorPopUp, err.Error())
 	} else {
 		for _, tab := range app.entriesTabContainer.Items {
 			if tab.Text == currentTabText {

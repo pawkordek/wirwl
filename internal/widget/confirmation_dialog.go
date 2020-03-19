@@ -37,11 +37,6 @@ func (dialog *ConfirmationDialog) TypedKey(key *fyne.KeyEvent) {
 	}
 }
 
-func (dialog *ConfirmationDialog) SetMsg(msg string) {
-	dialog.MsgPopUp.SetMsg(msg)
-	dialog.msg.Text += " (y)es or (n)o?"
-}
-
 func (dialog *ConfirmationDialog) Display(msg string) {
 	msg += " (y)es or (n)o?"
 	dialog.MsgPopUp.Display(InfoPopUp, msg)
