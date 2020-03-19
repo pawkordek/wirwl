@@ -13,6 +13,7 @@ import (
 const exampleDbPath = "../test/exampleDb.db"
 const emptyDbPath = "../test/emptyDb.db"
 const saveTestDbPath = "../test/saveTestDb.db"
+const deletionTestDbPath = "../test/deletionTestDb.db"
 
 func TestMain(m *testing.M) {
 	dataProvider := data.NewBoltProvider(exampleDbPath)
@@ -214,6 +215,38 @@ func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
 	assert.True(t, app.msgPopUp.Visible())
 	assert.Equal(t, "ERROR", app.msgPopUp.Title())
 	assert.Equal(t, data.AlwaysFailingProviderError.Error(), app.msgPopUp.Msg())
+}
+
+func TestThatDeletingEntriesTypesWorks(t *testing.T) {
+	data.CopyFile(exampleDbPath, deletionTestDbPath)
+	app := NewApp(deletionTestDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyD)
+	app.confirmationDialog.SimulateKeyPress(fyne.KeyY)
+	assert.Equal(t, 2, len(app.entriesTabContainer.Items))
+	assert.Equal(t, "music", app.entriesTabContainer.Items[0].Text)
+	assert.Equal(t, "videos", app.entriesTabContainer.Items[1].Text)
+	data.DeleteFile(deletionTestDbPath)
+}
+
+func TestThatWhenTryingToDeleteLastEntryTypeItIsPreventedAndWarningDialogIsDisplayed(t *testing.T) {
+	data.CopyFile(exampleDbPath, deletionTestDbPath)
+	app := NewApp(deletionTestDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyD)
+	app.confirmationDialog.SimulateKeyPress(fyne.KeyY)
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyD)
+	app.confirmationDialog.SimulateKeyPress(fyne.KeyY)
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyD)
+	assert.Equal(t, 1, len(app.entriesTabContainer.Items))
+	assert.Equal(t, true, app.msgPopUp.Visible())
+	assert.Equal(t, "WARNING", app.msgPopUp.Title())
+	assert.Equal(t, "You cannot remove the only remaining entry type!", app.msgPopUp.Msg())
+	data.DeleteFile(deletionTestDbPath)
 }
 
 func (app *App) SimulateKeyPress(key fyne.KeyName) {

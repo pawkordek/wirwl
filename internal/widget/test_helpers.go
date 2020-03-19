@@ -17,3 +17,8 @@ func (input *Input) Type(chars string) {
 		input.TypedRune(char)
 	}
 }
+
+func (dialog *ConfirmationDialog) SimulateKeyPress(key fyne.KeyName) {
+	event := &fyne.KeyEvent{Name: key}
+	dialog.TypedKey(event)
+}

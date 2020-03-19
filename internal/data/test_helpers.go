@@ -2,6 +2,7 @@ package data
 
 import (
 	"errors"
+	"io"
 	"log"
 	"os"
 )
@@ -116,6 +117,23 @@ func DeleteFile(path string) {
 		if err != nil {
 			log.Fatal(err)
 		}
+	}
+}
+
+func CopyFile(sourcePath string, destinationPath string) {
+	sourceFile, err := os.Open(sourcePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer sourceFile.Close()
+	destinationFile, err := os.Create(destinationPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer destinationFile.Close()
+	_, err = io.Copy(destinationFile, sourceFile)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 

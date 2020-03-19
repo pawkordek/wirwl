@@ -16,6 +16,7 @@ type App struct {
 	mainWindow          fyne.Window
 	addEntryTypePopUp   *widget.PopUp
 	msgPopUp            *widget2.MsgPopUp
+	confirmationDialog  *widget2.ConfirmationDialog
 	entriesTabContainer *widget.TabContainer
 	currentEntryNr      int
 	entries             map[string][]data.Entry
@@ -43,7 +44,7 @@ func (app *App) prepareMainWindow() {
 	app.loadEntriesTabContainer()
 	app.resetSelectedEntry()
 	app.prepareAddEntryTypePopUp()
-	app.prepareErrorPopUp()
+	app.prepareDialogs()
 	app.prepareMainWindowContent()
 	app.mainWindow.Canvas().SetOnTypedKey(app.onKeyPressed)
 }
@@ -83,9 +84,19 @@ func (app *App) prepareMainWindowContent() {
 	app.mainWindow.SetContent(widget.NewVBox(app.entriesTabContainer))
 }
 
-func (app *App) prepareErrorPopUp() {
+func (app *App) prepareDialogs() {
 	app.msgPopUp = widget2.NewMsgPopUp(app.mainWindow.Canvas())
 	app.msgPopUp.Hide()
+	app.confirmationDialog = widget2.NewConfirmationDialog(app.mainWindow.Canvas())
+	app.confirmationDialog.OnConfirm = app.deleteCurrentEntryType
+	app.confirmationDialog.Hide()
+}
+
+func (app *App) deleteCurrentEntryType() {
+	currentTab := app.entriesTabContainer.CurrentTab()
+	delete(app.entries, currentTab.Text)
+	delete(app.entriesLabels, currentTab.Text)
+	app.entriesTabContainer.Remove(currentTab)
 }
 
 func (app *App) loadEntriesTabContainer() {
@@ -189,9 +200,8 @@ func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 		app.selectNextTab()
 	} else if event.Name == fyne.KeyH {
 		app.selectPreviousTab()
-	} else if event.Name == fyne.KeyI && app.lastKeyPress == fyne.KeyT {
-		app.addEntryTypePopUp.Show()
-		app.mainWindow.Canvas().Focus(app.typeInput)
+	} else if app.lastKeyPress == fyne.KeyT {
+		app.handleTabRelatedKeyPress(event)
 	} else if event.Name == fyne.KeyS {
 		err := app.saveChangesToDb()
 		if err != nil {
@@ -202,6 +212,19 @@ func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 	}
 
 	app.lastKeyPress = event.Name
+}
+
+func (app *App) handleTabRelatedKeyPress(event *fyne.KeyEvent) {
+	if event.Name == fyne.KeyI {
+		app.addEntryTypePopUp.Show()
+		app.mainWindow.Canvas().Focus(app.typeInput)
+	} else if event.Name == fyne.KeyD {
+		if len(app.entriesTabContainer.Items) > 1 {
+			app.confirmationDialog.Display("Are you sure you want to delete entry type '" + app.entriesTabContainer.CurrentTab().Text + "'?")
+		} else {
+			app.msgPopUp.Display(widget2.WarningPopUp, "You cannot remove the only remaining entry type!")
+		}
+	}
 }
 
 func (app *App) selectNextTab() {
@@ -253,4 +276,3 @@ func (app *App) saveChangesToDb() error {
 	}
 	return err
 }
-
