@@ -9,15 +9,15 @@ import (
 func TestThatTypeGetsSet(t *testing.T) {
 	popUp := NewMsgPopUp(test.Canvas())
 	assert.Equal(t, popUp.title.Text, "")
-	popUp.SetType(InfoPopUp)
+	popUp.setType(InfoPopUp)
 	assert.Equal(t, popUp.title.Text, "INFO")
-	popUp.SetType(SuccessPopUp)
+	popUp.setType(SuccessPopUp)
 	assert.Equal(t, popUp.title.Text, "SUCCESS")
-	popUp.SetType(WarningPopUp)
+	popUp.setType(WarningPopUp)
 	assert.Equal(t, popUp.title.Text, "WARNING")
-	popUp.SetType(ErrorPopUp)
+	popUp.setType(ErrorPopUp)
 	assert.Equal(t, popUp.title.Text, "ERROR")
-	popUp.SetType("non existing type")
+	popUp.setType("non existing type")
 	assert.Equal(t, popUp.title.Text, "")
 }
 

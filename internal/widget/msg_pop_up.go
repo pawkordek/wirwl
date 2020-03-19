@@ -37,7 +37,7 @@ func (popUp *MsgPopUp) Msg() string {
 	return popUp.msg.Text
 }
 
-func (popUp *MsgPopUp) SetType(t string) {
+func (popUp *MsgPopUp) setType(t string) {
 	switch t {
 	case InfoPopUp:
 		popUp.title.SetText("INFO")
@@ -53,7 +53,7 @@ func (popUp *MsgPopUp) SetType(t string) {
 }
 
 func (popUp *MsgPopUp) Display(popUpType string, msg string) {
-	popUp.SetType(popUpType)
+	popUp.setType(popUpType)
 	popUp.msg.Text = msg
 	popUp.Show()
 }
