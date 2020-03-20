@@ -42,19 +42,3 @@ func (dialog *ConfirmationDialog) Display(msg string) {
 	dialog.MsgPopUp.Display(InfoPopUp, msg)
 	dialog.Canvas.Focus(dialog)
 }
-
-func (dialog *ConfirmationDialog) FocusGained() {
-	dialog.focused = true
-}
-
-func (dialog *ConfirmationDialog) FocusLost() {
-	dialog.focused = false
-}
-
-func (dialog *ConfirmationDialog) Focused() bool {
-	return dialog.focused
-}
-
-func (dialog *ConfirmationDialog) TypedRune(r rune) {
-	//Do nothing as inputting text handling is not needed, only key presses
-}

@@ -1,6 +1,7 @@
 package widget
 
 import (
+	"fyne.io/fyne"
 	"fyne.io/fyne/test"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -27,4 +28,16 @@ func TestThatDisplayShowsPopUpWithSpecifiedData(t *testing.T) {
 	assert.True(t, popUp.Visible())
 	assert.Equal(t, "SUCCESS", popUp.title.Text)
 	assert.Equal(t, "some message", popUp.msg.Text)
+}
+
+func TestThatPressingAnyKeyHidesThePopUp(t *testing.T) {
+	popUp := NewMsgPopUp(test.Canvas())
+	popUp.Display(InfoPopUp, "testing")
+	SimulateKeyPress(popUp, fyne.KeyQ)
+	assert.Equal(t, true, popUp.Hidden)
+	assert.Equal(t, false, popUp.Focused())
+	popUp.Display(InfoPopUp, "testing")
+	SimulateKeyPress(popUp, fyne.Key1)
+	assert.Equal(t, true, popUp.Hidden)
+	assert.Equal(t, false, popUp.Focused())
 }
