@@ -18,7 +18,7 @@ func (input *Input) Type(chars string) {
 	}
 }
 
-func (dialog *ConfirmationDialog) SimulateKeyPress(key fyne.KeyName) {
+func SimulateKeyPress(focusable fyne.Focusable, key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
-	dialog.TypedKey(event)
+	focusable.TypedKey(event)
 }

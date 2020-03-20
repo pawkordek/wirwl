@@ -12,7 +12,7 @@ func TestThatConfirmingWorksCorrectly(t *testing.T) {
 	dialog := NewConfirmationDialog(test.Canvas())
 	dialog.OnConfirm = func() { called = true }
 	dialog.Display("")
-	dialog.SimulateKeyPress(fyne.KeyY)
+	SimulateKeyPress(dialog, fyne.KeyY)
 	assert.Equal(t, true, called)
 	assert.Equal(t, true, dialog.Hidden)
 	assert.Equal(t, false, dialog.Focused())
@@ -23,7 +23,7 @@ func TestThatCancellingWorksCorrectly(t *testing.T) {
 	dialog := NewConfirmationDialog(test.Canvas())
 	dialog.OnCancel = func() { called = true }
 	dialog.Display("")
-	dialog.SimulateKeyPress(fyne.KeyN)
+	SimulateKeyPress(dialog, fyne.KeyN)
 	assert.Equal(t, true, called)
 	assert.Equal(t, true, dialog.Hidden)
 	assert.Equal(t, false, dialog.Focused())

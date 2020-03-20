@@ -8,6 +8,7 @@ import (
 	"os"
 	"testing"
 	"wirwl/internal/data"
+	"wirwl/internal/widget"
 )
 
 const exampleDbPath = "../test/exampleDb.db"
@@ -223,7 +224,7 @@ func TestThatDeletingEntriesTypesWorks(t *testing.T) {
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateKeyPress(fyne.KeyT)
 	app.SimulateKeyPress(fyne.KeyD)
-	app.confirmationDialog.SimulateKeyPress(fyne.KeyY)
+	widget.SimulateKeyPress(app.confirmationDialog, fyne.KeyY)
 	assert.Equal(t, 2, len(app.entriesTabContainer.Items))
 	assert.Equal(t, "music", app.entriesTabContainer.Items[0].Text)
 	assert.Equal(t, "videos", app.entriesTabContainer.Items[1].Text)
@@ -236,10 +237,10 @@ func TestThatWhenTryingToDeleteLastEntryTypeItIsPreventedAndWarningDialogIsDispl
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateKeyPress(fyne.KeyT)
 	app.SimulateKeyPress(fyne.KeyD)
-	app.confirmationDialog.SimulateKeyPress(fyne.KeyY)
+	widget.SimulateKeyPress(app.confirmationDialog, fyne.KeyY)
 	app.SimulateKeyPress(fyne.KeyT)
 	app.SimulateKeyPress(fyne.KeyD)
-	app.confirmationDialog.SimulateKeyPress(fyne.KeyY)
+	widget.SimulateKeyPress(app.confirmationDialog, fyne.KeyY)
 	app.SimulateKeyPress(fyne.KeyT)
 	app.SimulateKeyPress(fyne.KeyD)
 	assert.Equal(t, 1, len(app.entriesTabContainer.Items))
