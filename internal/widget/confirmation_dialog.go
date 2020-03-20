@@ -28,13 +28,10 @@ func NewConfirmationDialog(canvas fyne.Canvas) *ConfirmationDialog {
 func (dialog *ConfirmationDialog) TypedKey(key *fyne.KeyEvent) {
 	if key.Name == fyne.KeyY {
 		dialog.OnConfirm()
-		dialog.Hide()
-		dialog.Canvas.Unfocus()
 	} else if key.Name == fyne.KeyN {
 		dialog.OnCancel()
-		dialog.Hide()
-		dialog.Canvas.Unfocus()
 	}
+	dialog.MsgPopUp.TypedKey(key)
 }
 
 func (dialog *ConfirmationDialog) Display(msg string) {
