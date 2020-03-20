@@ -30,6 +30,13 @@ func TestThatDisplayShowsPopUpWithSpecifiedData(t *testing.T) {
 	assert.Equal(t, "some message", popUp.msg.Text)
 }
 
+func TestThatCallingDisplayViewsAndFocusesPopUp(t *testing.T) {
+	popUp := NewMsgPopUp(test.Canvas())
+	popUp.Display(InfoPopUp, "testing")
+	assert.Equal(t, true, popUp.Visible())
+	assert.Equal(t, true, popUp.Focused())
+}
+
 func TestThatPressingAnyKeyHidesThePopUp(t *testing.T) {
 	popUp := NewMsgPopUp(test.Canvas())
 	popUp.Display(InfoPopUp, "testing")

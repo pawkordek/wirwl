@@ -56,11 +56,13 @@ func (popUp *MsgPopUp) setType(t string) {
 func (popUp *MsgPopUp) Display(popUpType string, msg string) {
 	popUp.setType(popUpType)
 	popUp.msg.Text = msg
+	popUp.Canvas.Focus(popUp)
 	popUp.Show()
 }
 
 func (popUp *MsgPopUp) TypedKey(key *fyne.KeyEvent) {
 	popUp.Hide()
+	popUp.Canvas.Unfocus()
 }
 
 func (popUp *MsgPopUp) FocusGained() {
