@@ -4,26 +4,26 @@ import (
 	"errors"
 	"fyne.io/fyne"
 	"fyne.io/fyne/theme"
-	"fyne.io/fyne/widget"
+	fyneWidget "fyne.io/fyne/widget"
 	"log"
 	"sort"
 	"wirwl/internal/data"
-	widget2 "wirwl/internal/widget"
+	"wirwl/internal/widget"
 )
 
 type App struct {
 	fyneApp             fyne.App
 	mainWindow          fyne.Window
-	addEntryTypePopUp   *widget.PopUp
-	msgPopUp            *widget2.MsgPopUp
-	confirmationDialog  *widget2.ConfirmationDialog
-	entriesTabContainer *widget.TabContainer
+	addEntryTypePopUp   *fyneWidget.PopUp
+	msgPopUp            *widget.MsgPopUp
+	confirmationDialog  *widget.ConfirmationDialog
+	entriesTabContainer *fyneWidget.TabContainer
 	currentEntryNr      int
 	entries             map[string][]data.Entry
-	entriesLabels       map[string][]widget.Label
+	entriesLabels       map[string][]fyneWidget.Label
 	dataProvider        data.Provider
 	lastKeyPress        fyne.KeyName
-	typeInput           *widget2.Input
+	typeInput           *widget.Input
 }
 
 func NewApp(entriesPath string) *App {
@@ -50,12 +50,12 @@ func (app *App) prepareMainWindow() {
 }
 
 func (app *App) prepareAddEntryTypePopUp() {
-	app.typeInput = widget2.NewInput()
+	app.typeInput = widget.NewInput()
 	app.typeInput.SetOnEnterPressed(app.onTypeInputEnterPressed)
-	popUpTitle := widget.NewLabel("Add new entry type")
+	popUpTitle := fyneWidget.NewLabel("Add new entry type")
 	popUpTitle.Alignment = fyne.TextAlignCenter
-	popUpContent := widget.NewVBox(popUpTitle, app.typeInput)
-	app.addEntryTypePopUp = widget.NewModalPopUp(popUpContent, app.mainWindow.Canvas())
+	popUpContent := fyneWidget.NewVBox(popUpTitle, app.typeInput)
+	app.addEntryTypePopUp = fyneWidget.NewModalPopUp(popUpContent, app.mainWindow.Canvas())
 	app.addEntryTypePopUp.Hide()
 }
 
@@ -66,7 +66,7 @@ func (app *App) onTypeInputEnterPressed() {
 	app.addEntryTypePopUp.Hide()
 	app.typeInput.Text = ""
 	if err != nil {
-		app.msgPopUp.Display(widget2.ErrorPopUp, err.Error())
+		app.msgPopUp.Display(widget.ErrorPopUp, err.Error())
 	} else {
 		for _, tab := range app.entriesTabContainer.Items {
 			if tab.Text == currentTabText {
@@ -79,12 +79,12 @@ func (app *App) onTypeInputEnterPressed() {
 }
 
 func (app *App) prepareMainWindowContent() {
-	app.mainWindow.SetContent(widget.NewVBox(app.entriesTabContainer))
+	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTabContainer))
 }
 
 func (app *App) prepareDialogs() {
-	app.msgPopUp = widget2.NewMsgPopUp(app.mainWindow.Canvas())
-	app.confirmationDialog = widget2.NewConfirmationDialog(app.mainWindow.Canvas())
+	app.msgPopUp = widget.NewMsgPopUp(app.mainWindow.Canvas())
+	app.confirmationDialog = widget.NewConfirmationDialog(app.mainWindow.Canvas())
 	app.confirmationDialog.OnConfirm = app.deleteCurrentEntryType
 }
 
@@ -98,7 +98,7 @@ func (app *App) deleteCurrentEntryType() {
 func (app *App) loadEntriesTabContainer() {
 	tabs := app.loadEntriesTypesTabsWithTheirContent()
 	if len(tabs) != 0 {
-		app.entriesTabContainer = widget.NewTabContainer(tabs...)
+		app.entriesTabContainer = fyneWidget.NewTabContainer(tabs...)
 	}
 }
 
@@ -118,21 +118,21 @@ func (app *App) loadEntries() {
 	}
 }
 
-func (app *App) loadEntriesTypesTabsWithTheirContent() []*widget.TabItem {
-	var tabs []*widget.TabItem
+func (app *App) loadEntriesTypesTabsWithTheirContent() []*fyneWidget.TabItem {
+	var tabs []*fyneWidget.TabItem
 	if len(app.entries) != 0 {
-		app.entriesLabels = make(map[string][]widget.Label, len(app.entries))
+		app.entriesLabels = make(map[string][]fyneWidget.Label, len(app.entries))
 		orderedEntriesKeys := app.getOrderedEntriesKeys()
 		for _, entryType := range orderedEntriesKeys {
 			labels := app.getEntriesNamesAsLabels(app.entries[entryType])
 			app.entriesLabels[entryType] = labels
 			labelsAsCanvasObjects := app.getLabelsAsCanvasObjects(labels)
-			tab := widget.NewTabItem(entryType, widget.NewVBox(labelsAsCanvasObjects...))
+			tab := fyneWidget.NewTabItem(entryType, fyneWidget.NewVBox(labelsAsCanvasObjects...))
 			tabs = append(tabs, tab)
 		}
 		return tabs
 	} else {
-		tab := widget.NewTabItem("No entries", widget.NewVBox())
+		tab := fyneWidget.NewTabItem("No entries", fyneWidget.NewVBox())
 		return append(tabs, tab)
 	}
 }
@@ -146,7 +146,7 @@ func (app *App) getOrderedEntriesKeys() []string {
 	return orderedEntriesKeys
 }
 
-func (app *App) getLabelsAsCanvasObjects(labels []widget.Label) []fyne.CanvasObject {
+func (app *App) getLabelsAsCanvasObjects(labels []fyneWidget.Label) []fyne.CanvasObject {
 	objects := make([]fyne.CanvasObject, len(labels))
 	for i, _ := range labels {
 		objects[i] = &labels[i]
@@ -154,10 +154,10 @@ func (app *App) getLabelsAsCanvasObjects(labels []widget.Label) []fyne.CanvasObj
 	return objects
 }
 
-func (app *App) getEntriesNamesAsLabels(entries []data.Entry) []widget.Label {
-	var labels []widget.Label
+func (app *App) getEntriesNamesAsLabels(entries []data.Entry) []fyneWidget.Label {
+	var labels []fyneWidget.Label
 	for _, entry := range entries {
-		label := widget.NewLabel(entry.Title)
+		label := fyneWidget.NewLabel(entry.Title)
 		labels = append(labels, *label)
 	}
 	return labels
@@ -198,9 +198,9 @@ func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 	} else if event.Name == fyne.KeyS {
 		err := app.saveChangesToDb()
 		if err != nil {
-			app.msgPopUp.Display(widget2.ErrorPopUp, err.Error())
+			app.msgPopUp.Display(widget.ErrorPopUp, err.Error())
 		} else {
-			app.msgPopUp.Display(widget2.SuccessPopUp, "Changes saved.")
+			app.msgPopUp.Display(widget.SuccessPopUp, "Changes saved.")
 		}
 	}
 
@@ -215,7 +215,7 @@ func (app *App) handleTabRelatedKeyPress(event *fyne.KeyEvent) {
 		if len(app.entriesTabContainer.Items) > 1 {
 			app.confirmationDialog.Display("Are you sure you want to delete entry type '" + app.entriesTabContainer.CurrentTab().Text + "'?")
 		} else {
-			app.msgPopUp.Display(widget2.WarningPopUp, "You cannot remove the only remaining entry type!")
+			app.msgPopUp.Display(widget.WarningPopUp, "You cannot remove the only remaining entry type!")
 		}
 	}
 }
