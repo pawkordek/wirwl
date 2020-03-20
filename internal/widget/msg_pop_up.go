@@ -55,7 +55,7 @@ func (popUp *MsgPopUp) setType(t string) {
 
 func (popUp *MsgPopUp) Display(popUpType string, msg string) {
 	popUp.setType(popUpType)
-	popUp.msg.Text = msg
+	popUp.msg.SetText(msg)
 	popUp.Canvas.Focus(popUp)
 	popUp.Show()
 }
