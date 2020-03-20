@@ -27,6 +27,7 @@ func NewMsgPopUp(canvas fyne.Canvas) *MsgPopUp {
 	content := widget.NewVBox(title, msg)
 	popUp := &MsgPopUp{widget.NewModalPopUp(content, canvas), title, msg, false}
 	popUp.ExtendBaseWidget(popUp)
+	popUp.Hide()
 	return popUp
 }
 

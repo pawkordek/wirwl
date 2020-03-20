@@ -7,6 +7,11 @@ import (
 	"testing"
 )
 
+func TestThatNewPopUpIsHidden(t *testing.T) {
+	popUp := NewMsgPopUp(test.Canvas())
+	assert.Equal(t, true, popUp.Hidden)
+}
+
 func TestThatTypeGetsSet(t *testing.T) {
 	popUp := NewMsgPopUp(test.Canvas())
 	assert.Equal(t, popUp.title.Text, "")

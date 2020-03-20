@@ -84,10 +84,8 @@ func (app *App) prepareMainWindowContent() {
 
 func (app *App) prepareDialogs() {
 	app.msgPopUp = widget2.NewMsgPopUp(app.mainWindow.Canvas())
-	app.msgPopUp.Hide()
 	app.confirmationDialog = widget2.NewConfirmationDialog(app.mainWindow.Canvas())
 	app.confirmationDialog.OnConfirm = app.deleteCurrentEntryType
-	app.confirmationDialog.Hide()
 }
 
 func (app *App) deleteCurrentEntryType() {
