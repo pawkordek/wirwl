@@ -34,3 +34,14 @@ func TestThatDisplayedMessageHasYesOrNoMessageAppended(t *testing.T) {
 	dialog.Display("Some message.")
 	assert.Equal(t, "Some message. (y)es or (n)o?", dialog.Msg())
 }
+
+func TestThatItIsNotPossibleToExitDialogWithOtherButtonThanYOrN(t *testing.T) {
+	dialog := NewConfirmationDialog(test.Canvas())
+	dialog.Display("message")
+	SimulateKeyPress(dialog, fyne.KeyE)
+	SimulateKeyPress(dialog, fyne.KeyI)
+	SimulateKeyPress(dialog, fyne.KeyA)
+	SimulateKeyPress(dialog, fyne.Key1)
+	assert.Equal(t, true, dialog.Visible())
+	assert.Equal(t, true, dialog.Focused())
+}
