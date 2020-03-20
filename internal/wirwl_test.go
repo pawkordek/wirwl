@@ -149,14 +149,14 @@ func TestThatItIsNotPossibleToAddTheSameEntryTypeTwice(t *testing.T) {
 	assert.Equal(t, 4, len(app.entriesTabContainer.Items))
 }
 
-func TestThatPressingAnyKeyClosesErrorPopUp(t *testing.T) {
+func TestThatPressingAnyKeyClosesMessagePopUp(t *testing.T) {
 	app := NewApp(exampleDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.msgPopUp.Show()
-	app.SimulateKeyPress(fyne.KeyT)
+	widget.SimulateKeyPress(app.msgPopUp, fyne.KeyT)
 	assert.Equal(t, true, app.msgPopUp.Hidden)
 	app.msgPopUp.Show()
-	app.SimulateKeyPress(fyne.KeyReturn)
+	widget.SimulateKeyPress(app.msgPopUp, fyne.KeyReturn)
 	assert.Equal(t, true, app.msgPopUp.Hidden)
 }
 

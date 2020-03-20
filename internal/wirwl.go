@@ -191,9 +191,6 @@ func (app *App) getCurrentTabText() string {
 }
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
-	if app.msgPopUp.Visible() {
-		app.msgPopUp.Hide()
-	}
 	if event.Name == fyne.KeyL {
 		app.selectNextTab()
 	} else if event.Name == fyne.KeyH {
