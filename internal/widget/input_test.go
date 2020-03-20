@@ -10,10 +10,10 @@ func TestThatFunctionGetsCalledOnEnterPressed(t *testing.T) {
 	functionExecuted := false
 	input := NewInput()
 	input.SetOnEnterPressed(func() { functionExecuted = true })
-	input.SimulateKeyPress(fyne.KeyEnter)
+	SimulateKeyPress(input, fyne.KeyEnter)
 	assert.Equal(t, true, functionExecuted)
 	functionExecuted = false
-	input.SimulateKeyPress(fyne.KeyReturn)
+	SimulateKeyPress(input, fyne.KeyReturn)
 	assert.Equal(t, true, functionExecuted)
 }
 
@@ -24,7 +24,3 @@ func TestThatTypingWorks(t *testing.T) {
 	input.Type("some value")
 	assert.Equal(t, "some value", input.Text)
 }
-
-
-
-
