@@ -31,7 +31,6 @@ func NewFormDialog(canvas fyne.Canvas, title string, items ...string) *FormDialo
 	form := widget.NewForm()
 	for _, item := range items {
 		input := NewInput()
-		input.CreateRenderer()
 		inputs[item] = input
 		formItem := widget.NewFormItem(item, input)
 		form.AppendItem(formItem)

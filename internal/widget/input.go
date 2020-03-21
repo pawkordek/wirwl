@@ -38,6 +38,7 @@ func (input *Input) CreateRenderer() fyne.WidgetRenderer {
 func NewInput() *Input {
 	input := &Input{
 		Entry:            widget.Entry{},
+		bgRenderer:       &backgroundRenderer{},
 		OnEnterPressed:   func() {},
 		OnTypedKey:       func(key *fyne.KeyEvent) {},
 		firstRuneIgnored: false,
