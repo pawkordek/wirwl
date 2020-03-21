@@ -19,7 +19,7 @@ type FocusableDialog struct {
 func NewFocusableDialog(canvas fyne.Canvas, content ...fyne.CanvasObject) *FocusableDialog {
 	title := widget.NewLabel("")
 	title.Alignment = fyne.TextAlignCenter
-	content = append(content, title)
+	content = append([]fyne.CanvasObject{title}, content...)
 	popupContent := widget.NewVBox(content...)
 	dialog := &FocusableDialog{
 		PopUp:   widget.NewModalPopUp(popupContent, canvas),

@@ -35,3 +35,9 @@ func TestThatPressingAnyKeyHidesFocusableDialog(t *testing.T) {
 	assert.Equal(t, true, dialog.Hidden)
 	assert.Equal(t, false, dialog.Focused())
 }
+
+func TestThatTitleIsDisplayedFirst(t *testing.T) {
+	label := widget.NewLabel("some title")
+	dialog := NewFocusableDialog(test.Canvas(), label)
+	assert.Equal(t, dialog.Content.(*widget.Box).Children[1], label)
+}
