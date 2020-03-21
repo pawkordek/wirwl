@@ -24,3 +24,8 @@ func TestThatTypingWorks(t *testing.T) {
 	input.Type("some value")
 	assert.Equal(t, "some value", input.Text)
 }
+
+func TestThatFunctionsAreNotNil(t *testing.T) {
+	input := NewInput()
+	assert.NotNil(t, input.OnEnterPressed)
+}

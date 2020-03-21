@@ -12,7 +12,11 @@ type Input struct {
 }
 
 func NewInput() *Input {
-	input := &Input{}
+	input := &Input{
+		Entry:            widget.Entry{},
+		OnEnterPressed:   func() {},
+		firstRuneIgnored: false,
+	}
 	input.ExtendBaseWidget(input)
 	return input
 }
