@@ -8,6 +8,7 @@ import (
 type Input struct {
 	widget.Entry
 	OnEnterPressed   func()
+	OnTypedKey       func(key *fyne.KeyEvent)
 	firstRuneIgnored bool
 }
 
@@ -15,6 +16,7 @@ func NewInput() *Input {
 	input := &Input{
 		Entry:            widget.Entry{},
 		OnEnterPressed:   func() {},
+		OnTypedKey:       func(key *fyne.KeyEvent) {},
 		firstRuneIgnored: false,
 	}
 	input.ExtendBaseWidget(input)
@@ -23,6 +25,10 @@ func NewInput() *Input {
 
 func (input *Input) SetOnEnterPressed(function func()) {
 	input.OnEnterPressed = function
+}
+
+func (input *Input) SetOnTypedKey(function func(key *fyne.KeyEvent)) {
+	input.OnTypedKey = function
 }
 
 func (input *Input) TypedKey(key *fyne.KeyEvent) {
@@ -36,6 +42,7 @@ func (input *Input) TypedKey(key *fyne.KeyEvent) {
 	if key.Name == fyne.KeyReturn || key.Name == fyne.KeyEnter {
 		input.OnEnterPressed()
 	}
+	input.OnTypedKey(key)
 }
 
 func (input *Input) TypedRune(r rune) {
