@@ -6,10 +6,8 @@ import (
 )
 
 type MsgPopUp struct {
-	*widget.PopUp
-	title   *widget.Label
-	msg     *widget.Label
-	focused bool
+	*FocusableDialog
+	msg *widget.Label
 }
 
 const (
@@ -20,12 +18,12 @@ const (
 )
 
 func NewMsgPopUp(canvas fyne.Canvas) *MsgPopUp {
-	title := widget.NewLabel("")
-	title.Alignment = fyne.TextAlignCenter
 	msg := widget.NewLabel("")
 	msg.Alignment = fyne.TextAlignCenter
-	content := widget.NewVBox(title, msg)
-	popUp := &MsgPopUp{widget.NewModalPopUp(content, canvas), title, msg, false}
+	popUp := &MsgPopUp{
+		FocusableDialog: NewFocusableDialog(canvas, msg),
+		msg:             msg,
+	}
 	popUp.ExtendBaseWidget(popUp)
 	popUp.Hide()
 	return popUp
@@ -59,25 +57,4 @@ func (popUp *MsgPopUp) Display(popUpType string, msg string) {
 	popUp.msg.SetText(msg)
 	popUp.Canvas.Focus(popUp)
 	popUp.Show()
-}
-
-func (popUp *MsgPopUp) TypedKey(key *fyne.KeyEvent) {
-	popUp.Hide()
-	popUp.Canvas.Unfocus()
-}
-
-func (popUp *MsgPopUp) FocusGained() {
-	popUp.focused = true
-}
-
-func (popUp *MsgPopUp) FocusLost() {
-	popUp.focused = false
-}
-
-func (popUp *MsgPopUp) Focused() bool {
-	return popUp.focused
-}
-
-func (popUp *MsgPopUp) TypedRune(r rune) {
-	//Do nothing as inputting text handling is not needed, only key presses
 }
