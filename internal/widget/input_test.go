@@ -2,6 +2,8 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	"fyne.io/fyne/test"
+	"fyne.io/fyne/theme"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -42,4 +44,15 @@ func TestThatFunctionsAreNotNil(t *testing.T) {
 	input := NewInput()
 	assert.NotNil(t, input.OnEnterPressed)
 	assert.NotNil(t, input.OnTypedKey)
+}
+
+func TestMarkingAndUnmarking(t *testing.T) {
+	input := NewInput()
+	//Input needs to be placed into a test window, otherwise renderer doesn't work properly and marking sets background color again
+	test.NewApp().NewWindow("").SetContent(input)
+	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.BackgroundColor())
+	input.Mark()
+	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.FocusColor())
+	input.Unmark()
+	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.BackgroundColor())
 }

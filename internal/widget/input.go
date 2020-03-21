@@ -2,14 +2,37 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
+	"image/color"
 )
 
 type Input struct {
 	widget.Entry
+	bgRenderer       *backgroundRenderer
 	OnEnterPressed   func()
 	OnTypedKey       func(key *fyne.KeyEvent)
 	firstRuneIgnored bool
+}
+
+type backgroundRenderer struct {
+	fyne.WidgetRenderer
+	color color.Color
+}
+
+func (renderer *backgroundRenderer) BackgroundColor() color.Color {
+	return renderer.color
+}
+
+func (renderer *backgroundRenderer) SetColor(color color.Color) {
+	renderer.color = color
+}
+
+func (input *Input) CreateRenderer() fyne.WidgetRenderer {
+	renderer := input.Entry.CreateRenderer()
+	bgRenderer := &backgroundRenderer{renderer, theme.BackgroundColor()}
+	input.bgRenderer = bgRenderer
+	return bgRenderer
 }
 
 func NewInput() *Input {
@@ -57,4 +80,17 @@ func (input *Input) TypedRune(r rune) {
 func (input *Input) FocusGained() {
 	input.firstRuneIgnored = false
 	input.Entry.FocusGained()
+}
+
+func (input *Input) setBgColor(color color.Color) {
+	input.bgRenderer.SetColor(color)
+	input.Refresh()
+}
+
+func (input *Input) Mark() {
+	input.setBgColor(theme.FocusColor())
+}
+
+func (input *Input) Unmark() {
+	input.setBgColor(theme.BackgroundColor())
 }
