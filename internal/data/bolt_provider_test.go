@@ -69,4 +69,5 @@ func TestThatSavingEmptyEntriesSliceCreatesTable(t *testing.T) {
 	}
 	_, err = dataProvider.LoadEntriesFromDb("new table")
 	assert.Nil(t, err)
+	DeleteTestDb()
 }
