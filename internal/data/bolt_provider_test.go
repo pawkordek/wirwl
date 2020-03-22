@@ -44,6 +44,7 @@ func TestDbOperationsOnEntriesTypes(t *testing.T) {
 	}
 	assert.Equal(t, types[0], entriesTypes[0])
 	assert.Equal(t, types[1], entriesTypes[1])
+	assert.Equal(t, types[2], entriesTypes[2])
 	DeleteTestDb()
 }
 

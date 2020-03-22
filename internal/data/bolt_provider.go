@@ -80,7 +80,7 @@ func (provider *BoltProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
 	if err != nil {
 		return nil, err
 	}
-	var entries [] Entry
+	var entries []Entry
 	err = provider.db.View(func(transaction *bolt.Tx) error {
 		entries, err = getEntriesDataFromTable(transaction, table)
 		return err
@@ -113,7 +113,7 @@ func getEntriesDataFromTable(transaction *bolt.Tx, table string) ([]Entry, error
 	return entries, err
 }
 
-func (provider *BoltProvider) SaveEntriesTypesToDb(entriesTypes []string) error {
+func (provider *BoltProvider) SaveEntriesTypesToDb(entriesTypes []EntryType) error {
 	err := provider.openDb()
 	if err != nil {
 		return err
@@ -127,22 +127,30 @@ func (provider *BoltProvider) SaveEntriesTypesToDb(entriesTypes []string) error 
 	return provider.db.Close()
 }
 
-func (provider *BoltProvider) saveEntryTypeToTable(entryType string) error {
-	return provider.db.Update(func(transaction *bolt.Tx) error {
+func (provider *BoltProvider) saveEntryTypeToTable(entryType EntryType) error {
+	typeAsJSON, err := json.Marshal(entryType)
+	if err != nil {
+		return err
+	}
+	err = provider.db.Update(func(transaction *bolt.Tx) error {
 		bucket, err := transaction.CreateBucketIfNotExists([]byte(entriesTypesTableName))
 		if err != nil {
 			return err
 		}
-		return bucket.Put([]byte(entryType), []byte(entryType))
+		return bucket.Put([]byte(entryType.Name), typeAsJSON)
 	})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (provider *BoltProvider) LoadEntriesTypesFromDb() ([]string, error) {
+func (provider *BoltProvider) LoadEntriesTypesFromDb() ([]EntryType, error) {
 	err := provider.openDb()
 	if err != nil {
 		return nil, err
 	}
-	var types []string
+	var types []EntryType
 	err = provider.db.View(func(transaction *bolt.Tx) error {
 		types, err = getEntriesTypesFromTable(transaction)
 		return err
@@ -157,14 +165,19 @@ func (provider *BoltProvider) LoadEntriesTypesFromDb() ([]string, error) {
 	return types, nil
 }
 
-func getEntriesTypesFromTable(transaction *bolt.Tx) ([]string, error) {
-	var types []string
+func getEntriesTypesFromTable(transaction *bolt.Tx) ([]EntryType, error) {
+	var types []EntryType
 	bucket := transaction.Bucket([]byte(entriesTypesTableName))
 	if bucket == nil {
 		return types, nil
 	}
 	err := bucket.ForEach(func(key, value []byte) error {
-		types = append(types, string(key))
+		var entryType EntryType
+		err := json.Unmarshal(value, &entryType)
+		if err != nil {
+			return err
+		}
+		types = append(types, entryType)
 		return nil
 	})
 	return types, err

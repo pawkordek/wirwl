@@ -20,6 +20,7 @@ type App struct {
 	entriesTabContainer *fyneWidget.TabContainer
 	currentEntryNr      int
 	entries             map[string][]data.Entry
+	entriesTypes        map[string]data.EntryType
 	entriesLabels       map[string][]fyneWidget.Label
 	dataProvider        data.Provider
 	lastKeyPress        fyne.KeyName
@@ -104,18 +105,31 @@ func (app *App) loadEntriesTabContainer() {
 
 func (app *App) loadEntries() {
 	app.entries = make(map[string][]data.Entry)
+	app.entriesTypes = make(map[string]data.EntryType)
 	entriesTypes, err := app.dataProvider.LoadEntriesTypesFromDb()
 	if err != nil {
 		log.Fatal(err)
 	}
-	sort.Strings(entriesTypes)
 	for _, entryType := range entriesTypes {
-		entries, err := app.dataProvider.LoadEntriesFromDb(entryType)
+		app.entriesTypes[entryType.Name] = entryType
+	}
+	typesNames := app.getEntriesTypesNames(entriesTypes)
+	sort.Strings(typesNames)
+	for _, typeName := range typesNames {
+		entries, err := app.dataProvider.LoadEntriesFromDb(typeName)
 		if err != nil {
 			log.Fatal(err)
 		}
-		app.entries[entryType] = entries
+		app.entries[typeName] = entries
 	}
+}
+
+func (app *App) getEntriesTypesNames(entriesTypes []data.EntryType) []string {
+	var typesNames = make([]string, len(entriesTypes), len(entriesTypes))
+	for i, entryType := range entriesTypes {
+		typesNames[i] = entryType.Name
+	}
+	return typesNames
 }
 
 func (app *App) loadEntriesTypesTabsWithTheirContent() []*fyneWidget.TabItem {
@@ -248,8 +262,12 @@ func (app *App) changeTab(byHowManyTabs int) {
 }
 
 func (app *App) addNewTab(name string) error {
-	if _, exists := app.entries[name]; !exists {
+	if _, exists := app.entriesTypes[name]; !exists {
 		app.entries[name] = nil
+		app.entriesTypes[name] = data.EntryType{
+			Name:       name,
+			ImageQuery: "",
+		}
 		app.loadEntriesTabContainer()
 		app.prepareMainWindowContent()
 		return nil
@@ -259,8 +277,8 @@ func (app *App) addNewTab(name string) error {
 }
 
 func (app *App) saveChangesToDb() error {
-	var types []string
-	for entryType, _ := range app.entries {
+	var types []data.EntryType
+	for _, entryType := range app.entriesTypes {
 		types = append(types, entryType)
 	}
 	err := app.dataProvider.SaveEntriesTypesToDb(types)

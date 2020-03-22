@@ -11,11 +11,20 @@ const ExampleDbPath = "../../test/exampleDb.db"
 const TestDbPath = "../../test/testDb.db"
 const EmptyDbPath = "../../test/emptyDb.db"
 
-func GetEntriesTypes() []string {
-	return []string{
-		"comics",
-		"music",
-		"videos",
+func GetEntriesTypes() []EntryType {
+	return []EntryType{
+		{
+			Name:       "comics",
+			ImageQuery: "comic cover",
+		},
+		{
+			Name:       "music",
+			ImageQuery: "album cover",
+		},
+		{
+			Name:       "videos",
+			ImageQuery: "video cover",
+		},
 	}
 }
 
@@ -183,10 +192,10 @@ func (provider *AlwaysFailingProvider) LoadEntriesFromDb(table string) ([]Entry,
 	return nil, AlwaysFailingProviderError
 }
 
-func (provider *AlwaysFailingProvider) SaveEntriesTypesToDb(entriesTypes []string) error {
+func (provider *AlwaysFailingProvider) SaveEntriesTypesToDb(entriesTypes []EntryType) error {
 	return AlwaysFailingProviderError
 }
 
-func (provider *AlwaysFailingProvider) LoadEntriesTypesFromDb() ([]string, error) {
+func (provider *AlwaysFailingProvider) LoadEntriesTypesFromDb() ([]EntryType, error) {
 	return nil, AlwaysFailingProviderError
 }
