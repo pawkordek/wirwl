@@ -33,6 +33,7 @@ func (provider *BoltProvider) SaveEntriesToDb(table string, entries []Entry) err
 	if err != nil {
 		return err
 	}
+	err = provider.deleteTableIfExists(table)
 	if len(entries) == 0 {
 		err = provider.createNewTable(table)
 	} else {
@@ -73,6 +74,19 @@ func (provider *BoltProvider) saveEntryToTable(table string, entry Entry) error 
 		return err
 	}
 	return nil
+}
+
+func (provider *BoltProvider) deleteTableIfExists(table string) error {
+	return provider.db.Update(func(transaction *bolt.Tx) error {
+		bucket := transaction.Bucket([]byte(table))
+		if bucket != nil {
+			err := transaction.DeleteBucket([]byte(table))
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
 
 func (provider *BoltProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
@@ -118,6 +132,7 @@ func (provider *BoltProvider) SaveEntriesTypesToDb(entriesTypes []EntryType) err
 	if err != nil {
 		return err
 	}
+	err = provider.deleteTableIfExists(entriesTypesTableName)
 	for _, entryType := range entriesTypes {
 		err := provider.saveEntryTypeToTable(entryType)
 		if err != nil {

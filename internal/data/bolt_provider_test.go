@@ -71,3 +71,35 @@ func TestThatSavingEmptyEntriesSliceCreatesTable(t *testing.T) {
 	assert.Nil(t, err)
 	DeleteTestDb()
 }
+
+func TestThatWhenSavingEntriesPreviousDataInDbIsRemoved(t *testing.T) {
+	dataProvider := NewBoltProvider(TestDbPath)
+	entriesToSave := GetTestEntriesToSave()
+	err := dataProvider.SaveEntriesToDb("entries", entriesToSave)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = dataProvider.SaveEntriesToDb("entries", []Entry{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	loadedEntries, err := dataProvider.LoadEntriesFromDb("entries")
+	assert.Empty(t, loadedEntries)
+	DeleteTestDb()
+}
+
+func TestThatWhenSavingEntriesTypesPreviousDataInDbIsRemoved(t *testing.T) {
+	dataProvider := NewBoltProvider(TestDbPath)
+	typesToSave := GetEntriesTypes()
+	err := dataProvider.SaveEntriesTypesToDb(typesToSave)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = dataProvider.SaveEntriesTypesToDb([]EntryType{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	loadedTypes, err := dataProvider.LoadEntriesTypesFromDb()
+	assert.Empty(t, loadedTypes)
+	DeleteTestDb()
+}
