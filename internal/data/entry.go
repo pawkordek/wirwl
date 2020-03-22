@@ -12,3 +12,8 @@ type Entry struct {
 	Comment                    string
 	MediaType                  string
 }
+
+type EntryType struct {
+	Name       string
+	ImageQuery string
+}
