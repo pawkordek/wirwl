@@ -17,7 +17,7 @@ type App struct {
 	addEntryTypeDialog  *widget.FormDialog
 	msgDialog           *widget.MsgDialog
 	confirmationDialog  *widget.ConfirmationDialog
-	entriesTabContainer *fyneWidget.TabContainer
+	entriesTypesTabs    *fyneWidget.TabContainer
 	currentEntryNr      int
 	entries             map[string][]data.Entry
 	entriesTypes        map[string]data.EntryType
@@ -55,9 +55,9 @@ func (app *App) onEnterPressedInAddEntryTypeDialog() {
 	if err != nil {
 		app.msgDialog.Display(widget.ErrorPopUp, err.Error())
 	} else {
-		for _, tab := range app.entriesTabContainer.Items {
+		for _, tab := range app.entriesTypesTabs.Items {
 			if tab.Text == currentTabText {
-				app.entriesTabContainer.SelectTab(tab)
+				app.entriesTypesTabs.SelectTab(tab)
 				app.updateCurrentlySelectedEntry()
 				break
 			}
@@ -66,7 +66,7 @@ func (app *App) onEnterPressedInAddEntryTypeDialog() {
 }
 
 func (app *App) prepareMainWindowContent() {
-	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTabContainer))
+	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTypesTabs))
 }
 
 func (app *App) prepareDialogs() {
@@ -80,11 +80,11 @@ func (app *App) prepareDialogs() {
 }
 
 func (app *App) deleteCurrentEntryType() {
-	currentTab := app.entriesTabContainer.CurrentTab()
+	currentTab := app.entriesTypesTabs.CurrentTab()
 	delete(app.entries, currentTab.Text)
 	delete(app.entriesTypes, currentTab.Text)
 	delete(app.entriesLabels, currentTab.Text)
-	app.entriesTabContainer.Remove(currentTab)
+	app.entriesTypesTabs.Remove(currentTab)
 }
 
 func (app *App) applyChangesToCurrentEntryType() {
@@ -97,17 +97,17 @@ func (app *App) applyChangesToCurrentEntryType() {
 	app.entriesTypes[newTypeName] = currentEntryType
 	delete(app.entriesTypes, oldTypeName)
 	delete(app.entries, oldTypeName)
-	currentTabIndex := app.entriesTabContainer.CurrentTabIndex()
+	currentTabIndex := app.entriesTypesTabs.CurrentTabIndex()
 	app.loadEntriesTabContainer()
 	app.prepareMainWindowContent()
-	app.entriesTabContainer.SelectTabIndex(currentTabIndex)
+	app.entriesTypesTabs.SelectTabIndex(currentTabIndex)
 	app.updateCurrentlySelectedEntry()
 }
 
 func (app *App) loadEntriesTabContainer() {
 	tabs := app.loadEntriesTypesTabsWithTheirContent()
 	if len(tabs) != 0 {
-		app.entriesTabContainer = fyneWidget.NewTabContainer(tabs...)
+		app.entriesTypesTabs = fyneWidget.NewTabContainer(tabs...)
 	}
 }
 
@@ -207,7 +207,7 @@ func (app *App) updateCurrentlySelectedEntry() {
 }
 
 func (app *App) getCurrentTabText() string {
-	return app.entriesTabContainer.CurrentTab().Text
+	return app.entriesTypesTabs.CurrentTab().Text
 }
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
@@ -233,8 +233,8 @@ func (app *App) handleTabRelatedKeyPress(event *fyne.KeyEvent) {
 	if event.Name == fyne.KeyI {
 		app.displayDialogForAddingNewEntryType()
 	} else if event.Name == fyne.KeyD {
-		if len(app.entriesTabContainer.Items) > 1 {
-			app.confirmationDialog.Display("Are you sure you want to delete entry type '" + app.entriesTabContainer.CurrentTab().Text + "'?")
+		if len(app.entriesTypesTabs.Items) > 1 {
+			app.confirmationDialog.Display("Are you sure you want to delete entry type '" + app.entriesTypesTabs.CurrentTab().Text + "'?")
 		} else {
 			app.msgDialog.Display(widget.WarningPopUp, "You cannot remove the only remaining entry type!")
 		}
@@ -255,7 +255,7 @@ func (app *App) editCurrentEntryType() {
 }
 
 func (app *App) selectNextTab() {
-	if app.entriesTabContainer.CurrentTabIndex() < len(app.entries)-1 {
+	if app.entriesTypesTabs.CurrentTabIndex() < len(app.entries)-1 {
 		app.changeTab(1)
 	} else {
 		app.selectTab(0)
@@ -263,20 +263,20 @@ func (app *App) selectNextTab() {
 }
 
 func (app *App) selectPreviousTab() {
-	if app.entriesTabContainer.CurrentTabIndex() > 0 {
+	if app.entriesTypesTabs.CurrentTabIndex() > 0 {
 		app.changeTab(-1)
 	} else {
-		app.selectTab(len(app.entriesTabContainer.Items) - 1)
+		app.selectTab(len(app.entriesTypesTabs.Items) - 1)
 	}
 }
 
 func (app *App) selectTab(tabNum int) {
-	app.entriesTabContainer.SelectTabIndex(tabNum)
+	app.entriesTypesTabs.SelectTabIndex(tabNum)
 	app.updateCurrentlySelectedEntry()
 }
 
 func (app *App) changeTab(byHowManyTabs int) {
-	currentIndex := app.entriesTabContainer.CurrentTabIndex()
+	currentIndex := app.entriesTypesTabs.CurrentTabIndex()
 	newIndex := currentIndex + byHowManyTabs
 	app.selectTab(newIndex)
 }
