@@ -95,6 +95,7 @@ func (app *App) prepareDialogs() {
 func (app *App) deleteCurrentEntryType() {
 	currentTab := app.entriesTabContainer.CurrentTab()
 	delete(app.entries, currentTab.Text)
+	delete(app.entriesTypes, currentTab.Text)
 	delete(app.entriesLabels, currentTab.Text)
 	app.entriesTabContainer.Remove(currentTab)
 }

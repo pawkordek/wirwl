@@ -277,6 +277,20 @@ func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) 
 	data.DeleteFile(deletionTestDbPath)
 }
 
+func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) {
+	data.CopyFile(exampleDbPath, deletionTestDbPath)
+	app := NewApp(deletionTestDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyD)
+	widget.SimulateKeyPress(app.confirmationDialog, fyne.KeyY)
+	app.SimulateKeyPress(fyne.KeyS)
+	app2 := NewApp(deletionTestDbPath)
+	app2.LoadAndDisplay(fyneTest.NewApp())
+	assert.Equal(t, "music", app2.entriesTabContainer.CurrentTab().Text)
+	data.DeleteFile(deletionTestDbPath)
+}
+
 func (app *App) SimulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
 	onTypedKey := app.mainWindow.Canvas().OnTypedKey()
