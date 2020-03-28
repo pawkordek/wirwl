@@ -5,7 +5,7 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-type MsgPopUp struct {
+type MsgDialog struct {
 	*FocusableDialog
 	msg *widget.Label
 }
@@ -17,10 +17,10 @@ const (
 	ErrorPopUp   = "error"
 )
 
-func NewMsgPopUp(canvas fyne.Canvas) *MsgPopUp {
+func NewMsgPopUp(canvas fyne.Canvas) *MsgDialog {
 	msg := widget.NewLabel("")
 	msg.Alignment = fyne.TextAlignCenter
-	popUp := &MsgPopUp{
+	popUp := &MsgDialog{
 		FocusableDialog: NewFocusableDialog(canvas, msg),
 		msg:             msg,
 	}
@@ -29,15 +29,15 @@ func NewMsgPopUp(canvas fyne.Canvas) *MsgPopUp {
 	return popUp
 }
 
-func (popUp *MsgPopUp) Title() string {
+func (popUp *MsgDialog) Title() string {
 	return popUp.title.Text
 }
 
-func (popUp *MsgPopUp) Msg() string {
+func (popUp *MsgDialog) Msg() string {
 	return popUp.msg.Text
 }
 
-func (popUp *MsgPopUp) setType(t string) {
+func (popUp *MsgDialog) setType(t string) {
 	switch t {
 	case InfoPopUp:
 		popUp.title.SetText("INFO")
@@ -52,7 +52,7 @@ func (popUp *MsgPopUp) setType(t string) {
 	}
 }
 
-func (popUp *MsgPopUp) Display(popUpType string, msg string) {
+func (popUp *MsgDialog) Display(popUpType string, msg string) {
 	popUp.setType(popUpType)
 	popUp.msg.SetText(msg)
 	popUp.Canvas.Focus(popUp)

@@ -15,7 +15,7 @@ type App struct {
 	fyneApp             fyne.App
 	mainWindow          fyne.Window
 	addEntryTypeDialog  *widget.FormDialog
-	msgPopUp            *widget.MsgPopUp
+	msgPopUp            *widget.MsgDialog
 	confirmationDialog  *widget.ConfirmationDialog
 	entriesTabContainer *fyneWidget.TabContainer
 	currentEntryNr      int

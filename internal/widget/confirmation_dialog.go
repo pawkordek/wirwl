@@ -10,7 +10,7 @@ Message passed into has an instruction message '(y)es or (n)o' appended at the e
 every time.
 */
 type ConfirmationDialog struct {
-	*MsgPopUp
+	*MsgDialog
 	OnConfirm func()
 	OnCancel  func()
 	focused   bool
@@ -18,7 +18,7 @@ type ConfirmationDialog struct {
 
 func NewConfirmationDialog(canvas fyne.Canvas) *ConfirmationDialog {
 	dialog := ConfirmationDialog{}
-	dialog.MsgPopUp = NewMsgPopUp(canvas)
+	dialog.MsgDialog = NewMsgPopUp(canvas)
 	dialog.OnConfirm = func() {}
 	dialog.OnCancel = func() {}
 	dialog.ExtendBaseWidget(dialog)
@@ -28,15 +28,15 @@ func NewConfirmationDialog(canvas fyne.Canvas) *ConfirmationDialog {
 func (dialog *ConfirmationDialog) TypedKey(key *fyne.KeyEvent) {
 	if key.Name == fyne.KeyY {
 		dialog.OnConfirm()
-		dialog.MsgPopUp.TypedKey(key)
+		dialog.MsgDialog.TypedKey(key)
 	} else if key.Name == fyne.KeyN {
 		dialog.OnCancel()
-		dialog.MsgPopUp.TypedKey(key)
+		dialog.MsgDialog.TypedKey(key)
 	}
 }
 
 func (dialog *ConfirmationDialog) Display(msg string) {
 	msg += " (y)es or (n)o?"
-	dialog.MsgPopUp.Display(InfoPopUp, msg)
+	dialog.MsgDialog.Display(InfoPopUp, msg)
 	dialog.Canvas.Focus(dialog)
 }
