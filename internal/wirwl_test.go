@@ -261,7 +261,21 @@ func TestThatEditingEntryTypeWorks(t *testing.T) {
 	assert.Equal(t, "2comics", app.entriesTabContainer.CurrentTab().Text)
 }
 
-//TODO: Test that changes from deletion/edition are saved on application reopening
+func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) {
+	data.CopyFile(exampleDbPath, deletionTestDbPath)
+	app := NewApp(deletionTestDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyE)
+	widget.SimulateKeyPress(app.editEntryTypeForm, fyne.KeyI)
+	app.editEntryTypeForm.Type("2")
+	widget.SimulateKeyPress(app.editEntryTypeForm, fyne.KeyEnter)
+	app.SimulateKeyPress(fyne.KeyS)
+	app2 := NewApp(deletionTestDbPath)
+	app2.LoadAndDisplay(fyneTest.NewApp())
+	assert.Equal(t, "2comics", app2.entriesTabContainer.CurrentTab().Text)
+	data.DeleteFile(deletionTestDbPath)
+}
 
 func (app *App) SimulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
