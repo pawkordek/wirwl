@@ -16,6 +16,10 @@ func (input *Input) Type(chars string) {
 	}
 }
 
+func (dialog *FormDialog) Type(chars string) {
+	dialog.currentInput().Type(chars)
+}
+
 func SimulateKeyPress(focusable fyne.Focusable, key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
 	focusable.TypedKey(event)

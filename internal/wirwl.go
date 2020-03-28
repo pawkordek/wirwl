@@ -25,6 +25,7 @@ type App struct {
 	dataProvider        data.Provider
 	lastKeyPress        fyne.KeyName
 	typeInput           *widget.Input
+	editEntryTypeForm   *widget.FormDialog
 }
 
 func NewApp(entriesPath string) *App {
@@ -87,6 +88,8 @@ func (app *App) prepareDialogs() {
 	app.msgPopUp = widget.NewMsgPopUp(app.mainWindow.Canvas())
 	app.confirmationDialog = widget.NewConfirmationDialog(app.mainWindow.Canvas())
 	app.confirmationDialog.OnConfirm = app.deleteCurrentEntryType
+	app.editEntryTypeForm = widget.NewFormDialog(app.mainWindow.Canvas(), "Editing entry type: "+app.getCurrentTabText(), "Name", "Image query")
+	app.editEntryTypeForm.OnEnterPressed = app.applyChangesToCurrentEntryType
 }
 
 func (app *App) deleteCurrentEntryType() {
@@ -94,6 +97,23 @@ func (app *App) deleteCurrentEntryType() {
 	delete(app.entries, currentTab.Text)
 	delete(app.entriesLabels, currentTab.Text)
 	app.entriesTabContainer.Remove(currentTab)
+}
+
+func (app *App) applyChangesToCurrentEntryType() {
+	currentEntryType := app.entriesTypes[app.getCurrentTabText()]
+	oldTypeName := currentEntryType.Name
+	currentEntryType.Name, _ = app.editEntryTypeForm.GetItemValue("Name")
+	currentEntryType.ImageQuery, _ = app.editEntryTypeForm.GetItemValue("Image query")
+	newTypeName := currentEntryType.Name
+	app.entries[newTypeName] = app.entries[oldTypeName]
+	app.entriesTypes[newTypeName] = currentEntryType
+	delete(app.entriesTypes, oldTypeName)
+	delete(app.entries, oldTypeName)
+	currentTabIndex := app.entriesTabContainer.CurrentTabIndex()
+	app.loadEntriesTabContainer()
+	app.prepareMainWindowContent()
+	app.entriesTabContainer.SelectTabIndex(currentTabIndex)
+	app.updateCurrentlySelectedEntry()
 }
 
 func (app *App) loadEntriesTabContainer() {
@@ -231,7 +251,15 @@ func (app *App) handleTabRelatedKeyPress(event *fyne.KeyEvent) {
 		} else {
 			app.msgPopUp.Display(widget.WarningPopUp, "You cannot remove the only remaining entry type!")
 		}
+	} else if event.Name == fyne.KeyE {
+		app.editCurrentEntryType()
 	}
+}
+
+func (app *App) editCurrentEntryType() {
+	app.editEntryTypeForm.SetItemValue("Name", app.getCurrentTabText())
+	app.editEntryTypeForm.SetItemValue("Image query", app.entriesTypes[app.getCurrentTabText()].ImageQuery)
+	app.editEntryTypeForm.Display()
 }
 
 func (app *App) selectNextTab() {

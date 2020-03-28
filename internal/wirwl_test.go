@@ -250,6 +250,19 @@ func TestThatWhenTryingToDeleteLastEntryTypeItIsPreventedAndWarningDialogIsDispl
 	data.DeleteFile(deletionTestDbPath)
 }
 
+func TestThatEditingEntryTypeWorks(t *testing.T) {
+	app := NewApp(exampleDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyE)
+	widget.SimulateKeyPress(app.editEntryTypeForm, fyne.KeyI)
+	app.editEntryTypeForm.Type("2")
+	widget.SimulateKeyPress(app.editEntryTypeForm, fyne.KeyEnter)
+	assert.Equal(t, "2comics", app.entriesTabContainer.CurrentTab().Text)
+}
+
+//TODO: Test that changes from deletion/edition are saved on application reopening
+
 func (app *App) SimulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
 	onTypedKey := app.mainWindow.Canvas().OnTypedKey()
