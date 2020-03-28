@@ -43,7 +43,7 @@ func (app *App) prepare() {
 	app.mainWindow = app.fyneApp.NewWindow("wirwl")
 	app.loadEntriesTypes()
 	app.loadEntries()
-	app.loadEntriesTabContainer()
+	app.loadEntriesTypesTabs()
 	app.resetSelectedEntry()
 	app.prepareDialogs()
 	app.prepareMainWindowContent()
@@ -99,13 +99,13 @@ func (app *App) applyChangesToCurrentEntryType() {
 	delete(app.entriesTypes, oldTypeName)
 	delete(app.entries, oldTypeName)
 	currentTabIndex := app.entriesTypesTabs.CurrentTabIndex()
-	app.loadEntriesTabContainer()
+	app.loadEntriesTypesTabs()
 	app.prepareMainWindowContent()
 	app.entriesTypesTabs.SelectTabIndex(currentTabIndex)
 	app.updateCurrentlySelectedEntry()
 }
 
-func (app *App) loadEntriesTabContainer() {
+func (app *App) loadEntriesTypesTabs() {
 	tabs := app.loadEntriesTypesTabsWithTheirContent()
 	if len(tabs) != 0 {
 		app.entriesTypesTabs = fyneWidget.NewTabContainer(tabs...)
@@ -284,7 +284,7 @@ func (app *App) addNewEntryType() error {
 			Name:       newEntryTypeName,
 			ImageQuery: imageQuery,
 		}
-		app.loadEntriesTabContainer()
+		app.loadEntriesTypesTabs()
 		app.prepareMainWindowContent()
 		return nil
 	} else {
