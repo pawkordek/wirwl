@@ -105,15 +105,30 @@ func TestThatIfThereAreNoEntriesCorrectMessageDisplays(t *testing.T) {
 	assert.Equal(t, "No entries", app.entriesTabContainer.Items[0].Text)
 }
 
-func TestWhetherEntryTypeInputOpens(t *testing.T) {
+func TestWhetherDialogForAddingEntryTypesOpens(t *testing.T) {
 	app := NewApp(emptyDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
-	assert.Equal(t, true, app.addEntryTypePopUp.Hidden)
+	assert.Equal(t, true, app.addEntryTypeDialog.Hidden)
 	app.SimulateKeyPress(fyne.KeyT)
 	app.SimulateKeyPress(fyne.KeyI)
-	assert.Equal(t, true, app.addEntryTypePopUp.Visible())
-	assert.Equal(t, true, app.typeInput.Visible())
-	assert.Equal(t, true, app.typeInput.Focused())
+	assert.Equal(t, true, app.addEntryTypeDialog.Visible())
+	assert.Equal(t, true, app.addEntryTypeDialog.Focused())
+}
+
+func TestWhetherReopeningDialogForAddingEntriesTypesDoesNotPersistPreviouslyInputText(t *testing.T) {
+	app := NewApp(emptyDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyI)
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyI)
+	app.addEntryTypeDialog.Type("some type")
+	app.SimulateKeyPress(fyne.KeyReturn)
+	app.SimulateKeyPress(fyne.KeyT)
+	app.SimulateKeyPress(fyne.KeyI)
+	name, _ := app.addEntryTypeDialog.GetItemValue("Name")
+	imageQuery, _ := app.addEntryTypeDialog.GetItemValue("Image query")
+	assert.Empty(t, name)
+	assert.Empty(t, imageQuery)
 }
 
 func TestAddingOfNewEntryType(t *testing.T) {
@@ -121,15 +136,16 @@ func TestAddingOfNewEntryType(t *testing.T) {
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateKeyPress(fyne.KeyT)
 	app.SimulateKeyPress(fyne.KeyI)
-	app.typeInput.Type("new entry type")
-	widget.SimulateKeyPress(app.typeInput, fyne.KeyEnter)
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyI)
+	app.addEntryTypeDialog.Type("new entry type")
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyEnter)
 	assert.Equal(t, 4, len(app.entriesTabContainer.Items))
 	assert.Equal(t, "comics", app.entriesTabContainer.Items[0].Text)
 	assert.Equal(t, "music", app.entriesTabContainer.Items[1].Text)
 	assert.Equal(t, "new entry type", app.entriesTabContainer.Items[2].Text)
 	assert.Equal(t, "videos", app.entriesTabContainer.Items[3].Text)
-	assert.Equal(t, true, app.addEntryTypePopUp.Hidden)
-	assert.Equal(t, true, !app.typeInput.Focused())
+	assert.Equal(t, true, app.addEntryTypeDialog.Hidden)
+	assert.Equal(t, true, !app.addEntryTypeDialog.Focused())
 }
 
 func TestThatItIsNotPossibleToAddTheSameEntryTypeTwice(t *testing.T) {
@@ -137,12 +153,14 @@ func TestThatItIsNotPossibleToAddTheSameEntryTypeTwice(t *testing.T) {
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateKeyPress(fyne.KeyT)
 	app.SimulateKeyPress(fyne.KeyI)
-	app.typeInput.Type("type")
-	widget.SimulateKeyPress(app.typeInput, fyne.KeyEnter)
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyI)
+	app.addEntryTypeDialog.Type("type")
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyEnter)
 	app.SimulateKeyPress(fyne.KeyT)
 	app.SimulateKeyPress(fyne.KeyI)
-	app.typeInput.Type("type")
-	widget.SimulateKeyPress(app.typeInput, fyne.KeyEnter)
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyI)
+	app.addEntryTypeDialog.Type("type")
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyEnter)
 	assert.Equal(t, true, app.msgPopUp.Visible())
 	assert.Equal(t, "ERROR", app.msgPopUp.Title())
 	assert.Equal(t, "Entry type with name 'type' already exists.", app.msgPopUp.Msg())
@@ -166,8 +184,9 @@ func TestThatAddingNewEntryTypeDoesNotChangeCurrentlyOpenedTab(t *testing.T) {
 	app.SimulateKeyPress(fyne.KeyL)
 	app.SimulateKeyPress(fyne.KeyT)
 	app.SimulateKeyPress(fyne.KeyI)
-	app.typeInput.Type("type")
-	widget.SimulateKeyPress(app.typeInput, fyne.KeyEnter)
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyI)
+	app.addEntryTypeDialog.Type("type")
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyEnter)
 	assert.Equal(t, "music", app.getCurrentTabText())
 }
 
@@ -176,8 +195,9 @@ func TestThatAfterAddingNewEntryOpenedTabStillHasTheSameElementHighlighted(t *te
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateKeyPress(fyne.KeyT)
 	app.SimulateKeyPress(fyne.KeyI)
-	app.typeInput.Type("type")
-	widget.SimulateKeyPress(app.typeInput, fyne.KeyEnter)
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyI)
+	app.addEntryTypeDialog.Type("type")
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyEnter)
 	assert.Equal(t, fyne.TextStyle{Bold: true}, app.entriesLabels["comics"][0].TextStyle)
 	assert.Equal(t, fyne.TextStyle{Bold: false}, app.entriesLabels["comics"][1].TextStyle)
 }
@@ -188,8 +208,9 @@ func TestThatSavingChangesWorks(t *testing.T) {
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateKeyPress(fyne.KeyT)
 	app.SimulateKeyPress(fyne.KeyI)
-	app.typeInput.Type("type")
-	widget.SimulateKeyPress(app.typeInput, fyne.KeyEnter)
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyI)
+	app.addEntryTypeDialog.Type("type")
+	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyEnter)
 	app.SimulateKeyPress(fyne.KeyS)
 	app = NewApp(saveTestDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())

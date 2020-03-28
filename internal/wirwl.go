@@ -14,7 +14,7 @@ import (
 type App struct {
 	fyneApp             fyne.App
 	mainWindow          fyne.Window
-	addEntryTypePopUp   *fyneWidget.PopUp
+	addEntryTypeDialog  *widget.FormDialog
 	msgPopUp            *widget.MsgPopUp
 	confirmationDialog  *widget.ConfirmationDialog
 	entriesTabContainer *fyneWidget.TabContainer
@@ -24,7 +24,6 @@ type App struct {
 	entriesLabels       map[string][]fyneWidget.Label
 	dataProvider        data.Provider
 	lastKeyPress        fyne.KeyName
-	typeInput           *widget.Input
 	editEntryTypeDialog *widget.FormDialog
 }
 
@@ -45,28 +44,14 @@ func (app *App) prepareMainWindow() {
 	app.loadEntries()
 	app.loadEntriesTabContainer()
 	app.resetSelectedEntry()
-	app.prepareAddEntryTypePopUp()
 	app.prepareDialogs()
 	app.prepareMainWindowContent()
 	app.mainWindow.Canvas().SetOnTypedKey(app.onKeyPressed)
 }
 
-func (app *App) prepareAddEntryTypePopUp() {
-	app.typeInput = widget.NewInput()
-	app.typeInput.SetOnEnterPressed(app.onTypeInputEnterPressed)
-	popUpTitle := fyneWidget.NewLabel("Add new entry type")
-	popUpTitle.Alignment = fyne.TextAlignCenter
-	popUpContent := fyneWidget.NewVBox(popUpTitle, app.typeInput)
-	app.addEntryTypePopUp = fyneWidget.NewModalPopUp(popUpContent, app.mainWindow.Canvas())
-	app.addEntryTypePopUp.Hide()
-}
-
-func (app *App) onTypeInputEnterPressed() {
+func (app *App) onEnterPressedInAddEntryTypeDialog() {
 	currentTabText := app.getCurrentTabText()
-	err := app.addNewTab(app.typeInput.Text)
-	app.mainWindow.Canvas().Unfocus()
-	app.addEntryTypePopUp.Hide()
-	app.typeInput.Text = ""
+	err := app.addNewEntryType()
 	if err != nil {
 		app.msgPopUp.Display(widget.ErrorPopUp, err.Error())
 	} else {
@@ -88,6 +73,8 @@ func (app *App) prepareDialogs() {
 	app.msgPopUp = widget.NewMsgPopUp(app.mainWindow.Canvas())
 	app.confirmationDialog = widget.NewConfirmationDialog(app.mainWindow.Canvas())
 	app.confirmationDialog.OnConfirm = app.deleteCurrentEntryType
+	app.addEntryTypeDialog = widget.NewFormDialog(app.mainWindow.Canvas(), "Add new entry type", "Name", "Image query")
+	app.addEntryTypeDialog.OnEnterPressed = app.onEnterPressedInAddEntryTypeDialog
 	app.editEntryTypeDialog = widget.NewFormDialog(app.mainWindow.Canvas(), "Editing entry type: "+app.getCurrentTabText(), "Name", "Image query")
 	app.editEntryTypeDialog.OnEnterPressed = app.applyChangesToCurrentEntryType
 }
@@ -244,8 +231,7 @@ func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 
 func (app *App) handleTabRelatedKeyPress(event *fyne.KeyEvent) {
 	if event.Name == fyne.KeyI {
-		app.addEntryTypePopUp.Show()
-		app.mainWindow.Canvas().Focus(app.typeInput)
+		app.displayDialogForAddingNewEntryType()
 	} else if event.Name == fyne.KeyD {
 		if len(app.entriesTabContainer.Items) > 1 {
 			app.confirmationDialog.Display("Are you sure you want to delete entry type '" + app.entriesTabContainer.CurrentTab().Text + "'?")
@@ -255,6 +241,11 @@ func (app *App) handleTabRelatedKeyPress(event *fyne.KeyEvent) {
 	} else if event.Name == fyne.KeyE {
 		app.editCurrentEntryType()
 	}
+}
+
+func (app *App) displayDialogForAddingNewEntryType() {
+	app.addEntryTypeDialog.CleanItemValues()
+	app.addEntryTypeDialog.Display()
 }
 
 func (app *App) editCurrentEntryType() {
@@ -290,18 +281,20 @@ func (app *App) changeTab(byHowManyTabs int) {
 	app.selectTab(newIndex)
 }
 
-func (app *App) addNewTab(name string) error {
-	if _, exists := app.entriesTypes[name]; !exists {
-		app.entries[name] = nil
-		app.entriesTypes[name] = data.EntryType{
-			Name:       name,
-			ImageQuery: "",
+func (app *App) addNewEntryType() error {
+	newEntryTypeName, _ := app.addEntryTypeDialog.GetItemValue("Name")
+	if _, exists := app.entriesTypes[newEntryTypeName]; !exists {
+		app.entries[newEntryTypeName] = nil
+		imageQuery, _ := app.addEntryTypeDialog.GetItemValue("Image query")
+		app.entriesTypes[newEntryTypeName] = data.EntryType{
+			Name:       newEntryTypeName,
+			ImageQuery: imageQuery,
 		}
 		app.loadEntriesTabContainer()
 		app.prepareMainWindowContent()
 		return nil
 	} else {
-		return errors.New("Entry type with name '" + name + "' already exists.")
+		return errors.New("Entry type with name '" + newEntryTypeName + "' already exists.")
 	}
 }
 
