@@ -125,25 +125,13 @@ func (app *App) loadEntriesTypes() {
 
 func (app *App) loadEntries() {
 	app.entries = make(map[string][]data.Entry)
-	typesNames := app.getEntriesTypesNames()
-	sort.Strings(typesNames)
-	for _, typeName := range typesNames {
+	for typeName, _ := range app.entriesTypes {
 		entries, err := app.dataProvider.LoadEntriesFromDb(typeName)
 		if err != nil {
 			log.Fatal(err)
 		}
 		app.entries[typeName] = entries
 	}
-}
-
-func (app *App) getEntriesTypesNames() []string {
-	var typesNames = make([]string, len(app.entriesTypes), len(app.entriesTypes))
-	i := 0
-	for typeName, _ := range app.entriesTypes {
-		typesNames[i] = typeName
-		i++
-	}
-	return typesNames
 }
 
 func (app *App) loadEntriesTypesTabsWithTheirContent() []*fyneWidget.TabItem {
