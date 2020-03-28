@@ -107,9 +107,7 @@ func (app *App) applyChangesToCurrentEntryType() {
 
 func (app *App) loadEntriesTypesTabs() {
 	tabs := app.loadEntriesTypesTabsWithTheirContent()
-	if len(tabs) != 0 {
-		app.entriesTypesTabs = fyneWidget.NewTabContainer(tabs...)
-	}
+	app.entriesTypesTabs = fyneWidget.NewTabContainer(tabs...)
 }
 
 func (app *App) loadEntriesTypes() {
