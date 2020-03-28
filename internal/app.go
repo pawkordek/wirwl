@@ -35,11 +35,11 @@ func NewApp(entriesPath string) *App {
 func (app *App) LoadAndDisplay(fyneApp fyne.App) {
 	app.fyneApp = fyneApp
 	app.fyneApp.Settings().SetTheme(theme.LightTheme())
-	app.prepareMainWindow()
+	app.prepare()
 	app.mainWindow.ShowAndRun()
 }
 
-func (app *App) prepareMainWindow() {
+func (app *App) prepare() {
 	app.mainWindow = app.fyneApp.NewWindow("wirwl")
 	app.loadEntries()
 	app.loadEntriesTabContainer()
