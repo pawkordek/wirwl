@@ -15,7 +15,7 @@ type App struct {
 	fyneApp             fyne.App
 	mainWindow          fyne.Window
 	addEntryTypeDialog  *widget.FormDialog
-	msgPopUp            *widget.MsgDialog
+	msgDialog           *widget.MsgDialog
 	confirmationDialog  *widget.ConfirmationDialog
 	entriesTabContainer *fyneWidget.TabContainer
 	currentEntryNr      int
@@ -53,7 +53,7 @@ func (app *App) onEnterPressedInAddEntryTypeDialog() {
 	currentTabText := app.getCurrentTabText()
 	err := app.addNewEntryType()
 	if err != nil {
-		app.msgPopUp.Display(widget.ErrorPopUp, err.Error())
+		app.msgDialog.Display(widget.ErrorPopUp, err.Error())
 	} else {
 		for _, tab := range app.entriesTabContainer.Items {
 			if tab.Text == currentTabText {
@@ -70,7 +70,7 @@ func (app *App) prepareMainWindowContent() {
 }
 
 func (app *App) prepareDialogs() {
-	app.msgPopUp = widget.NewMsgPopUp(app.mainWindow.Canvas())
+	app.msgDialog = widget.NewMsgPopUp(app.mainWindow.Canvas())
 	app.confirmationDialog = widget.NewConfirmationDialog(app.mainWindow.Canvas())
 	app.confirmationDialog.OnConfirm = app.deleteCurrentEntryType
 	app.addEntryTypeDialog = widget.NewFormDialog(app.mainWindow.Canvas(), "Add new entry type", "Name", "Image query")
@@ -220,9 +220,9 @@ func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 	} else if event.Name == fyne.KeyS {
 		err := app.saveChangesToDb()
 		if err != nil {
-			app.msgPopUp.Display(widget.ErrorPopUp, err.Error())
+			app.msgDialog.Display(widget.ErrorPopUp, err.Error())
 		} else {
-			app.msgPopUp.Display(widget.SuccessPopUp, "Changes saved.")
+			app.msgDialog.Display(widget.SuccessPopUp, "Changes saved.")
 		}
 	}
 
@@ -236,7 +236,7 @@ func (app *App) handleTabRelatedKeyPress(event *fyne.KeyEvent) {
 		if len(app.entriesTabContainer.Items) > 1 {
 			app.confirmationDialog.Display("Are you sure you want to delete entry type '" + app.entriesTabContainer.CurrentTab().Text + "'?")
 		} else {
-			app.msgPopUp.Display(widget.WarningPopUp, "You cannot remove the only remaining entry type!")
+			app.msgDialog.Display(widget.WarningPopUp, "You cannot remove the only remaining entry type!")
 		}
 	} else if event.Name == fyne.KeyE {
 		app.editCurrentEntryType()

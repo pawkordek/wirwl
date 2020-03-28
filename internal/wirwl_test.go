@@ -161,21 +161,21 @@ func TestThatItIsNotPossibleToAddTheSameEntryTypeTwice(t *testing.T) {
 	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyI)
 	app.addEntryTypeDialog.Type("type")
 	widget.SimulateKeyPress(app.addEntryTypeDialog, fyne.KeyEnter)
-	assert.Equal(t, true, app.msgPopUp.Visible())
-	assert.Equal(t, "ERROR", app.msgPopUp.Title())
-	assert.Equal(t, "Entry type with name 'type' already exists.", app.msgPopUp.Msg())
+	assert.Equal(t, true, app.msgDialog.Visible())
+	assert.Equal(t, "ERROR", app.msgDialog.Title())
+	assert.Equal(t, "Entry type with name 'type' already exists.", app.msgDialog.Msg())
 	assert.Equal(t, 4, len(app.entriesTabContainer.Items))
 }
 
 func TestThatPressingAnyKeyClosesMessagePopUp(t *testing.T) {
 	app := NewApp(exampleDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
-	app.msgPopUp.Show()
-	widget.SimulateKeyPress(app.msgPopUp, fyne.KeyT)
-	assert.Equal(t, true, app.msgPopUp.Hidden)
-	app.msgPopUp.Show()
-	widget.SimulateKeyPress(app.msgPopUp, fyne.KeyReturn)
-	assert.Equal(t, true, app.msgPopUp.Hidden)
+	app.msgDialog.Show()
+	widget.SimulateKeyPress(app.msgDialog, fyne.KeyT)
+	assert.Equal(t, true, app.msgDialog.Hidden)
+	app.msgDialog.Show()
+	widget.SimulateKeyPress(app.msgDialog, fyne.KeyReturn)
+	assert.Equal(t, true, app.msgDialog.Hidden)
 }
 
 func TestThatAddingNewEntryTypeDoesNotChangeCurrentlyOpenedTab(t *testing.T) {
@@ -223,9 +223,9 @@ func TestThatAfterSavingSuccessfullySuccessDialogDisplays(t *testing.T) {
 	app := NewApp(saveTestDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateKeyPress(fyne.KeyS)
-	assert.True(t, app.msgPopUp.Visible())
-	assert.Equal(t, "SUCCESS", app.msgPopUp.Title())
-	assert.Equal(t, "Changes saved.", app.msgPopUp.Msg())
+	assert.True(t, app.msgDialog.Visible())
+	assert.Equal(t, "SUCCESS", app.msgDialog.Title())
+	assert.Equal(t, "Changes saved.", app.msgDialog.Msg())
 }
 
 func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
@@ -234,9 +234,9 @@ func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.dataProvider = data.NewAlwaysFailingProvider()
 	app.SimulateKeyPress(fyne.KeyS)
-	assert.True(t, app.msgPopUp.Visible())
-	assert.Equal(t, "ERROR", app.msgPopUp.Title())
-	assert.Equal(t, data.AlwaysFailingProviderError.Error(), app.msgPopUp.Msg())
+	assert.True(t, app.msgDialog.Visible())
+	assert.Equal(t, "ERROR", app.msgDialog.Title())
+	assert.Equal(t, data.AlwaysFailingProviderError.Error(), app.msgDialog.Msg())
 }
 
 func TestThatDeletingEntriesTypesWorks(t *testing.T) {
@@ -265,9 +265,9 @@ func TestThatWhenTryingToDeleteLastEntryTypeItIsPreventedAndWarningDialogIsDispl
 	app.SimulateKeyPress(fyne.KeyT)
 	app.SimulateKeyPress(fyne.KeyD)
 	assert.Equal(t, 1, len(app.entriesTabContainer.Items))
-	assert.Equal(t, true, app.msgPopUp.Visible())
-	assert.Equal(t, "WARNING", app.msgPopUp.Title())
-	assert.Equal(t, "You cannot remove the only remaining entry type!", app.msgPopUp.Msg())
+	assert.Equal(t, true, app.msgDialog.Visible())
+	assert.Equal(t, "WARNING", app.msgDialog.Title())
+	assert.Equal(t, "You cannot remove the only remaining entry type!", app.msgDialog.Msg())
 	data.DeleteFile(deletionTestDbPath)
 }
 
