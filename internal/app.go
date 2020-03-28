@@ -151,13 +151,6 @@ func (app *App) loadEntriesTypesTabsWithTheirContent() []*fyneWidget.TabItem {
 	}
 }
 
-func (app *App) loadEntryTabWithItsContent(typeName string) *fyneWidget.TabItem {
-	labels := app.getEntriesNamesAsLabels(app.entries[typeName])
-	app.entriesLabels[typeName] = labels
-	labelsAsCanvasObjects := app.getLabelsAsCanvasObjects(labels)
-	return fyneWidget.NewTabItem(typeName, fyneWidget.NewVBox(labelsAsCanvasObjects...))
-}
-
 func (app *App) getAlphabeticallySortedEntriesTypesNames() []string {
 	sortedTypesNames := make([]string, 0, len(app.entries))
 	for typeName, _ := range app.entries {
@@ -167,12 +160,11 @@ func (app *App) getAlphabeticallySortedEntriesTypesNames() []string {
 	return sortedTypesNames
 }
 
-func (app *App) getLabelsAsCanvasObjects(labels []fyneWidget.Label) []fyne.CanvasObject {
-	objects := make([]fyne.CanvasObject, len(labels))
-	for i, _ := range labels {
-		objects[i] = &labels[i]
-	}
-	return objects
+func (app *App) loadEntryTabWithItsContent(typeName string) *fyneWidget.TabItem {
+	labels := app.getEntriesNamesAsLabels(app.entries[typeName])
+	app.entriesLabels[typeName] = labels
+	labelsAsCanvasObjects := app.getLabelsAsCanvasObjects(labels)
+	return fyneWidget.NewTabItem(typeName, fyneWidget.NewVBox(labelsAsCanvasObjects...))
 }
 
 func (app *App) getEntriesNamesAsLabels(entries []data.Entry) []fyneWidget.Label {
@@ -182,6 +174,14 @@ func (app *App) getEntriesNamesAsLabels(entries []data.Entry) []fyneWidget.Label
 		labels = append(labels, *label)
 	}
 	return labels
+}
+
+func (app *App) getLabelsAsCanvasObjects(labels []fyneWidget.Label) []fyne.CanvasObject {
+	objects := make([]fyne.CanvasObject, len(labels))
+	for i, _ := range labels {
+		objects[i] = &labels[i]
+	}
+	return objects
 }
 
 func (app *App) resetSelectedEntry() {
