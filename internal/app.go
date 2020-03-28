@@ -138,8 +138,9 @@ func (app *App) loadEntriesTypesTabsWithTheirContent() []*fyneWidget.TabItem {
 	var tabs []*fyneWidget.TabItem
 	if len(app.entries) != 0 {
 		app.entriesLabels = make(map[string][]fyneWidget.Label, len(app.entries))
-		orderedEntriesKeys := app.getOrderedEntriesKeys()
-		for _, entryType := range orderedEntriesKeys {
+		//Names have to be alphabetically sorted so that they display in the correct order on tabs (A -> Z)
+		sortedTypesNames := app.getAlphabeticallySortedEntriesTypesNames()
+		for _, entryType := range sortedTypesNames {
 			labels := app.getEntriesNamesAsLabels(app.entries[entryType])
 			app.entriesLabels[entryType] = labels
 			labelsAsCanvasObjects := app.getLabelsAsCanvasObjects(labels)
@@ -153,13 +154,13 @@ func (app *App) loadEntriesTypesTabsWithTheirContent() []*fyneWidget.TabItem {
 	}
 }
 
-func (app *App) getOrderedEntriesKeys() []string {
-	orderedEntriesKeys := make([]string, 0, len(app.entries))
-	for key, _ := range app.entries {
-		orderedEntriesKeys = append(orderedEntriesKeys, key)
+func (app *App) getAlphabeticallySortedEntriesTypesNames() []string {
+	sortedTypesNames := make([]string, 0, len(app.entries))
+	for typeName, _ := range app.entries {
+		sortedTypesNames = append(sortedTypesNames, typeName)
 	}
-	sort.Strings(orderedEntriesKeys)
-	return orderedEntriesKeys
+	sort.Strings(sortedTypesNames)
+	return sortedTypesNames
 }
 
 func (app *App) getLabelsAsCanvasObjects(labels []fyneWidget.Label) []fyne.CanvasObject {
