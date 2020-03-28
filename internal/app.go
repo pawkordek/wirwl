@@ -41,6 +41,7 @@ func (app *App) LoadAndDisplay(fyneApp fyne.App) {
 
 func (app *App) prepare() {
 	app.mainWindow = app.fyneApp.NewWindow("wirwl")
+	app.loadEntriesTypes()
 	app.loadEntries()
 	app.loadEntriesTabContainer()
 	app.resetSelectedEntry()
@@ -111,8 +112,7 @@ func (app *App) loadEntriesTabContainer() {
 	}
 }
 
-func (app *App) loadEntries() {
-	app.entries = make(map[string][]data.Entry)
+func (app *App) loadEntriesTypes() {
 	app.entriesTypes = make(map[string]data.EntryType)
 	entriesTypes, err := app.dataProvider.LoadEntriesTypesFromDb()
 	if err != nil {
@@ -121,7 +121,11 @@ func (app *App) loadEntries() {
 	for _, entryType := range entriesTypes {
 		app.entriesTypes[entryType.Name] = entryType
 	}
-	typesNames := app.getEntriesTypesNames(entriesTypes)
+}
+
+func (app *App) loadEntries() {
+	app.entries = make(map[string][]data.Entry)
+	typesNames := app.getEntriesTypesNames()
 	sort.Strings(typesNames)
 	for _, typeName := range typesNames {
 		entries, err := app.dataProvider.LoadEntriesFromDb(typeName)
@@ -132,10 +136,12 @@ func (app *App) loadEntries() {
 	}
 }
 
-func (app *App) getEntriesTypesNames(entriesTypes []data.EntryType) []string {
-	var typesNames = make([]string, len(entriesTypes), len(entriesTypes))
-	for i, entryType := range entriesTypes {
-		typesNames[i] = entryType.Name
+func (app *App) getEntriesTypesNames() []string {
+	var typesNames = make([]string, len(app.entriesTypes), len(app.entriesTypes))
+	i := 0
+	for typeName, _ := range app.entriesTypes {
+		typesNames[i] = typeName
+		i++
 	}
 	return typesNames
 }
