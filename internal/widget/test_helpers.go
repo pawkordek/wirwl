@@ -33,3 +33,21 @@ func ContainsWidget(content fyne.CanvasObject, searchedWidget interface{}) bool 
 	}
 	return false
 }
+
+func ContainsLabelWithSameText(content fyne.CanvasObject, searchedText string) bool {
+	for _, existingWidget := range content.(*widget.Box).Children {
+		if existingWidget.(*widget.Label).Text == searchedText {
+			return true
+		}
+	}
+	return false
+}
+
+func GetLabelFromContent(content fyne.CanvasObject, labelText string) *widget.Label {
+	for _, existingWidget := range content.(*widget.Box).Children {
+		if existingWidget.(*widget.Label).Text == labelText {
+			return existingWidget.(*widget.Label)
+		}
+	}
+	return nil
+}
