@@ -126,3 +126,12 @@ func TestThatCleaningItemValuesWorks(t *testing.T) {
 	assert.Empty(t, dialog.inputs["first"].Text)
 	assert.Empty(t, dialog.inputs["second"].Text)
 }
+
+func TestThatFormDialogHidesBeforeItCallsOnEnterPressed(t *testing.T) {
+	dialog := NewFormDialog(test.Canvas(), "", "first", "second")
+	dialog.Display()
+	dialog.OnEnterPressed = func() {
+		assert.Nil(t, dialog.Canvas.Overlay())
+	}
+	SimulateKeyPress(dialog, fyne.KeyEnter)
+}

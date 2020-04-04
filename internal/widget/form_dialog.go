@@ -61,9 +61,9 @@ func (dialog *FormDialog) TypedKeyInInput(key *fyne.KeyEvent) {
 }
 
 func (dialog *FormDialog) handleEnterKey() {
-	dialog.OnEnterPressed()
 	dialog.Canvas.Unfocus()
 	dialog.Hide()
+	dialog.OnEnterPressed()
 }
 
 func (dialog *FormDialog) Display() {
