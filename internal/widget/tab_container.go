@@ -13,6 +13,8 @@ It allows to switch tab to next/previous which is done cyclically, setting next 
 type TabContainer struct {
 	/*Cannot extend fyne's TabContainer right now as there is a bug that prevents tab buttons from updating when tabs change on extended TabContainer.
 	  So the only way to do it right now is to to compose fyne's TabContainer and extend a Box which will contain this TabContainer.
+	  The bug in question is this: https://github.com/fyne-io/fyne/issues/810
+	  TODO: Remove the workaround when fyne 1.2.4 comes out and replace pointers with variables
 	*/
 	it *fyneWidget.TabContainer
 	*fyneWidget.Box
