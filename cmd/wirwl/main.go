@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	wirwlApp := wirwl.NewApp()
-	wirwlApp.LoadAndDisplayGUI(app.New())
+	wirwlApp := wirwl.NewApp("exampleDb.db")
+	wirwlApp.LoadAndDisplay(app.New())
 }
