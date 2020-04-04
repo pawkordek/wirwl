@@ -11,6 +11,10 @@ It contains a title at the top and can contain any content below it.
 When any key gets pressed it hides itself.
 */
 type FocusableDialog struct {
+	/*PopUp has to stay as a pointer for now because when extended as value as recommended in fyne there seems to be a bug
+	  that causes a copy of it to display in the left corner when shown for the first time.
+	  TODO: Verify whether it is a bug
+	*/
 	*widget.PopUp
 	title   *widget.Label
 	focused bool

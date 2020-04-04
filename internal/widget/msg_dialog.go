@@ -6,7 +6,7 @@ import (
 )
 
 type MsgDialog struct {
-	*FocusableDialog
+	FocusableDialog
 	msg *widget.Label
 }
 
@@ -21,7 +21,7 @@ func NewMsgPopUp(canvas fyne.Canvas) *MsgDialog {
 	msg := widget.NewLabel("")
 	msg.Alignment = fyne.TextAlignCenter
 	popUp := &MsgDialog{
-		FocusableDialog: NewFocusableDialog(canvas, msg),
+		FocusableDialog: *NewFocusableDialog(canvas, msg),
 		msg:             msg,
 	}
 	popUp.ExtendBaseWidget(popUp)

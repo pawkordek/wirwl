@@ -19,7 +19,7 @@ Pressing enter key anytime closes the dialog and calls the function specified fo
 Values of every form item can be set, retrieved and cleaned using proper functions.
 */
 type FormDialog struct {
-	*FocusableDialog
+	FocusableDialog
 	items           []string
 	currentInputNum int
 	inputs          map[string]*Input
@@ -36,7 +36,7 @@ func NewFormDialog(canvas fyne.Canvas, title string, items ...string) *FormDialo
 		form.AppendItem(formItem)
 	}
 	dialog := &FormDialog{
-		FocusableDialog: NewFocusableDialog(canvas, form),
+		FocusableDialog: *NewFocusableDialog(canvas, form),
 		items:           items,
 		currentInputNum: 0,
 		inputs:          inputs,
