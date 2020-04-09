@@ -2,18 +2,31 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	"fyne.io/fyne/widget"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-var tabsData = map[string][]string{
-	"First tab":  {"a1", "b1", "c1"},
-	"Second tab": {"a2", "b2", "c2"},
-	"Third tab":  {"a3", "b3", "c3"},
+var tabsData = map[string][]fyne.CanvasObject{
+	"First tab":  {widget.NewLabel("a1"), widget.NewLabel("b1"), widget.NewLabel("c1")},
+	"Second tab": {widget.NewLabel("a2"), widget.NewLabel("b2"), widget.NewLabel("c2")},
+	"Third tab":  {widget.NewLabel("a3"), widget.NewLabel("b3"), widget.NewLabel("c3")},
+}
+
+func createTabContainerForTesting() *TabContainer {
+	return NewTabContainer(tabsData,
+		func(element *fyne.CanvasObject) {
+			label := *element
+			label.(*widget.Label).TextStyle = fyne.TextStyle{Bold: true}
+		},
+		func(element *fyne.CanvasObject) {
+			label := *element
+			label.(*widget.Label).TextStyle = fyne.TextStyle{Bold: false}
+		})
 }
 
 func TestThatOnDisplayCorrectTabAndContentDisplays(t *testing.T) {
-	container := NewTabContainer(tabsData)
+	container := createTabContainerForTesting()
 	assert.Equal(t, "First tab", container.it.CurrentTab().Text)
 	label1 := GetLabelFromContent(container.it.CurrentTab().Content, "a1")
 	assert.NotNil(t, label1)
@@ -23,8 +36,8 @@ func TestThatOnDisplayCorrectTabAndContentDisplays(t *testing.T) {
 	assert.NotNil(t, label3)
 }
 
-func TestThatFirstLabelOnFirstTabIsBoldedAtFirst(t *testing.T) {
-	container := NewTabContainer(tabsData)
+func TestThatChangingGraphicalPropertiesOnSelectionUnselectionWorks(t *testing.T) {
+	container := createTabContainerForTesting()
 	label1 := GetLabelFromContent(container.it.CurrentTab().Content, "a1")
 	assert.Equal(t, fyne.TextStyle{Bold: true}, label1.TextStyle)
 	label2 := GetLabelFromContent(container.it.CurrentTab().Content, "b1")
@@ -34,7 +47,7 @@ func TestThatFirstLabelOnFirstTabIsBoldedAtFirst(t *testing.T) {
 }
 
 func TestThatSelectingTabsWorks(t *testing.T) {
-	container := NewTabContainer(tabsData)
+	container := createTabContainerForTesting()
 	container.SelectNextTab()
 	assert.Equal(t, "Second tab", container.it.CurrentTab().Text)
 	container.SelectNextTab()
@@ -50,7 +63,7 @@ func TestThatSelectingTabsWorks(t *testing.T) {
 }
 
 func TestThatChangingTabSelectsFirstLabelOnTab(t *testing.T) {
-	container := NewTabContainer(tabsData)
+	container := createTabContainerForTesting()
 	container.SelectNextTab()
 	label1 := GetLabelFromContent(container.it.CurrentTab().Content, "a2")
 	assert.Equal(t, fyne.TextStyle{Bold: true}, label1.TextStyle)

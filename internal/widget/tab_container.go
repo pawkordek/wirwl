@@ -7,8 +7,9 @@ import (
 )
 
 /*
-Tab container in which every tab contains a list of labels.
+Tab container in which every tab contains a list of CanvasObjects. Tabs are displayed alphabetically.
 It allows to switch tab to next/previous which is done cyclically, setting next tab when on last tab goes to the first and vice versa.
+The way selected items display graphically should be controlled by onElementSelected and onElementUnselected functions e.g. labels becoming bold on selection.
 */
 type TabContainer struct {
 	/*Cannot extend fyne's TabContainer right now as there is a bug that prevents tab buttons from updating when tabs change on extended TabContainer.
@@ -18,34 +19,37 @@ type TabContainer struct {
 	*/
 	it *fyneWidget.TabContainer
 	*fyneWidget.Box
-	selectedLabelIndex int
-	labels             map[string][]*fyneWidget.Label
+	selectedElementIndex int
+	tabsContent          map[string][]fyne.CanvasObject
+	onElementSelected    func(element *fyne.CanvasObject)
+	onElementUnselected  func(element *fyne.CanvasObject)
 }
 
-func NewTabContainer(tabsData map[string][]string) *TabContainer {
+func NewTabContainer(
+	tabsData map[string][]fyne.CanvasObject,
+	onElementSelected func(element *fyne.CanvasObject),
+	onElementUnselected func(element *fyne.CanvasObject)) *TabContainer {
 	var tabs []*fyneWidget.TabItem
-	allLabels := map[string][]*fyneWidget.Label{}
 	sortedTabsNames := getAlphabeticallySortedTabsNames(tabsData)
 	for _, tabName := range sortedTabsNames {
-		labels := createLabels(tabsData[tabName])
-		allLabels[tabName] = labels
-		labelsAsCanvasObjects := getLabelsAsCanvasObjects(labels)
-		formItem := fyneWidget.NewTabItem(tabName, fyneWidget.NewVBox(labelsAsCanvasObjects...))
+		formItem := fyneWidget.NewTabItem(tabName, fyneWidget.NewVBox(tabsData[tabName]...))
 		tabs = append(tabs, formItem)
 	}
 	fyneContainer := fyneWidget.NewTabContainer(tabs...)
 	container := &TabContainer{
-		Box:                fyneWidget.NewVBox(fyneContainer),
-		it:                 fyneContainer,
-		selectedLabelIndex: 0,
-		labels:             allLabels,
+		Box:                  fyneWidget.NewVBox(fyneContainer),
+		it:                   fyneContainer,
+		selectedElementIndex: 0,
+		tabsContent:          tabsData,
+		onElementSelected:    onElementSelected,
+		onElementUnselected:  onElementUnselected,
 	}
-	container.selectLabel(0)
+	container.selectElement(0)
 	container.it.SelectTabIndex(0)
 	return container
 }
 
-func getAlphabeticallySortedTabsNames(tabsData map[string][]string) []string {
+func getAlphabeticallySortedTabsNames(tabsData map[string][]fyne.CanvasObject) []string {
 	sortedNames := make([]string, 0, len(tabsData))
 	for tabName, _ := range tabsData {
 		sortedNames = append(sortedNames, tabName)
@@ -54,33 +58,19 @@ func getAlphabeticallySortedTabsNames(tabsData map[string][]string) []string {
 	return sortedNames
 }
 
-func createLabels(names []string) []*fyneWidget.Label {
-	var labels []*fyneWidget.Label
-	for _, name := range names {
-		labels = append(labels, fyneWidget.NewLabel(name))
-	}
-	return labels
+func (container *TabContainer) selectElement(num int) {
+	selectedElement := container.selectedElement()
+	container.onElementUnselected(&selectedElement)
+	selectedElement.Refresh()
+	container.selectedElementIndex = num
+	selectedElement = container.selectedElement()
+	container.onElementSelected(&selectedElement)
+	container.selectedElement().Refresh()
 }
 
-func getLabelsAsCanvasObjects(labels []*fyneWidget.Label) []fyne.CanvasObject {
-	objects := make([]fyne.CanvasObject, len(labels))
-	for i, _ := range labels {
-		objects[i] = labels[i]
-	}
-	return objects
-}
-
-func (container *TabContainer) selectLabel(num int) {
-	container.getSelectedLabel().TextStyle = fyne.TextStyle{Bold: false}
-	container.getSelectedLabel().Refresh()
-	container.selectedLabelIndex = num
-	container.getSelectedLabel().TextStyle = fyne.TextStyle{Bold: true}
-	container.getSelectedLabel().Refresh()
-}
-
-func (container *TabContainer) getSelectedLabel() *fyneWidget.Label {
+func (container *TabContainer) selectedElement() fyne.CanvasObject {
 	currentTabText := container.it.CurrentTab().Text
-	return container.labels[currentTabText][container.selectedLabelIndex]
+	return container.tabsContent[currentTabText][container.selectedElementIndex]
 }
 
 func (container *TabContainer) SelectNextTab() {
@@ -103,5 +93,5 @@ func (container *TabContainer) SelectPreviousTab() {
 
 func (container *TabContainer) setTabTo(index int) {
 	container.it.SelectTabIndex(index)
-	container.selectLabel(0)
+	container.selectElement(0)
 }
