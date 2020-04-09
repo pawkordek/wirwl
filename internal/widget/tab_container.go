@@ -95,3 +95,33 @@ func (container *TabContainer) setTabTo(index int) {
 	container.it.SelectTabIndex(index)
 	container.selectElement(0)
 }
+
+//TODO: Remove when fyne 1.2.4 comes out
+func (container *TabContainer) Items() []*fyneWidget.TabItem {
+	return container.it.Items
+}
+
+//TODO: Remove when fyne 1.2.4 comes out
+func (container *TabContainer) SelectTab(item *fyneWidget.TabItem) {
+	container.it.SelectTab(item)
+}
+
+//TODO: Remove when fyne 1.2.4 comes out
+func (container *TabContainer) SelectTabIndex(index int) {
+	container.it.SelectTabIndex(index)
+}
+
+//TODO: Remove when fyne 1.2.4 comes out
+func (container *TabContainer) CurrentTab() *fyneWidget.TabItem {
+	return container.it.CurrentTab()
+}
+
+//TODO: Remove when fyne 1.2.4 comes out
+func (container *TabContainer) CurrentTabIndex() int {
+	return container.it.CurrentTabIndex()
+}
+
+//TODO: Remove when fyne 1.2.4 comes out
+func (container *TabContainer) Remove(item *fyneWidget.TabItem) {
+	container.it.Remove(item)
+}
