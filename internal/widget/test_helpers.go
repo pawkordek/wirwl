@@ -51,3 +51,12 @@ func GetLabelFromContent(content fyne.CanvasObject, labelText string) *widget.La
 	}
 	return nil
 }
+
+func GetLabelPositionInContent(content fyne.CanvasObject, labelText string) int {
+	for position, existingWidget := range content.(*widget.Box).Children {
+		if existingWidget.(*widget.Label).Text == labelText {
+			return position
+		}
+	}
+	return -1
+}

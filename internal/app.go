@@ -17,7 +17,7 @@ type App struct {
 	addEntryTypeDialog  *widget.FormDialog
 	msgDialog           *widget.MsgDialog
 	confirmationDialog  *widget.ConfirmationDialog
-	entriesTypesTabs    *fyneWidget.TabContainer
+	entriesTypesTabs    *widget.TabContainer
 	currentEntryNr      int
 	entries             map[string][]data.Entry
 	entriesTypes        map[string]data.EntryType
@@ -56,7 +56,7 @@ func (app *App) onEnterPressedInAddEntryTypeDialog() {
 	if err != nil {
 		app.msgDialog.Display(widget.ErrorPopUp, err.Error())
 	} else {
-		for _, tab := range app.entriesTypesTabs.Items {
+		for _, tab := range app.entriesTypesTabs.Items() {
 			if tab.Text == currentTabText {
 				app.entriesTypesTabs.SelectTab(tab)
 				app.updateCurrentlySelectedEntry()
@@ -106,8 +106,8 @@ func (app *App) applyChangesToCurrentEntryType() {
 }
 
 func (app *App) loadEntriesTypesTabs() {
-	tabs := app.loadEntriesTypesTabsWithTheirContent()
-	app.entriesTypesTabs = fyneWidget.NewTabContainer(tabs...)
+	entriesGroupedByType := app.getEntriesNamesGroupedByType()
+	app.entriesTypesTabs = widget.NewLabelsInTabContainer(entriesGroupedByType)
 }
 
 func (app *App) loadEntriesTypes() {
@@ -132,20 +132,34 @@ func (app *App) loadEntries() {
 	}
 }
 
-func (app *App) loadEntriesTypesTabsWithTheirContent() []*fyneWidget.TabItem {
-	var tabs []*fyneWidget.TabItem
+func (app *App) getEntriesNamesGroupedByType() map[string][]string {
 	if len(app.entries) != 0 {
-		app.entriesLabels = make(map[string][]fyneWidget.Label, len(app.entries))
-		//Names have to be alphabetically sorted so that they display in the correct order on tabs (A -> Z)
-		sortedTypesNames := app.getAlphabeticallySortedEntriesTypesNames()
-		for _, typeName := range sortedTypesNames {
-			tab := app.loadEntryTabWithItsContent(typeName)
-			tabs = append(tabs, tab)
-		}
-		return tabs
+		return app.getEntriesNamesGroupedByTypeMap()
 	} else {
-		tab := fyneWidget.NewTabItem("No entries", fyneWidget.NewVBox())
-		return append(tabs, tab)
+		return app.getNoEntriesTab()
+	}
+}
+
+func (app *App) getEntriesNamesGroupedByTypeMap() map[string][]string {
+	entriesNames := make(map[string][]string)
+	for entryType, entries := range app.entries {
+		names := app.getEntriesNames(entries)
+		entriesNames[entryType] = names
+	}
+	return entriesNames
+}
+
+func (app *App) getEntriesNames(entries []data.Entry) []string {
+	names := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		names = append(names, entry.Title)
+	}
+	return names
+}
+
+func (app *App) getNoEntriesTab() map[string][]string {
+	return map[string][]string{
+		"No entries": {""},
 	}
 }
 
@@ -230,7 +244,7 @@ func (app *App) handleTabRelatedKeyPress(event *fyne.KeyEvent) {
 	if event.Name == fyne.KeyI {
 		app.displayDialogForAddingNewEntryType()
 	} else if event.Name == fyne.KeyD {
-		if len(app.entriesTypesTabs.Items) > 1 {
+		if len(app.entriesTypesTabs.Items()) > 1 {
 			app.confirmationDialog.Display("Are you sure you want to delete entry type '" + app.entriesTypesTabs.CurrentTab().Text + "'?")
 		} else {
 			app.msgDialog.Display(widget.WarningPopUp, "You cannot remove the only remaining entry type!")
@@ -263,7 +277,7 @@ func (app *App) selectPreviousTab() {
 	if app.entriesTypesTabs.CurrentTabIndex() > 0 {
 		app.changeTab(-1)
 	} else {
-		app.selectTab(len(app.entriesTypesTabs.Items) - 1)
+		app.selectTab(len(app.entriesTypesTabs.Items()) - 1)
 	}
 }
 
