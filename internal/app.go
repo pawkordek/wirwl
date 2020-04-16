@@ -223,9 +223,9 @@ func (app *App) getCurrentTabText() string {
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 	if event.Name == fyne.KeyL {
-		app.selectNextTab()
+		app.entriesTypesTabs.SelectNextTab()
 	} else if event.Name == fyne.KeyH {
-		app.selectPreviousTab()
+		app.entriesTypesTabs.SelectPreviousTab()
 	} else if app.lastKeyPress == fyne.KeyT {
 		app.handleTabRelatedKeyPress(event)
 	} else if event.Name == fyne.KeyS {
@@ -263,33 +263,6 @@ func (app *App) editCurrentEntryType() {
 	app.editEntryTypeDialog.SetItemValue("Name", app.getCurrentTabText())
 	app.editEntryTypeDialog.SetItemValue("Image query", app.entriesTypes[app.getCurrentTabText()].ImageQuery)
 	app.editEntryTypeDialog.Display()
-}
-
-func (app *App) selectNextTab() {
-	if app.entriesTypesTabs.CurrentTabIndex() < len(app.entries)-1 {
-		app.changeTab(1)
-	} else {
-		app.selectTab(0)
-	}
-}
-
-func (app *App) selectPreviousTab() {
-	if app.entriesTypesTabs.CurrentTabIndex() > 0 {
-		app.changeTab(-1)
-	} else {
-		app.selectTab(len(app.entriesTypesTabs.Items()) - 1)
-	}
-}
-
-func (app *App) selectTab(tabNum int) {
-	app.entriesTypesTabs.SelectTabIndex(tabNum)
-	app.updateCurrentlySelectedEntry()
-}
-
-func (app *App) changeTab(byHowManyTabs int) {
-	currentIndex := app.entriesTypesTabs.CurrentTabIndex()
-	newIndex := currentIndex + byHowManyTabs
-	app.selectTab(newIndex)
 }
 
 func (app *App) addNewEntryType() error {
