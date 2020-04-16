@@ -15,7 +15,7 @@ type LabelsInTabContainer struct {
 
 func NewLabelsInTabContainer(tabsData map[string][]string) *TabContainer {
 	labelsData := getTabsDataAsLabelsMap(tabsData)
-	container := NewTabContainer(labelsData, boldSelectedElement, unboldSelectedElement)
+	container := NewTabContainer(labelsData, boldSelectedLabel, unboldSelectedLabel)
 	return container
 }
 
@@ -36,11 +36,11 @@ func getLabelsWithNames(names []string) []fyne.CanvasObject {
 	return labels
 }
 
-func boldSelectedElement(element *fyne.CanvasObject) {
+func boldSelectedLabel(element *fyne.CanvasObject) {
 	label := *element
 	label.(*widget.Label).TextStyle = fyne.TextStyle{Bold: true}
 }
-func unboldSelectedElement(element *fyne.CanvasObject) {
+func unboldSelectedLabel(element *fyne.CanvasObject) {
 	label := *element
 	label.(*widget.Label).TextStyle = fyne.TextStyle{Bold: false}
 }
