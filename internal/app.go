@@ -6,7 +6,6 @@ import (
 	"fyne.io/fyne/theme"
 	fyneWidget "fyne.io/fyne/widget"
 	"log"
-	"sort"
 	"wirwl/internal/data"
 	"wirwl/internal/widget"
 )
@@ -155,38 +154,6 @@ func (app *App) getNoEntriesTab() map[string][]string {
 	return map[string][]string{
 		"No entries": {""},
 	}
-}
-
-func (app *App) getAlphabeticallySortedEntriesTypesNames() []string {
-	sortedTypesNames := make([]string, 0, len(app.entries))
-	for typeName, _ := range app.entries {
-		sortedTypesNames = append(sortedTypesNames, typeName)
-	}
-	sort.Strings(sortedTypesNames)
-	return sortedTypesNames
-}
-
-func (app *App) loadEntryTabWithItsContent(typeName string) *fyneWidget.TabItem {
-	labels := app.getEntriesNamesAsLabels(app.entries[typeName])
-	labelsAsCanvasObjects := app.getLabelsAsCanvasObjects(labels)
-	return fyneWidget.NewTabItem(typeName, fyneWidget.NewVBox(labelsAsCanvasObjects...))
-}
-
-func (app *App) getEntriesNamesAsLabels(entries []data.Entry) []fyneWidget.Label {
-	var labels []fyneWidget.Label
-	for _, entry := range entries {
-		label := fyneWidget.NewLabel(entry.Title)
-		labels = append(labels, *label)
-	}
-	return labels
-}
-
-func (app *App) getLabelsAsCanvasObjects(labels []fyneWidget.Label) []fyne.CanvasObject {
-	objects := make([]fyne.CanvasObject, len(labels))
-	for i, _ := range labels {
-		objects[i] = &labels[i]
-	}
-	return objects
 }
 
 func (app *App) getCurrentTabText() string {
