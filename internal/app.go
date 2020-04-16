@@ -18,7 +18,6 @@ type App struct {
 	msgDialog           *widget.MsgDialog
 	confirmationDialog  *widget.ConfirmationDialog
 	entriesTypesTabs    *widget.TabContainer
-	currentEntryNr      int
 	entries             map[string][]data.Entry
 	entriesTypes        map[string]data.EntryType
 	entriesLabels       map[string][]fyneWidget.Label
@@ -44,7 +43,6 @@ func (app *App) prepare() {
 	app.loadEntriesTypes()
 	app.loadEntries()
 	app.loadEntriesTypesTabs()
-	app.resetSelectedEntry()
 	app.prepareDialogs()
 	app.prepareMainWindowContent()
 	app.mainWindow.Canvas().SetOnTypedKey(app.onKeyPressed)
@@ -59,7 +57,6 @@ func (app *App) onEnterPressedInAddEntryTypeDialog() {
 		for _, tab := range app.entriesTypesTabs.Items() {
 			if tab.Text == currentTabText {
 				app.entriesTypesTabs.SelectTab(tab)
-				app.updateCurrentlySelectedEntry()
 				break
 			}
 		}
@@ -102,7 +99,6 @@ func (app *App) applyChangesToCurrentEntryType() {
 	app.loadEntriesTypesTabs()
 	app.prepareMainWindowContent()
 	app.entriesTypesTabs.SelectTabIndex(currentTabIndex)
-	app.updateCurrentlySelectedEntry()
 }
 
 func (app *App) loadEntriesTypesTabs() {
@@ -194,27 +190,6 @@ func (app *App) getLabelsAsCanvasObjects(labels []fyneWidget.Label) []fyne.Canva
 		objects[i] = &labels[i]
 	}
 	return objects
-}
-
-func (app *App) resetSelectedEntry() {
-	app.currentEntryNr = 0
-	app.updateCurrentlySelectedEntry()
-}
-
-func (app *App) updateCurrentlySelectedEntry() {
-	for _, label := range app.entriesLabels[app.getCurrentTabText()] {
-		(&label).TextStyle = fyne.TextStyle{
-			Bold: false,
-		}
-		(&label).Refresh()
-	}
-	if len(app.entriesLabels[app.getCurrentTabText()]) > 0 {
-		label := &app.entriesLabels[app.getCurrentTabText()][app.currentEntryNr]
-		label.TextStyle = fyne.TextStyle{
-			Bold: true,
-		}
-		label.Refresh()
-	}
 }
 
 func (app *App) getCurrentTabText() string {
