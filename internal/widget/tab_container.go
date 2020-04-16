@@ -59,13 +59,20 @@ func getAlphabeticallySortedTabsNames(tabsData map[string][]fyne.CanvasObject) [
 }
 
 func (container *TabContainer) selectElement(num int) {
-	selectedElement := container.selectedElement()
-	container.onElementUnselected(&selectedElement)
-	selectedElement.Refresh()
-	container.selectedElementIndex = num
-	selectedElement = container.selectedElement()
-	container.onElementSelected(&selectedElement)
-	container.selectedElement().Refresh()
+	if container.currentTabHasElements() {
+		selectedElement := container.selectedElement()
+		container.onElementUnselected(&selectedElement)
+		selectedElement.Refresh()
+		container.selectedElementIndex = num
+		selectedElement = container.selectedElement()
+		container.onElementSelected(&selectedElement)
+		container.selectedElement().Refresh()
+	}
+}
+
+func (container *TabContainer) currentTabHasElements() bool {
+	currentTabText := container.it.CurrentTab().Text
+	return len(container.tabsContent[currentTabText]) > 0
 }
 
 func (container *TabContainer) selectedElement() fyne.CanvasObject {

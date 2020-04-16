@@ -14,15 +14,17 @@ var tabsData = map[string][]fyne.CanvasObject{
 }
 
 func createTabContainerForTesting() *TabContainer {
-	return NewTabContainer(tabsData,
-		func(element *fyne.CanvasObject) {
-			label := *element
-			label.(*widget.Label).TextStyle = fyne.TextStyle{Bold: true}
-		},
-		func(element *fyne.CanvasObject) {
-			label := *element
-			label.(*widget.Label).TextStyle = fyne.TextStyle{Bold: false}
-		})
+	return NewTabContainer(tabsData, boldLabelOnSelection, unboldLabelOnUnselection, )
+}
+
+func boldLabelOnSelection(element *fyne.CanvasObject) {
+	label := *element
+	label.(*widget.Label).TextStyle = fyne.TextStyle{Bold: true}
+}
+
+func unboldLabelOnUnselection(element *fyne.CanvasObject) {
+	label := *element
+	label.(*widget.Label).TextStyle = fyne.TextStyle{Bold: false}
 }
 
 func TestThatOnDisplayCorrectTabAndContentDisplays(t *testing.T) {
@@ -78,4 +80,16 @@ func TestThatChangingTabSelectsFirstLabelOnTab(t *testing.T) {
 	assert.Equal(t, fyne.TextStyle{Bold: false}, label5.TextStyle)
 	label6 := GetLabelFromContent(container.it.CurrentTab().Content, "c1")
 	assert.Equal(t, fyne.TextStyle{Bold: false}, label6.TextStyle)
+}
+
+func TestThatChangingIntoTabWithNoContentDoesNotPanic(t *testing.T) {
+	container := NewTabContainer(
+		map[string][]fyne.CanvasObject{
+			"First tab":  {widget.NewLabel("a1"), widget.NewLabel("b1"), widget.NewLabel("c1")},
+			"Second tab": {},
+		},
+		boldLabelOnSelection,
+		unboldLabelOnUnselection,
+	)
+	container.SelectNextTab()
 }
