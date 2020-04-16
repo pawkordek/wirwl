@@ -20,7 +20,6 @@ type App struct {
 	entriesTypesTabs    *widget.TabContainer
 	entries             map[string][]data.Entry
 	entriesTypes        map[string]data.EntryType
-	entriesLabels       map[string][]fyneWidget.Label
 	dataProvider        data.Provider
 	lastKeyPress        fyne.KeyName
 	editEntryTypeDialog *widget.FormDialog
@@ -81,7 +80,6 @@ func (app *App) deleteCurrentEntryType() {
 	currentTab := app.entriesTypesTabs.CurrentTab()
 	delete(app.entries, currentTab.Text)
 	delete(app.entriesTypes, currentTab.Text)
-	delete(app.entriesLabels, currentTab.Text)
 	app.entriesTypesTabs.Remove(currentTab)
 }
 
@@ -170,7 +168,6 @@ func (app *App) getAlphabeticallySortedEntriesTypesNames() []string {
 
 func (app *App) loadEntryTabWithItsContent(typeName string) *fyneWidget.TabItem {
 	labels := app.getEntriesNamesAsLabels(app.entries[typeName])
-	app.entriesLabels[typeName] = labels
 	labelsAsCanvasObjects := app.getLabelsAsCanvasObjects(labels)
 	return fyneWidget.NewTabItem(typeName, fyneWidget.NewVBox(labelsAsCanvasObjects...))
 }
