@@ -23,12 +23,6 @@ func NewTabContainer(
 	tabsData map[string][]fyne.CanvasObject,
 	onElementSelected func(element *fyne.CanvasObject),
 	onElementUnselected func(element *fyne.CanvasObject)) *TabContainer {
-	var tabs []*fyneWidget.TabItem
-	sortedTabsNames := getAlphabeticallySortedTabsNames(tabsData)
-	for _, tabName := range sortedTabsNames {
-		formItem := fyneWidget.NewTabItem(tabName, fyneWidget.NewVBox(tabsData[tabName]...))
-		tabs = append(tabs, formItem)
-	}
 	container := &TabContainer{
 		selectedElementIndex: 0,
 		tabsContent:          tabsData,
@@ -36,10 +30,20 @@ func NewTabContainer(
 		onElementUnselected:  onElementUnselected,
 	}
 	container.ExtendBaseWidget(container)
-	container.TabContainer.Items = tabs
+	container.TabContainer.Items = getTabsFromData(tabsData)
 	container.selectElement(0)
 	container.SelectTabIndex(0)
 	return container
+}
+
+func getTabsFromData(tabsData map[string][]fyne.CanvasObject) []*fyneWidget.TabItem {
+	var tabs []*fyneWidget.TabItem
+	sortedTabsNames := getAlphabeticallySortedTabsNames(tabsData)
+	for _, tabName := range sortedTabsNames {
+		formItem := fyneWidget.NewTabItem(tabName, fyneWidget.NewVBox(tabsData[tabName]...))
+		tabs = append(tabs, formItem)
+	}
+	return tabs
 }
 
 func getAlphabeticallySortedTabsNames(tabsData map[string][]fyne.CanvasObject) []string {
