@@ -12,13 +12,7 @@ It allows to switch tab to next/previous which is done cyclically, setting next 
 The way selected items display graphically should be controlled by onElementSelected and onElementUnselected functions e.g. labels becoming bold on selection.
 */
 type TabContainer struct {
-	/*Cannot extend fyne's TabContainer right now as there is a bug that prevents tab buttons from updating when tabs change on extended TabContainer.
-	  So the only way to do it right now is to to compose fyne's TabContainer and extend a Box which will contain this TabContainer.
-	  The bug in question is this: https://github.com/fyne-io/fyne/issues/810
-	  TODO: Remove the workaround when fyne 1.2.4 comes out and replace pointers with variables
-	*/
-	it *fyneWidget.TabContainer
-	*fyneWidget.Box
+	fyneWidget.TabContainer
 	selectedElementIndex int
 	tabsContent          map[string][]fyne.CanvasObject
 	onElementSelected    func(element *fyne.CanvasObject)
@@ -35,17 +29,16 @@ func NewTabContainer(
 		formItem := fyneWidget.NewTabItem(tabName, fyneWidget.NewVBox(tabsData[tabName]...))
 		tabs = append(tabs, formItem)
 	}
-	fyneContainer := fyneWidget.NewTabContainer(tabs...)
 	container := &TabContainer{
-		Box:                  fyneWidget.NewVBox(fyneContainer),
-		it:                   fyneContainer,
 		selectedElementIndex: 0,
 		tabsContent:          tabsData,
 		onElementSelected:    onElementSelected,
 		onElementUnselected:  onElementUnselected,
 	}
+	container.ExtendBaseWidget(container)
+	container.TabContainer.Items = tabs
 	container.selectElement(0)
-	container.it.SelectTabIndex(0)
+	container.SelectTabIndex(0)
 	return container
 }
 
@@ -71,18 +64,18 @@ func (container *TabContainer) selectElement(num int) {
 }
 
 func (container *TabContainer) currentTabHasElements() bool {
-	currentTabText := container.it.CurrentTab().Text
+	currentTabText := container.CurrentTab().Text
 	return len(container.tabsContent[currentTabText]) > 0
 }
 
 func (container *TabContainer) selectedElement() fyne.CanvasObject {
-	currentTabText := container.it.CurrentTab().Text
+	currentTabText := container.CurrentTab().Text
 	return container.tabsContent[currentTabText][container.selectedElementIndex]
 }
 
 func (container *TabContainer) SelectNextTab() {
-	currentTabIndex := container.it.CurrentTabIndex()
-	if currentTabIndex >= len(container.it.Items)-1 {
+	currentTabIndex := container.CurrentTabIndex()
+	if currentTabIndex >= len(container.Items())-1 {
 		container.setTabTo(0)
 	} else {
 		container.setTabTo(currentTabIndex + 1)
@@ -90,45 +83,19 @@ func (container *TabContainer) SelectNextTab() {
 }
 
 func (container *TabContainer) SelectPreviousTab() {
-	currentTabIndex := container.it.CurrentTabIndex()
+	currentTabIndex := container.CurrentTabIndex()
 	if currentTabIndex == 0 {
-		container.setTabTo(len(container.it.Items) - 1)
+		container.setTabTo(len(container.Items()) - 1)
 	} else {
 		container.setTabTo(currentTabIndex - 1)
 	}
 }
 
 func (container *TabContainer) setTabTo(index int) {
-	container.it.SelectTabIndex(index)
+	container.SelectTabIndex(index)
 	container.selectElement(0)
 }
 
-//TODO: Remove when fyne 1.2.4 comes out
 func (container *TabContainer) Items() []*fyneWidget.TabItem {
-	return container.it.Items
-}
-
-//TODO: Remove when fyne 1.2.4 comes out
-func (container *TabContainer) SelectTab(item *fyneWidget.TabItem) {
-	container.it.SelectTab(item)
-}
-
-//TODO: Remove when fyne 1.2.4 comes out
-func (container *TabContainer) SelectTabIndex(index int) {
-	container.it.SelectTabIndex(index)
-}
-
-//TODO: Remove when fyne 1.2.4 comes out
-func (container *TabContainer) CurrentTab() *fyneWidget.TabItem {
-	return container.it.CurrentTab()
-}
-
-//TODO: Remove when fyne 1.2.4 comes out
-func (container *TabContainer) CurrentTabIndex() int {
-	return container.it.CurrentTabIndex()
-}
-
-//TODO: Remove when fyne 1.2.4 comes out
-func (container *TabContainer) Remove(item *fyneWidget.TabItem) {
-	container.it.Remove(item)
+	return container.TabContainer.Items
 }

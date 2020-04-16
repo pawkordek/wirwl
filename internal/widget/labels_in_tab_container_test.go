@@ -17,21 +17,21 @@ func createLabelsInTabContainerForTesting() *TabContainer {
 
 func TestThatLabelsDisplay(t *testing.T) {
 	container := createLabelsInTabContainerForTesting()
-	assert.Equal(t, "First tab", container.it.CurrentTab().Text)
-	label1 := GetLabelFromContent(container.it.CurrentTab().Content, "a1")
+	assert.Equal(t, "First tab", container.CurrentTab().Text)
+	label1 := GetLabelFromContent(container.CurrentTab().Content, "a1")
 	assert.NotNil(t, label1)
-	label2 := GetLabelFromContent(container.it.CurrentTab().Content, "b1")
+	label2 := GetLabelFromContent(container.CurrentTab().Content, "b1")
 	assert.NotNil(t, label2)
-	label3 := GetLabelFromContent(container.it.CurrentTab().Content, "c1")
+	label3 := GetLabelFromContent(container.CurrentTab().Content, "c1")
 	assert.NotNil(t, label3)
 }
 
 func TestThatLabelsAreBoldedUnbolded(t *testing.T) {
 	container := createLabelsInTabContainerForTesting()
-	label1 := GetLabelFromContent(container.it.CurrentTab().Content, "a1")
+	label1 := GetLabelFromContent(container.CurrentTab().Content, "a1")
 	assert.Equal(t, fyne.TextStyle{Bold: true}, label1.TextStyle)
-	label2 := GetLabelFromContent(container.it.CurrentTab().Content, "b1")
+	label2 := GetLabelFromContent(container.CurrentTab().Content, "b1")
 	assert.Equal(t, fyne.TextStyle{Bold: false}, label2.TextStyle)
-	label3 := GetLabelFromContent(container.it.CurrentTab().Content, "c1")
+	label3 := GetLabelFromContent(container.CurrentTab().Content, "c1")
 	assert.Equal(t, fyne.TextStyle{Bold: false}, label3.TextStyle)
 }
