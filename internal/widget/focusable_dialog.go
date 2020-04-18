@@ -13,7 +13,10 @@ When any key gets pressed it hides itself.
 type FocusableDialog struct {
 	/*PopUp has to stay as a pointer for now because when extended as value as recommended in fyne there seems to be a bug
 	  that causes a copy of it to display in the left corner when shown for the first time.
-	  TODO: Verify whether it is a bug
+	  It is possible to set PopUp as variable and extend and the problem will not show up but then it's not possible
+	  to make it modal since calling &FocusableDialog{} will set inner 'modal' value to false - thus it's not
+	  gonna act like ModalPopUp. Setting value of NewModalPopUp on extended PopUp on the other hand will cause the bug to happen.
+	  TODO: Verify how to deal with this
 	*/
 	*widget.PopUp
 	title   *widget.Label
