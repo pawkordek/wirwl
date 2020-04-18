@@ -338,14 +338,3 @@ func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T)
 	assert.Equal(t, "music", app2.entriesTypesTabs.CurrentTab().Text)
 	data.DeleteFile(deletionTestDbPath)
 }
-
-func (app *App) SimulateKeyPress(key fyne.KeyName) {
-	event := &fyne.KeyEvent{Name: key}
-	focusedElement := app.mainWindow.Canvas().Focused()
-	if focusedElement != nil {
-		focusedElement.TypedKey(event)
-	} else {
-		onTypedKey := app.mainWindow.Canvas().OnTypedKey()
-		onTypedKey(event)
-	}
-}
