@@ -71,19 +71,23 @@ func createLoggingDirIfNotExist(loggingDir string) {
 
 func (app *App) LoadAndDisplay(fyneApp fyne.App) {
 	app.fyneApp = fyneApp
-	app.fyneApp.Settings().SetTheme(theme.LightTheme())
 	app.prepare()
 	app.mainWindow.ShowAndRun()
 }
 
 func (app *App) prepare() {
-	app.mainWindow = app.fyneApp.NewWindow("wirwl")
+	app.setupBasicSettings()
 	app.loadEntriesTypes()
 	app.loadEntries()
 	app.loadEntriesTypesTabs()
 	app.prepareDialogs()
 	app.prepareMainWindowContent()
 	app.mainWindow.Canvas().SetOnTypedKey(app.onKeyPressed)
+}
+
+func (app *App) setupBasicSettings() {
+	app.mainWindow = app.fyneApp.NewWindow("wirwl")
+	app.fyneApp.Settings().SetTheme(theme.LightTheme())
 }
 
 func (app *App) onEnterPressedInAddEntryTypeDialog() {
