@@ -112,6 +112,42 @@ func (app *App) loadEntries() {
 	}
 }
 
+func (app *App) loadEntriesTypesTabs() {
+	entriesGroupedByType := app.getEntriesNamesGroupedByType()
+	app.entriesTypesTabs = widget.NewLabelsInTabContainer(entriesGroupedByType)
+}
+
+func (app *App) getEntriesNamesGroupedByType() map[string][]string {
+	if len(app.entries) != 0 {
+		return app.getEntriesNamesGroupedByTypeMap()
+	} else {
+		return app.getNoEntriesTab()
+	}
+}
+
+func (app *App) getEntriesNamesGroupedByTypeMap() map[string][]string {
+	entriesNames := make(map[string][]string)
+	for entryType, entries := range app.entries {
+		names := app.getEntriesNames(entries)
+		entriesNames[entryType] = names
+	}
+	return entriesNames
+}
+
+func (app *App) getEntriesNames(entries []data.Entry) []string {
+	names := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		names = append(names, entry.Title)
+	}
+	return names
+}
+
+func (app *App) getNoEntriesTab() map[string][]string {
+	return map[string][]string{
+		"No entries": {""},
+	}
+}
+
 func (app *App) prepareMainWindowContent() {
 	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTypesTabs))
 }
@@ -162,44 +198,6 @@ func (app *App) applyChangesToCurrentEntryType() {
 	app.loadEntriesTypesTabs()
 	app.prepareMainWindowContent()
 	app.entriesTypesTabs.SelectTabIndex(currentTabIndex)
-}
-
-func (app *App) loadEntriesTypesTabs() {
-	entriesGroupedByType := app.getEntriesNamesGroupedByType()
-	app.entriesTypesTabs = widget.NewLabelsInTabContainer(entriesGroupedByType)
-}
-
-
-
-func (app *App) getEntriesNamesGroupedByType() map[string][]string {
-	if len(app.entries) != 0 {
-		return app.getEntriesNamesGroupedByTypeMap()
-	} else {
-		return app.getNoEntriesTab()
-	}
-}
-
-func (app *App) getEntriesNamesGroupedByTypeMap() map[string][]string {
-	entriesNames := make(map[string][]string)
-	for entryType, entries := range app.entries {
-		names := app.getEntriesNames(entries)
-		entriesNames[entryType] = names
-	}
-	return entriesNames
-}
-
-func (app *App) getEntriesNames(entries []data.Entry) []string {
-	names := make([]string, 0, len(entries))
-	for _, entry := range entries {
-		names = append(names, entry.Title)
-	}
-	return names
-}
-
-func (app *App) getNoEntriesTab() map[string][]string {
-	return map[string][]string{
-		"No entries": {""},
-	}
 }
 
 func (app *App) getCurrentTabText() string {
