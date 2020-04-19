@@ -178,10 +178,10 @@ func TestThatItIsNotPossibleToAddTheSameEntryTypeTwice(t *testing.T) {
 func TestThatPressingAnyKeyClosesMessagePopUp(t *testing.T) {
 	app := NewApp(exampleDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
-	app.msgDialog.Show()
+	app.msgDialog.Display("", "")
 	app.SimulateKeyPress(fyne.KeyT)
 	assert.Equal(t, true, app.msgDialog.Hidden)
-	app.msgDialog.Show()
+	app.msgDialog.Display("", "")
 	app.SimulateKeyPress(fyne.KeyReturn)
 	assert.Equal(t, true, app.msgDialog.Hidden)
 }
