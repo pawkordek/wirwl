@@ -208,12 +208,7 @@ func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 	} else if app.lastKeyPress == fyne.KeyT {
 		app.handleTabRelatedKeyPress(event)
 	} else if event.Name == fyne.KeyS {
-		err := app.saveChangesToDb()
-		if err != nil {
-			app.msgDialog.Display(widget.ErrorPopUp, err.Error())
-		} else {
-			app.msgDialog.Display(widget.SuccessPopUp, "Changes saved.")
-		}
+		app.trySavingChangesToDb()
 	}
 
 	app.lastKeyPress = event.Name
@@ -242,6 +237,15 @@ func (app *App) editCurrentEntryType() {
 	app.editEntryTypeDialog.SetItemValue("Name", app.getCurrentTabText())
 	app.editEntryTypeDialog.SetItemValue("Image query", app.entriesTypes[app.getCurrentTabText()].ImageQuery)
 	app.editEntryTypeDialog.Display()
+}
+
+func (app *App) trySavingChangesToDb() {
+	err := app.saveChangesToDb()
+	if err != nil {
+		app.msgDialog.Display(widget.ErrorPopUp, err.Error())
+	} else {
+		app.msgDialog.Display(widget.SuccessPopUp, "Changes saved.")
+	}
 }
 
 func (app *App) addNewEntryType() error {
