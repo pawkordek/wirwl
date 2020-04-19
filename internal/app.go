@@ -90,21 +90,6 @@ func (app *App) setupBasicSettings() {
 	app.fyneApp.Settings().SetTheme(theme.LightTheme())
 }
 
-func (app *App) onEnterPressedInAddEntryTypeDialog() {
-	currentTabText := app.getCurrentTabText()
-	err := app.addNewEntryType()
-	if err != nil {
-		app.msgDialog.Display(widget.ErrorPopUp, err.Error())
-	} else {
-		for _, tab := range app.entriesTypesTabs.Items() {
-			if tab.Text == currentTabText {
-				app.entriesTypesTabs.SelectTab(tab)
-				break
-			}
-		}
-	}
-}
-
 func (app *App) prepareMainWindowContent() {
 	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTypesTabs))
 }
@@ -124,6 +109,21 @@ func (app *App) deleteCurrentEntryType() {
 	delete(app.entries, currentTab.Text)
 	delete(app.entriesTypes, currentTab.Text)
 	app.entriesTypesTabs.Remove(currentTab)
+}
+
+func (app *App) onEnterPressedInAddEntryTypeDialog() {
+	currentTabText := app.getCurrentTabText()
+	err := app.addNewEntryType()
+	if err != nil {
+		app.msgDialog.Display(widget.ErrorPopUp, err.Error())
+	} else {
+		for _, tab := range app.entriesTypesTabs.Items() {
+			if tab.Text == currentTabText {
+				app.entriesTypesTabs.SelectTab(tab)
+				break
+			}
+		}
+	}
 }
 
 func (app *App) applyChangesToCurrentEntryType() {
