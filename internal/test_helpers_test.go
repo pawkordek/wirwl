@@ -46,6 +46,7 @@ func (app *App) SimulateAddingNewEntryTypeWithName(text string) {
 
 func (app *App) SimulateSavingChanges() {
 	app.SimulateKeyPress(fyne.KeyS)
+	app.SimulateKeyPress(fyne.KeyY)
 }
 
 func (app *App) SimulateAttemptAtDeletionOfCurrentEntryType() {

@@ -207,7 +207,7 @@ func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 		app.entriesTypesTabs.SelectPreviousTab()
 	} else if app.lastKeyPress == fyne.KeyT {
 		app.handleTabRelatedKeyPress(event)
-	} else if event.Name == fyne.KeyS {
+	} else if app.lastKeyPress == fyne.KeyS && event.Name == fyne.KeyY {
 		app.trySavingChangesToDb()
 	}
 
