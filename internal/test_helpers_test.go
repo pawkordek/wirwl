@@ -1,6 +1,17 @@
 package wirwl
 
-import "fyne.io/fyne"
+import (
+	"fyne.io/fyne"
+	"os/user"
+)
+
+func getLoggingDirForTesting() string {
+	currentUser, err := user.Current()
+	if err != nil {
+		return "/tmp/wirwl/"
+	}
+	return currentUser.HomeDir + "/.local/share/wirwl/"
+}
 
 func (app *App) SimulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}

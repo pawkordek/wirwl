@@ -63,6 +63,16 @@ func TestMain(m *testing.M) {
 	os.Exit(exitCode)
 }
 
+func TestThatLoggingFileWithItsDirGetsCreated(t *testing.T) {
+	loggingDir := getLoggingDirForTesting()
+	loggingFilePath := loggingDir + "wirwl.log"
+	data.DeleteFile(loggingFilePath)
+	data.DeleteFile(loggingDir)
+	NewApp(exampleDbPath)
+	_, err := os.Stat(loggingFilePath)
+	assert.Nil(t, err)
+}
+
 func TestThatEntriesTabsWithContentDisplayInCorrectOrder(t *testing.T) {
 	app := NewApp(exampleDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
