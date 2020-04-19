@@ -90,6 +90,28 @@ func (app *App) setupBasicSettings() {
 	app.fyneApp.Settings().SetTheme(theme.LightTheme())
 }
 
+func (app *App) loadEntriesTypes() {
+	app.entriesTypes = make(map[string]data.EntryType)
+	entriesTypes, err := app.dataProvider.LoadEntriesTypesFromDb()
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, entryType := range entriesTypes {
+		app.entriesTypes[entryType.Name] = entryType
+	}
+}
+
+func (app *App) loadEntries() {
+	app.entries = make(map[string][]data.Entry)
+	for typeName, _ := range app.entriesTypes {
+		entries, err := app.dataProvider.LoadEntriesFromDb(typeName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		app.entries[typeName] = entries
+	}
+}
+
 func (app *App) prepareMainWindowContent() {
 	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTypesTabs))
 }
@@ -147,27 +169,7 @@ func (app *App) loadEntriesTypesTabs() {
 	app.entriesTypesTabs = widget.NewLabelsInTabContainer(entriesGroupedByType)
 }
 
-func (app *App) loadEntriesTypes() {
-	app.entriesTypes = make(map[string]data.EntryType)
-	entriesTypes, err := app.dataProvider.LoadEntriesTypesFromDb()
-	if err != nil {
-		log.Fatal(err)
-	}
-	for _, entryType := range entriesTypes {
-		app.entriesTypes[entryType.Name] = entryType
-	}
-}
 
-func (app *App) loadEntries() {
-	app.entries = make(map[string][]data.Entry)
-	for typeName, _ := range app.entriesTypes {
-		entries, err := app.dataProvider.LoadEntriesFromDb(typeName)
-		if err != nil {
-			log.Fatal(err)
-		}
-		app.entries[typeName] = entries
-	}
-}
 
 func (app *App) getEntriesNamesGroupedByType() map[string][]string {
 	if len(app.entries) != 0 {
