@@ -41,3 +41,16 @@ func TestThatTitleIsDisplayedFirst(t *testing.T) {
 	dialog := NewFocusableDialog(test.Canvas(), label)
 	assert.Equal(t, dialog.Content.(*widget.Box).Children[1], label)
 }
+
+func TestThatAfterOnlyFirstHidingCallbackFunctionIsCalled(t *testing.T) {
+	label := widget.NewLabel("some title")
+	dialog := NewFocusableDialog(test.Canvas(), label)
+	count := 0
+	dialog.SetOneTimeOnHideCallback(func() {
+		count++
+	})
+	dialog.Hide()
+	assert.Equal(t, 1, count)
+	dialog.Hide()
+	assert.Equal(t, 1, count)
+}

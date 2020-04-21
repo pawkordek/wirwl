@@ -19,8 +19,9 @@ type FocusableDialog struct {
 	  TODO: Verify how to deal with this
 	*/
 	*widget.PopUp
-	title   *widget.Label
-	focused bool
+	title                 *widget.Label
+	focused               bool
+	oneTimeOnHideCallback func()
 }
 
 func NewFocusableDialog(canvas fyne.Canvas, content ...fyne.CanvasObject) *FocusableDialog {
@@ -29,9 +30,10 @@ func NewFocusableDialog(canvas fyne.Canvas, content ...fyne.CanvasObject) *Focus
 	content = append([]fyne.CanvasObject{title}, content...)
 	popupContent := widget.NewVBox(content...)
 	dialog := &FocusableDialog{
-		PopUp:   widget.NewModalPopUp(popupContent, canvas),
-		title:   title,
-		focused: false,
+		PopUp:                 widget.NewModalPopUp(popupContent, canvas),
+		title:                 title,
+		focused:               false,
+		oneTimeOnHideCallback: func() {},
 	}
 	dialog.ExtendBaseWidget(dialog)
 	dialog.Hide()
@@ -67,4 +69,14 @@ func (dialog *FocusableDialog) Focused() bool {
 
 func (dialog *FocusableDialog) TypedRune(r rune) {
 	//Do nothing as inputting text handling is not needed, only key presses
+}
+
+func (dialog *FocusableDialog) Hide() {
+	dialog.PopUp.Hide()
+	dialog.oneTimeOnHideCallback()
+	dialog.oneTimeOnHideCallback = func() {}
+}
+
+func (dialog *FocusableDialog) SetOneTimeOnHideCallback(callback func()) {
+	dialog.oneTimeOnHideCallback = callback
 }
