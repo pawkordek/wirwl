@@ -48,7 +48,7 @@ func getTabsFromData(tabsData map[string][]fyne.CanvasObject) []*fyneWidget.TabI
 
 func getAlphabeticallySortedTabsNames(tabsData map[string][]fyne.CanvasObject) []string {
 	sortedNames := make([]string, 0, len(tabsData))
-	for tabName, _ := range tabsData {
+	for tabName := range tabsData {
 		sortedNames = append(sortedNames, tabName)
 	}
 	sort.Strings(sortedNames)

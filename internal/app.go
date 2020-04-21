@@ -103,7 +103,7 @@ func (app *App) loadEntriesTypes() {
 
 func (app *App) loadEntries() {
 	app.entries = make(map[string][]data.Entry)
-	for typeName, _ := range app.entriesTypes {
+	for typeName := range app.entriesTypes {
 		entries, err := app.dataProvider.LoadEntriesFromDb(typeName)
 		if err != nil {
 			log.Fatal(err)
