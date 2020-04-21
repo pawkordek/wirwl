@@ -213,6 +213,17 @@ func TestThatAfterAddingNewEntryOpenedTabStillHasTheSameElementHighlighted(t *te
 	assert.Equal(t, fyne.TextStyle{Bold: false}, widget.GetLabelFromContent(currentTab.Content, "some comic2").TextStyle)
 }
 
+func TestThatAfterTryingToAddExistingEntryTypeAndClosingWarningMessageAboutItDialogForAddingEntriesTypesIsStillOpen(t *testing.T) {
+	app := NewApp(exampleDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateAddingNewEntryTypeWithName("comics")
+	assert.True(t, app.addEntryTypeDialog.Hidden)
+	assert.False(t, app.addEntryTypeDialog.Focused())
+	app.SimulateKeyPress(fyne.KeyEscape)
+	assert.True(t, app.addEntryTypeDialog.Visible())
+	assert.True(t, app.addEntryTypeDialog.Focused())
+}
+
 func TestThatSavingChangesWorks(t *testing.T) {
 	data.DeleteFile(saveTestDbPath)
 	app := NewApp(saveTestDbPath)

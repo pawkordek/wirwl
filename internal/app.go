@@ -173,6 +173,9 @@ func (app *App) onEnterPressedInAddEntryTypeDialog() {
 	currentTabText := app.getCurrentTabText()
 	err := app.addNewEntryType()
 	if err != nil {
+		app.msgDialog.SetOneTimeOnHideCallback(func() {
+			app.addEntryTypeDialog.Display()
+		})
 		app.msgDialog.Display(widget.ErrorPopUp, err.Error())
 	} else {
 		for _, tab := range app.entriesTypesTabs.Items() {
