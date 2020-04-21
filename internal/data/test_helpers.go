@@ -7,9 +7,7 @@ import (
 	"os"
 )
 
-const ExampleDbPath = "../../test/exampleDb.db"
 const TestDbPath = "../../test/testDb.db"
-const EmptyDbPath = "../../test/emptyDb.db"
 
 func GetEntriesTypes() []EntryType {
 	return []EntryType{
