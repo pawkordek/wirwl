@@ -51,8 +51,8 @@ func (dialog *FocusableDialog) Display(title string) {
 }
 
 func (dialog *FocusableDialog) TypedKey(key *fyne.KeyEvent) {
-	dialog.Hide()
 	dialog.Canvas.Unfocus()
+	dialog.Hide()
 }
 
 func (dialog *FocusableDialog) FocusGained() {
