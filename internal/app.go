@@ -191,8 +191,8 @@ func (app *App) onEnterPressedInAddEntryTypeDialog() {
 func (app *App) applyChangesToCurrentEntryType() {
 	currentEntryType := app.entriesTypes[app.getCurrentTabText()]
 	oldTypeName := currentEntryType.Name
-	currentEntryType.Name, _ = app.editEntryTypeDialog.ItemValue("Name")
-	currentEntryType.ImageQuery, _ = app.editEntryTypeDialog.ItemValue("Image query")
+	currentEntryType.Name = app.editEntryTypeDialog.ItemValue("Name")
+	currentEntryType.ImageQuery = app.editEntryTypeDialog.ItemValue("Image query")
 	newTypeName := currentEntryType.Name
 	app.entries[newTypeName] = app.entries[oldTypeName]
 	app.entriesTypes[newTypeName] = currentEntryType
@@ -257,13 +257,13 @@ func (app *App) trySavingChangesToDb() {
 }
 
 func (app *App) addNewEntryType() error {
-	newEntryTypeName, _ := app.addEntryTypeDialog.ItemValue("Name")
+	newEntryTypeName := app.addEntryTypeDialog.ItemValue("Name")
 	if newEntryTypeName == "" {
 		return errors.New("You cannot add entry type with empty name")
 	}
 	if _, exists := app.entriesTypes[newEntryTypeName]; !exists {
 		app.entries[newEntryTypeName] = nil
-		imageQuery, _ := app.addEntryTypeDialog.ItemValue("Image query")
+		imageQuery := app.addEntryTypeDialog.ItemValue("Image query")
 		app.entriesTypes[newEntryTypeName] = data.EntryType{
 			Name:       newEntryTypeName,
 			ImageQuery: imageQuery,

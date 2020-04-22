@@ -1,7 +1,6 @@
 package widget
 
 import (
-	"errors"
 	"fyne.io/fyne"
 	"fyne.io/fyne/widget"
 )
@@ -107,11 +106,11 @@ func (dialog *FormDialog) SetItemValue(itemName string, value string) {
 	}
 }
 
-func (dialog *FormDialog) ItemValue(itemName string) (string, error) {
+func (dialog *FormDialog) ItemValue(itemName string) string {
 	if dialog.inputs[itemName] != nil {
-		return dialog.inputs[itemName].Text, nil
+		return dialog.inputs[itemName].Text
 	}
-	return "", errors.New("There is no item with name=" + itemName)
+	return ""
 }
 
 func (dialog *FormDialog) CleanItemValues() {

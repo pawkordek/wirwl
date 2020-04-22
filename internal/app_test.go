@@ -155,8 +155,8 @@ func TestWhetherReopeningDialogForAddingEntriesTypesDoesNotPersistPreviouslyInpu
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateAddingNewEntryTypeWithName("some type")
 	app.SimulateOpeningDialogForAddingEntryType()
-	name, _ := app.addEntryTypeDialog.ItemValue("Name")
-	imageQuery, _ := app.addEntryTypeDialog.ItemValue("Image query")
+	name := app.addEntryTypeDialog.ItemValue("Name")
+	imageQuery := app.addEntryTypeDialog.ItemValue("Image query")
 	assert.Empty(t, name)
 	assert.Empty(t, imageQuery)
 }
