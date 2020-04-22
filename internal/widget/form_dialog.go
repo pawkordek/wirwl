@@ -107,7 +107,7 @@ func (dialog *FormDialog) SetItemValue(itemName string, value string) {
 	}
 }
 
-func (dialog *FormDialog) GetItemValue(itemName string) (string, error) {
+func (dialog *FormDialog) ItemValue(itemName string) (string, error) {
 	if dialog.inputs[itemName] != nil {
 		return dialog.inputs[itemName].Text, nil
 	}

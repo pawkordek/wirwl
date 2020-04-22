@@ -101,7 +101,7 @@ func TestThatSettingAndGettingItemValueWorksCorrectly(t *testing.T) {
 	dialog := NewFormDialog(test.Canvas(), "", "first")
 	setValue := "test value"
 	dialog.SetItemValue("first", setValue)
-	receivedValue, err := dialog.GetItemValue("first")
+	receivedValue, err := dialog.ItemValue("first")
 	assert.Nil(t, err)
 	assert.Equal(t, setValue, receivedValue)
 }
@@ -113,7 +113,7 @@ func TestThatSettingItemValueOnNonExistingItemDoesNotPanic(t *testing.T) {
 
 func TestThatGettingItemValueOnNonExistingItemReturnsError(t *testing.T) {
 	dialog := NewFormDialog(test.Canvas(), "", "first")
-	value, err := dialog.GetItemValue("non existing")
+	value, err := dialog.ItemValue("non existing")
 	assert.Equal(t, "", value)
 	assert.NotNil(t, err)
 }
