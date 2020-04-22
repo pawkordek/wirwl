@@ -257,6 +257,9 @@ func (app *App) trySavingChangesToDb() {
 
 func (app *App) addNewEntryType() error {
 	newEntryTypeName, _ := app.addEntryTypeDialog.GetItemValue("Name")
+	if newEntryTypeName == "" {
+		return errors.New("You cannot add entry type with empty name")
+	}
 	if _, exists := app.entriesTypes[newEntryTypeName]; !exists {
 		app.entries[newEntryTypeName] = nil
 		imageQuery, _ := app.addEntryTypeDialog.GetItemValue("Image query")

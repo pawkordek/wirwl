@@ -224,6 +224,16 @@ func TestThatAfterTryingToAddExistingEntryTypeAndClosingWarningMessageAboutItDia
 	assert.True(t, app.addEntryTypeDialog.Focused())
 }
 
+func TestThatAfterTryingToAddEntryTypeWithEmptyNameWarningMessageDisplaysAndEntryTypeIsNotAdded(t *testing.T) {
+	app := NewApp(exampleDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app.SimulateAddingNewEntryTypeWithName("")
+	assert.True(t, app.msgDialog.Visible())
+	assert.Equal(t, "ERROR", app.msgDialog.Title())
+	assert.Equal(t, "You cannot add entry type with empty name", app.msgDialog.Msg())
+	assert.Equal(t, 3, len(app.entriesTypesTabs.Items()))
+}
+
 func TestThatSavingChangesWorks(t *testing.T) {
 	data.DeleteFile(saveTestDbPath)
 	app := NewApp(saveTestDbPath)
