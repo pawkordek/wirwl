@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/boltdb/bolt"
+	"log"
 	"strconv"
 )
 
@@ -24,8 +25,11 @@ func (provider *BoltProvider) openDb() error {
 	return err
 }
 
-func (provider *BoltProvider) closeDb() error {
-	return provider.db.Close()
+func (provider *BoltProvider) closeDb() {
+	err := provider.db.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (provider *BoltProvider) SaveEntriesToDb(table string, entries []Entry) error {
@@ -33,6 +37,7 @@ func (provider *BoltProvider) SaveEntriesToDb(table string, entries []Entry) err
 	if err != nil {
 		return err
 	}
+	defer provider.closeDb()
 	err = provider.deleteTableIfExists(table)
 	if len(entries) == 0 {
 		err = provider.createNewTable(table)
@@ -43,10 +48,6 @@ func (provider *BoltProvider) SaveEntriesToDb(table string, entries []Entry) err
 				return err
 			}
 		}
-	}
-	err = provider.closeDb()
-	if err != nil {
-		return err
 	}
 	return nil
 }
@@ -94,15 +95,12 @@ func (provider *BoltProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer provider.closeDb()
 	var entries []Entry
 	err = provider.db.View(func(transaction *bolt.Tx) error {
 		entries, err = getEntriesDataFromTable(transaction, table)
 		return err
 	})
-	if err != nil {
-		return nil, err
-	}
-	err = provider.closeDb()
 	if err != nil {
 		return nil, err
 	}
@@ -165,15 +163,12 @@ func (provider *BoltProvider) LoadEntriesTypesFromDb() ([]EntryType, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer provider.closeDb()
 	var types []EntryType
 	err = provider.db.View(func(transaction *bolt.Tx) error {
 		types, err = getEntriesTypesFromTable(transaction)
 		return err
 	})
-	if err != nil {
-		return nil, err
-	}
-	err = provider.closeDb()
 	if err != nil {
 		return nil, err
 	}
