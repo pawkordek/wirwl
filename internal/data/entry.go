@@ -11,6 +11,7 @@ type Entry struct {
 	Description                string
 	Comment                    string
 	MediaType                  string
+	Tags                       string
 }
 
 type EntryType struct {

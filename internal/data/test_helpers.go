@@ -39,6 +39,7 @@ func GetExampleVideoEntries() []Entry {
 			Description:                "some description",
 			Comment:                    "some comment",
 			MediaType:                  "video",
+			Tags:                       "some tags",
 		},
 		{
 			Id:                         1,
@@ -51,6 +52,7 @@ func GetExampleVideoEntries() []Entry {
 			Description:                "some description2",
 			Comment:                    "some comment2",
 			MediaType:                  "video",
+			Tags:                       "some tags",
 		},
 	}
 }
@@ -68,6 +70,7 @@ func GetExampleComicEntries() []Entry {
 			Description:                "some description",
 			Comment:                    "some comment",
 			MediaType:                  "comic",
+			Tags:                       "some tags",
 		},
 		{
 			Id:                         1,
@@ -80,6 +83,7 @@ func GetExampleComicEntries() []Entry {
 			Description:                "some description2",
 			Comment:                    "some comment2",
 			MediaType:                  "comic",
+			Tags:                       "some tags",
 		},
 	}
 }
@@ -97,6 +101,7 @@ func GetExampleMusicEntries() []Entry {
 			Description:                "some description",
 			Comment:                    "some comment",
 			MediaType:                  "music",
+			Tags:                       "some tags",
 		},
 		{
 			Id:                         1,
@@ -109,6 +114,7 @@ func GetExampleMusicEntries() []Entry {
 			Description:                "some description2",
 			Comment:                    "some comment2",
 			MediaType:                  "music",
+			Tags:                       "some tags",
 		},
 	}
 }
@@ -157,6 +163,7 @@ func GetTestEntriesToSave() []Entry {
 			Description:                "some description",
 			Comment:                    "some comment",
 			MediaType:                  "some media type",
+			Tags:                       "some tags",
 		},
 		{
 			Id:                         1,
@@ -169,6 +176,7 @@ func GetTestEntriesToSave() []Entry {
 			Description:                "some description2",
 			Comment:                    "some comment2",
 			MediaType:                  "some media type2",
+			Tags:                       "some tags",
 		},
 	}
 }
