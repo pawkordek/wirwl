@@ -166,7 +166,8 @@ func (app *App) deleteCurrentEntryType() {
 	currentTab := app.entriesTypesTabs.CurrentTab()
 	delete(app.entries, currentTab.Text)
 	delete(app.entriesTypes, currentTab.Text)
-	app.entriesTypesTabs.Remove(currentTab)
+	app.loadEntriesTypesTabs()
+	app.prepareMainWindowContent()
 }
 
 func (app *App) onEnterPressedInAddEntryTypeDialog() {
