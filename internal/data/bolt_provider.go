@@ -6,6 +6,7 @@ import (
 	"github.com/boltdb/bolt"
 	"log"
 	"strconv"
+	"time"
 )
 
 const entriesTypesTableName = "entries_types"
@@ -20,7 +21,7 @@ func NewBoltProvider(dbPath string) Provider {
 }
 
 func (provider *BoltProvider) openDb() error {
-	db, err := bolt.Open(provider.dbPath, 0600, nil)
+	db, err := bolt.Open(provider.dbPath, 0600, &bolt.Options{Timeout: 10 * time.Second})
 	provider.db = db
 	return err
 }
