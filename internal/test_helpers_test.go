@@ -29,7 +29,7 @@ const testDbCopyPath = "../test/test_db_copy.db"
 /* Doesn't exist on disk when tests are run and will be created by wirwl if it has been loaded and run.
 Should be used for testing situations when application has been run for the first time.
 */
-const emptyDbPath = "../test/emptyDb.db"
+const emptyDbPath = "../test/empty_db.db"
 
 func createTestDb() {
 	dataProvider := data.NewBoltProvider(testDbPath)
