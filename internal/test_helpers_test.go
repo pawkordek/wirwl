@@ -29,12 +29,6 @@ won't change it's contents
 */
 const emptyDbPath = "../test/emptyDb.db"
 
-/* Contains no data. Should be used for testing saving operations. Should be deleted before running a test. */
-const saveTestDbPath = "../test/saveTestDb.db"
-
-/* Should be made as a copy of exampleDb. Should be used for testing deleting operations. Should be deleted after running a test*/
-const deletionTestDbPath = "../test/deletionTestDb.db"
-
 func createTestDb() {
 	dataProvider := data.NewBoltProvider(testDbPath)
 	saveTestEntriesTypes(dataProvider)
