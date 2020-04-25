@@ -219,20 +219,17 @@ func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
 }
 
 func TestThatDeletingEntriesTypesWorks(t *testing.T) {
-	data.CopyFile(testDbPath, deletionTestDbPath)
-	app := NewApp(deletionTestDbPath)
-	app.LoadAndDisplay(fyneTest.NewApp())
+	app, cleanup := setupAppForTesting()
+	defer cleanup()
 	app.SimulateDeletionOfCurrentEntryType()
 	assert.Equal(t, 2, len(app.entriesTypesTabs.Items()))
 	assert.Equal(t, "music", app.entriesTypesTabs.Items()[0].Text)
 	assert.Equal(t, "videos", app.entriesTypesTabs.Items()[1].Text)
-	data.DeleteFile(deletionTestDbPath)
 }
 
 func TestThatWhenTryingToDeleteLastEntryTypeItIsPreventedAndWarningDialogIsDisplayed(t *testing.T) {
-	data.CopyFile(testDbPath, deletionTestDbPath)
-	app := NewApp(deletionTestDbPath)
-	app.LoadAndDisplay(fyneTest.NewApp())
+	app, cleanup := setupAppForTesting()
+	defer cleanup()
 	app.SimulateDeletionOfCurrentEntryType()
 	app.SimulateDeletionOfCurrentEntryType()
 	app.SimulateAttemptAtDeletionOfCurrentEntryType()
@@ -240,7 +237,6 @@ func TestThatWhenTryingToDeleteLastEntryTypeItIsPreventedAndWarningDialogIsDispl
 	assert.Equal(t, true, app.msgDialog.Visible())
 	assert.Equal(t, "WARNING", app.msgDialog.Title())
 	assert.Equal(t, "You cannot remove the only remaining entry type!", app.msgDialog.Msg())
-	data.DeleteFile(deletionTestDbPath)
 }
 
 func TestThatEditingEntryTypeWorks(t *testing.T) {
