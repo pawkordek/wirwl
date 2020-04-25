@@ -189,15 +189,14 @@ func TestThatAfterTryingToAddEntryTypeWithEmptyNameWarningMessageDisplaysAndEntr
 }
 
 func TestThatSavingChangesWorks(t *testing.T) {
-	data.DeleteFile(saveTestDbPath)
-	app := NewApp(saveTestDbPath)
-	app.LoadAndDisplay(fyneTest.NewApp())
+	app, cleanup := setupAppForTesting()
+	defer cleanup()
 	app.SimulateAddingNewEntryTypeWithName("type")
 	app.SimulateSavingChanges()
-	app = NewApp(saveTestDbPath)
+	app = NewApp(testDbCopyPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
-	assert.Equal(t, 1, len(app.entriesTypesTabs.Items()))
-	assert.Equal(t, "type", app.getCurrentTabText())
+	assert.Equal(t, 4, len(app.entriesTypesTabs.Items()))
+	assert.Equal(t, "comics", app.getCurrentTabText())
 }
 
 func TestThatAfterSavingSuccessfullySuccessDialogDisplays(t *testing.T) {
