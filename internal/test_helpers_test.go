@@ -9,23 +9,39 @@ import (
 
 func createTestDb() {
 	dataProvider := data.NewBoltProvider(exampleDbPath)
+	saveTestEntriesTypes(dataProvider)
+	saveTestComics(dataProvider)
+	saveTestMusic(dataProvider)
+	saveTestVideos(dataProvider)
+}
+
+func saveTestEntriesTypes(provider data.Provider) {
 	entriesTypes := data.GetEntriesTypes()
-	err := dataProvider.SaveEntriesTypesToDb(entriesTypes)
+	err := provider.SaveEntriesTypesToDb(entriesTypes)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func saveTestVideos(provider data.Provider) {
 	videos := data.GetExampleVideoEntries()
-	err = dataProvider.SaveEntriesToDb("videos", videos)
+	err := provider.SaveEntriesToDb("videos", videos)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func saveTestComics(provider data.Provider) {
 	comics := data.GetExampleComicEntries()
-	err = dataProvider.SaveEntriesToDb("comics", comics)
+	err := provider.SaveEntriesToDb("comics", comics)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func saveTestMusic(provider data.Provider) {
 	music := data.GetExampleMusicEntries()
-	err = dataProvider.SaveEntriesToDb("music", music)
+	err := provider.SaveEntriesToDb("music", music)
 	if err != nil {
 		log.Fatal(err)
 	}
