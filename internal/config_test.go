@@ -12,7 +12,7 @@ func TestThatLoggingFileWithItsDirGetsCreated(t *testing.T) {
 	loggingFilePath := loggingDir + "wirwl.log"
 	data.DeleteFile(loggingFilePath)
 	data.DeleteFile(loggingDir)
-	NewApp(testDbPath)
+	NewApp(testDbCopyPath)
 	_, err := os.Stat(loggingFilePath)
 	assert.Nil(t, err)
 }
