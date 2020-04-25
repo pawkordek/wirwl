@@ -4,7 +4,6 @@ import (
 	"fyne.io/fyne"
 	fyneTest "fyne.io/fyne/test"
 	"github.com/stretchr/testify/assert"
-	"log"
 	"os"
 	"testing"
 	"wirwl/internal/data"
@@ -37,27 +36,7 @@ const saveTestDbPath = "../test/saveTestDb.db"
 const deletionTestDbPath = "../test/deletionTestDb.db"
 
 func TestMain(m *testing.M) {
-	dataProvider := data.NewBoltProvider(exampleDbPath)
-	entriesTypes := data.GetEntriesTypes()
-	err := dataProvider.SaveEntriesTypesToDb(entriesTypes)
-	if err != nil {
-		log.Fatal(err)
-	}
-	videos := data.GetExampleVideoEntries()
-	err = dataProvider.SaveEntriesToDb("videos", videos)
-	if err != nil {
-		log.Fatal(err)
-	}
-	comics := data.GetExampleComicEntries()
-	err = dataProvider.SaveEntriesToDb("comics", comics)
-	if err != nil {
-		log.Fatal(err)
-	}
-	music := data.GetExampleMusicEntries()
-	err = dataProvider.SaveEntriesToDb("music", music)
-	if err != nil {
-		log.Fatal(err)
-	}
+	createTestDb()
 	exitCode := m.Run()
 	data.DeleteFile(exampleDbPath)
 	os.Exit(exitCode)

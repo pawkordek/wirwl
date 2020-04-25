@@ -2,8 +2,34 @@ package wirwl
 
 import (
 	"fyne.io/fyne"
+	"log"
 	"os/user"
+	"wirwl/internal/data"
 )
+
+func createTestDb() {
+	dataProvider := data.NewBoltProvider(exampleDbPath)
+	entriesTypes := data.GetEntriesTypes()
+	err := dataProvider.SaveEntriesTypesToDb(entriesTypes)
+	if err != nil {
+		log.Fatal(err)
+	}
+	videos := data.GetExampleVideoEntries()
+	err = dataProvider.SaveEntriesToDb("videos", videos)
+	if err != nil {
+		log.Fatal(err)
+	}
+	comics := data.GetExampleComicEntries()
+	err = dataProvider.SaveEntriesToDb("comics", comics)
+	if err != nil {
+		log.Fatal(err)
+	}
+	music := data.GetExampleMusicEntries()
+	err = dataProvider.SaveEntriesToDb("music", music)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func getLoggingDirForTesting() string {
 	currentUser, err := user.Current()
