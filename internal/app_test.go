@@ -89,8 +89,8 @@ func TestThatApplicationDoesNotCrashWhenTryingToSwitchToATabThatDoesNotExist(t *
 }
 
 func TestThatIfThereAreNoEntriesCorrectMessageDisplays(t *testing.T) {
-	app := NewApp(emptyDbPath)
-	app.LoadAndDisplay(fyneTest.NewApp())
+	app, cleanup := setupFirstRunAppForTesting()
+	defer cleanup()
 	assert.Equal(t, 1, len(app.entriesTypesTabs.Items()))
 	assert.Equal(t, "No entries", app.entriesTypesTabs.Items()[0].Text)
 }
