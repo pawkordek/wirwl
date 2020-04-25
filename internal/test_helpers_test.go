@@ -81,7 +81,7 @@ func deleteTestDb() {
 
 func setupAppForTesting() (*App, func()) {
 	data.CopyFile(testDbPath, testDbCopyPath)
-	app := NewApp(testDbPath)
+	app := NewApp(testDbCopyPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	return app, deleteTestDbCopy
 }
