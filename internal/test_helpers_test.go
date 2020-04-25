@@ -8,9 +8,7 @@ import (
 	"wirwl/internal/data"
 )
 
-const testDbCopyPath = "../test/test_db_copy.db"
-
-/* Contains data generated in TestMain which is as follows:
+/* It's a generated db file which contains:
 comics:
 	some comic1
 	some comic2
@@ -20,12 +18,16 @@ music:
 videos:
 	some video1
 	some video2
-Should be used for testing operations that don't change it's contents
+Should be copied to perform any tests that require data to exist.
 */
 const testDbPath = "../test/test_db.db"
 
-/* Contains no data. Should be used for testing situations when application has been run for the first time and operations
-won't change it's contents
+/* Path which should contain a copy of test db file. It should be used for testing any tests that require data to exists
+ */
+const testDbCopyPath = "../test/test_db_copy.db"
+
+/* Doesn't exist on disk when tests are run and will be created by wirwl if it has been loaded and run.
+Should be used for testing situations when application has been run for the first time.
 */
 const emptyDbPath = "../test/emptyDb.db"
 
