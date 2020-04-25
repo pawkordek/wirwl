@@ -22,7 +22,7 @@ videos:
 	some video2
 Should be used for testing operations that don't change it's contents
 */
-const exampleDbPath = "../test/exampleDb.db"
+const testDbPath = "../test/test_db.db"
 
 /* Contains no data. Should be used for testing situations when application has been run for the first time and operations
 won't change it's contents
@@ -36,7 +36,7 @@ const saveTestDbPath = "../test/saveTestDb.db"
 const deletionTestDbPath = "../test/deletionTestDb.db"
 
 func createTestDb() {
-	dataProvider := data.NewBoltProvider(exampleDbPath)
+	dataProvider := data.NewBoltProvider(testDbPath)
 	saveTestEntriesTypes(dataProvider)
 	saveTestComics(dataProvider)
 	saveTestMusic(dataProvider)
@@ -76,12 +76,12 @@ func saveTestMusic(provider data.Provider) {
 }
 
 func deleteTestDb() {
-	data.DeleteFile(exampleDbPath)
+	data.DeleteFile(testDbPath)
 }
 
 func setupAppForTesting() (*App, func()) {
-	data.CopyFile(exampleDbPath, testDbCopyPath)
-	app := NewApp(exampleDbPath)
+	data.CopyFile(testDbPath, testDbCopyPath)
+	app := NewApp(testDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	return app, deleteTestDbCopy
 }

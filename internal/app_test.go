@@ -22,7 +22,7 @@ func TestThatLoggingFileWithItsDirGetsCreated(t *testing.T) {
 	loggingFilePath := loggingDir + "wirwl.log"
 	data.DeleteFile(loggingFilePath)
 	data.DeleteFile(loggingDir)
-	NewApp(exampleDbPath)
+	NewApp(testDbPath)
 	_, err := os.Stat(loggingFilePath)
 	assert.Nil(t, err)
 }
@@ -222,7 +222,7 @@ func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
 }
 
 func TestThatDeletingEntriesTypesWorks(t *testing.T) {
-	data.CopyFile(exampleDbPath, deletionTestDbPath)
+	data.CopyFile(testDbPath, deletionTestDbPath)
 	app := NewApp(deletionTestDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateDeletionOfCurrentEntryType()
@@ -233,7 +233,7 @@ func TestThatDeletingEntriesTypesWorks(t *testing.T) {
 }
 
 func TestThatWhenTryingToDeleteLastEntryTypeItIsPreventedAndWarningDialogIsDisplayed(t *testing.T) {
-	data.CopyFile(exampleDbPath, deletionTestDbPath)
+	data.CopyFile(testDbPath, deletionTestDbPath)
 	app := NewApp(deletionTestDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateDeletionOfCurrentEntryType()
@@ -254,7 +254,7 @@ func TestThatEditingEntryTypeWorks(t *testing.T) {
 }
 
 func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) {
-	data.CopyFile(exampleDbPath, deletionTestDbPath)
+	data.CopyFile(testDbPath, deletionTestDbPath)
 	app := NewApp(deletionTestDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateEditionOfCurrentEntryTypeTo("2")
@@ -266,7 +266,7 @@ func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) 
 }
 
 func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) {
-	data.CopyFile(exampleDbPath, deletionTestDbPath)
+	data.CopyFile(testDbPath, deletionTestDbPath)
 	app := NewApp(deletionTestDbPath)
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateDeletionOfCurrentEntryType()
