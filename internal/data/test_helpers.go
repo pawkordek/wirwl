@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-const TestDbPath = "../../test/testDb.db"
+const TestDbPath = "../../testdata/testDb.db"
 
 func GetEntriesTypes() []EntryType {
 	return []EntryType{

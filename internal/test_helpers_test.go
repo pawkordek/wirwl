@@ -20,16 +20,16 @@ videos:
 	some video2
 Should be copied to perform any tests that require data to exist.
 */
-const testDbPath = "../test/test_db.db"
+const testDbPath = "../testdata/test_db.db"
 
 /* Path which should contain a copy of test db file. It should be used for testing any tests that require data to exists
  */
-const testDbCopyPath = "../test/test_db_copy.db"
+const testDbCopyPath = "../testdata/test_db_copy.db"
 
 /* Doesn't exist on disk when tests are run and will be created by wirwl if it has been loaded and run.
 Should be used for testing situations when application has been run for the first time.
 */
-const emptyDbPath = "../test/empty_db.db"
+const emptyDbPath = "../testdata/empty_db.db"
 
 func createTestDb() {
 	dataProvider := data.NewBoltProvider(testDbPath)
