@@ -38,7 +38,7 @@ const deletionTestDbPath = "../test/deletionTestDb.db"
 func TestMain(m *testing.M) {
 	createTestDb()
 	exitCode := m.Run()
-	data.DeleteFile(exampleDbPath)
+	deleteTestDb()
 	os.Exit(exitCode)
 }
 

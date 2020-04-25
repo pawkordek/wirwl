@@ -47,6 +47,10 @@ func saveTestMusic(provider data.Provider) {
 	}
 }
 
+func deleteTestDb() {
+	data.DeleteFile(exampleDbPath)
+}
+
 func getLoggingDirForTesting() string {
 	currentUser, err := user.Current()
 	if err != nil {
