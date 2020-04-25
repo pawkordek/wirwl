@@ -200,9 +200,8 @@ func TestThatSavingChangesWorks(t *testing.T) {
 }
 
 func TestThatAfterSavingSuccessfullySuccessDialogDisplays(t *testing.T) {
-	data.DeleteFile(saveTestDbPath)
-	app := NewApp(saveTestDbPath)
-	app.LoadAndDisplay(fyneTest.NewApp())
+	app, cleanup := setupAppForTesting()
+	defer cleanup()
 	app.SimulateSavingChanges()
 	assert.True(t, app.msgDialog.Visible())
 	assert.Equal(t, "SUCCESS", app.msgDialog.Title())
@@ -210,9 +209,8 @@ func TestThatAfterSavingSuccessfullySuccessDialogDisplays(t *testing.T) {
 }
 
 func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
-	data.DeleteFile(saveTestDbPath)
-	app := NewApp(saveTestDbPath)
-	app.LoadAndDisplay(fyneTest.NewApp())
+	app, cleanup := setupAppForTesting()
+	defer cleanup()
 	app.dataProvider = data.NewAlwaysFailingProvider()
 	app.SimulateSavingChanges()
 	assert.True(t, app.msgDialog.Visible())
