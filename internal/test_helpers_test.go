@@ -80,8 +80,18 @@ func setupAppForTesting() (*App, func()) {
 	return app, deleteTestDbCopy
 }
 
+func setupFirstRunAppForTesting() (*App, func()) {
+	app := NewApp(emptyDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	return app, deleteEmptyTestDb
+}
+
 func deleteTestDbCopy() {
 	data.DeleteFile(testDbCopyPath)
+}
+
+func deleteEmptyTestDb() {
+	data.DeleteFile(emptyDbPath)
 }
 
 func getLoggingDirForTesting() string {
