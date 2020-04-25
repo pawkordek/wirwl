@@ -2,10 +2,13 @@ package wirwl
 
 import (
 	"fyne.io/fyne"
+	fyneTest "fyne.io/fyne/test"
 	"log"
 	"os/user"
 	"wirwl/internal/data"
 )
+
+const testDbCopyPath = "../test/test_db_copy.db"
 
 func createTestDb() {
 	dataProvider := data.NewBoltProvider(exampleDbPath)
@@ -49,6 +52,17 @@ func saveTestMusic(provider data.Provider) {
 
 func deleteTestDb() {
 	data.DeleteFile(exampleDbPath)
+}
+
+func setupAppForTesting() (*App, func()) {
+	data.CopyFile(exampleDbPath, testDbCopyPath)
+	app := NewApp(exampleDbPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	return app, deleteTestDbCopy
+}
+
+func deleteTestDbCopy() {
+	data.DeleteFile(testDbCopyPath)
 }
 
 func getLoggingDirForTesting() string {
