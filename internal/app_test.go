@@ -10,31 +10,6 @@ import (
 	"wirwl/internal/widget"
 )
 
-/* Contains data generated in TestMain which is as follows:
-comics:
-	some comic1
-	some comic2
-music:
-	some music1
-	some music2
-videos:
-	some video1
-	some video2
-Should be used for testing operations that don't change it's contents
-*/
-const exampleDbPath = "../test/exampleDb.db"
-
-/* Contains no data. Should be used for testing situations when application has been run for the first time and operations
-won't change it's contents
-*/
-const emptyDbPath = "../test/emptyDb.db"
-
-/* Contains no data. Should be used for testing saving operations. Should be deleted before running a test. */
-const saveTestDbPath = "../test/saveTestDb.db"
-
-/* Should be made as a copy of exampleDb. Should be used for testing deleting operations. Should be deleted after running a test*/
-const deletionTestDbPath = "../test/deletionTestDb.db"
-
 func TestMain(m *testing.M) {
 	createTestDb()
 	exitCode := m.Run()
