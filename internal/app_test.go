@@ -247,25 +247,22 @@ func TestThatEditingEntryTypeWorks(t *testing.T) {
 }
 
 func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) {
-	data.CopyFile(testDbPath, deletionTestDbPath)
-	app := NewApp(deletionTestDbPath)
+	app, cleanup := setupAppForTesting()
+	defer cleanup()
 	app.LoadAndDisplay(fyneTest.NewApp())
 	app.SimulateEditionOfCurrentEntryTypeTo("2")
 	app.SimulateSavingChanges()
-	app2 := NewApp(deletionTestDbPath)
+	app2 := NewApp(testDbCopyPath)
 	app2.LoadAndDisplay(fyneTest.NewApp())
 	assert.Equal(t, "2comics", app2.entriesTypesTabs.CurrentTab().Text)
-	data.DeleteFile(deletionTestDbPath)
 }
 
 func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) {
-	data.CopyFile(testDbPath, deletionTestDbPath)
-	app := NewApp(deletionTestDbPath)
-	app.LoadAndDisplay(fyneTest.NewApp())
+	app, cleanup := setupAppForTesting()
+	defer cleanup()
 	app.SimulateDeletionOfCurrentEntryType()
 	app.SimulateSavingChanges()
-	app2 := NewApp(deletionTestDbPath)
+	app2 := NewApp(testDbCopyPath)
 	app2.LoadAndDisplay(fyneTest.NewApp())
 	assert.Equal(t, "music", app2.entriesTypesTabs.CurrentTab().Text)
-	data.DeleteFile(deletionTestDbPath)
 }
