@@ -1,6 +1,7 @@
 package wirwl
 
 import (
+	fyneTest "fyne.io/fyne/test"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -15,4 +16,13 @@ func TestThatLoggingFileWithItsDirGetsCreated(t *testing.T) {
 	NewApp(testDbCopyPath)
 	_, err := os.Stat(loggingFilePath)
 	assert.Nil(t, err)
+}
+
+func TestThatDefaultConfigGetsLoadedIfNoConfigExists(t *testing.T) {
+	data.DeleteFile(defaultConfigPath)
+	app := NewApp(testDbCopyPath)
+	app.LoadAndDisplay(fyneTest.NewApp())
+	app, cleanup := setupAppForTesting()
+	defer cleanup()
+	app.config.DataDbPath = defaultConfigPath
 }

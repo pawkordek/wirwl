@@ -6,6 +6,25 @@ import (
 	"os/user"
 )
 
+const defaultAppDataPath = "/.local/share/wirwl/"
+const defaultConfigPath = defaultAppDataPath + "wirwl.cfg"
+const defaultDataDbPath = defaultAppDataPath + "wirwl.db"
+
+var defaultConfig = Config{
+	DataDbPath: defaultDataDbPath,
+}
+
+type Config struct {
+	DataDbPath string
+}
+
+func loadConfig() Config {
+	if _, err := os.Stat(defaultConfigPath); os.IsNotExist(err) {
+		return defaultConfig
+	}
+	return Config{DataDbPath: ""}
+}
+
 func setupLogging() {
 	loggingDir := getLoggingDir()
 	createLoggingDirIfNotExist(loggingDir)

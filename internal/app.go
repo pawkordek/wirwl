@@ -13,6 +13,7 @@ import (
 type App struct {
 	fyneApp             fyne.App
 	mainWindow          fyne.Window
+	config              Config
 	addEntryTypeDialog  *widget.FormDialog
 	msgDialog           *widget.MsgDialog
 	confirmationDialog  *widget.ConfirmationDialog
@@ -32,6 +33,7 @@ func NewApp(entriesPath string) *App {
 
 func (app *App) LoadAndDisplay(fyneApp fyne.App) {
 	app.fyneApp = fyneApp
+	app.config = loadConfig()
 	app.prepare()
 	app.mainWindow.ShowAndRun()
 }
