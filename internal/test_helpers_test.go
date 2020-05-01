@@ -8,6 +8,10 @@ import (
 	"wirwl/internal/data"
 )
 
+const testDataDirPath = "../testdata/"
+const testAppDataDirPath = "../testdata/app_data/"
+const firstRunTestAppDataDirPath = "../testdata/first_run_app_data/"
+
 /* It's a generated db file which contains:
 comics:
 	some comic1
@@ -20,18 +24,20 @@ videos:
 	some video2
 Should be copied to perform any tests that require data to exist.
 */
-const testDbPath = "../testdata/test_db.db"
+const testDbPath = testDataDirPath + "data.db"
 
 /* Path which should contain a copy of test db file. It should be used for testing any tests that require data to exists
  */
-const testDbCopyPath = "../testdata/test_db_copy.db"
+const testDbCopyPath = testAppDataDirPath + "data.db"
 
 /* Doesn't exist on disk when tests are run and will be created by wirwl if it has been loaded and run.
 Should be used for testing situations when application has been run for the first time.
 */
-const emptyDbPath = "../testdata/empty_db.db"
+const emptyDbPath = firstRunTestAppDataDirPath + "data.db"
 
 func createTestDb() {
+	createDirIfNotExist(testAppDataDirPath)
+	createDirIfNotExist(firstRunTestAppDataDirPath)
 	dataProvider := data.NewBoltProvider(testDbPath)
 	saveTestEntriesTypes(dataProvider)
 	saveTestComics(dataProvider)
@@ -73,18 +79,20 @@ func saveTestMusic(provider data.Provider) {
 
 func deleteTestDb() {
 	data.DeleteFile(testDbPath)
+	data.DeleteFile(testAppDataDirPath)
+	data.DeleteFile(firstRunTestAppDataDirPath)
 }
 
 func setupAppForTesting() (*App, func()) {
 	data.CopyFile(testDbPath, testDbCopyPath)
-	app := NewApp(testDbCopyPath)
-	app.LoadAndDisplay(fyneTest.NewApp())
+	app := NewApp(fyneTest.NewApp())
+	app.LoadAndDisplay(testAppDataDirPath, testAppDataDirPath)
 	return app, deleteTestDbCopy
 }
 
 func setupFirstRunAppForTesting() (*App, func()) {
-	app := NewApp(emptyDbPath)
-	app.LoadAndDisplay(fyneTest.NewApp())
+	app := NewApp(fyneTest.NewApp())
+	app.LoadAndDisplay(testAppDataDirPath, firstRunTestAppDataDirPath)
 	return app, deleteEmptyTestDb
 }
 

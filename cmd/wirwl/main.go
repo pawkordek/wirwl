@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	wirwlApp := wirwl.NewApp("exampleDb.db")
-	wirwlApp.LoadAndDisplay(app.New())
+	wirwlApp := wirwl.NewApp(app.New())
+	wirwlApp.LoadAndDisplay("./", "./")
 }

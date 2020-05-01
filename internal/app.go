@@ -25,15 +25,14 @@ type App struct {
 	editEntryTypeDialog *widget.FormDialog
 }
 
-func NewApp(entriesPath string) *App {
-	setupLogging()
-	provider := data.NewBoltProvider(entriesPath)
-	return &App{dataProvider: provider}
+func NewApp(fyneApp fyne.App) *App {
+	return &App{fyneApp: fyneApp}
 }
 
-func (app *App) LoadAndDisplay(fyneApp fyne.App) {
-	app.fyneApp = fyneApp
-	app.config = loadConfig()
+func (app *App) LoadAndDisplay(configDirPath string, appDataDirPath string) {
+	setupLogging()
+	app.dataProvider = data.NewBoltProvider(appDataDirPath + "data.db")
+	app.config = loadConfigFromDir(configDirPath)
 	app.prepare()
 	app.mainWindow.ShowAndRun()
 }

@@ -8,7 +8,7 @@ import (
 
 const defaultAppDataPath = "/.local/share/wirwl/"
 const defaultConfigPath = defaultAppDataPath + "wirwl.cfg"
-const defaultDataDbPath = defaultAppDataPath + "wirwl.db"
+const defaultDataDbPath = defaultAppDataPath + "data.db"
 
 var defaultConfig = Config{
 	DataDbPath: defaultDataDbPath,
@@ -18,8 +18,8 @@ type Config struct {
 	DataDbPath string
 }
 
-func loadConfig() Config {
-	if _, err := os.Stat(defaultConfigPath); os.IsNotExist(err) {
+func loadConfigFromDir(configDirPath string) Config {
+	if _, err := os.Stat(configDirPath); os.IsNotExist(err) {
 		return defaultConfig
 	}
 	return Config{DataDbPath: ""}
@@ -27,7 +27,7 @@ func loadConfig() Config {
 
 func setupLogging() {
 	loggingDir := getLoggingDir()
-	createLoggingDirIfNotExist(loggingDir)
+	createDirIfNotExist(loggingDir)
 	logFile, err := os.OpenFile(loggingDir+"wirwl.log", os.O_CREATE|os.O_WRONLY, 0700)
 	if err != nil {
 		log.Fatal(err)
@@ -53,9 +53,9 @@ func getLoggingDir() string {
 	return loggingDir
 }
 
-func createLoggingDirIfNotExist(loggingDir string) {
-	if _, err := os.Stat(loggingDir); os.IsNotExist(err) {
-		err := os.Mkdir(loggingDir, 0700)
+func createDirIfNotExist(path string) {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := os.Mkdir(path, 0700)
 		if err != nil {
 			log.Fatal(err)
 		}
