@@ -9,6 +9,7 @@ import (
 const defaultAppDataPath = "/.local/share/wirwl/"
 const defaultConfigPath = defaultAppDataPath + "wirwl.cfg"
 const defaultDataDbPath = defaultAppDataPath + "data.db"
+const logFileName = "wirwl.log"
 
 var defaultConfig = Config{
 	DataDbPath: defaultDataDbPath,
@@ -25,10 +26,8 @@ func loadConfigFromDir(configDirPath string) Config {
 	return Config{DataDbPath: ""}
 }
 
-func setupLogging() {
-	loggingDir := getLoggingDir()
-	createDirIfNotExist(loggingDir)
-	logFile, err := os.OpenFile(loggingDir+"wirwl.log", os.O_CREATE|os.O_WRONLY, 0700)
+func setupLoggingIn(path string) {
+	logFile, err := os.OpenFile(path+logFileName, os.O_CREATE|os.O_WRONLY, 0700)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,15 +41,6 @@ func getCurrentUserHomeDir() (string, error) {
 		return "", err
 	}
 	return currentUser.HomeDir, nil
-}
-
-func getLoggingDir() string {
-	userHomeDir, err := getCurrentUserHomeDir()
-	if err != nil {
-		return "/tmp/wirwl/"
-	}
-	loggingDir := userHomeDir + "/.local/share/wirwl/"
-	return loggingDir
 }
 
 func createDirIfNotExist(path string) {

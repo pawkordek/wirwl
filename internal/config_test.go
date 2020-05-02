@@ -8,13 +8,11 @@ import (
 )
 
 func TestThatLoggingFileWithItsDirGetsCreated(t *testing.T) {
-	loggingDir := getLoggingDirForTesting()
-	loggingFilePath := loggingDir + "wirwl.log"
-	data.DeleteFile(loggingFilePath)
-	data.DeleteFile(loggingDir)
+	logFilePath := testAppDataDirPath + "wirwl.log"
+	data.DeleteFile(logFilePath)
 	_, cleanup := setupAppForTesting()
 	defer cleanup()
-	_, err := os.Stat(loggingFilePath)
+	_, err := os.Stat(logFilePath)
 	assert.Nil(t, err)
 }
 
