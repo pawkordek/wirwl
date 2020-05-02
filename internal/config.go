@@ -1,6 +1,7 @@
 package wirwl
 
 import (
+	"io"
 	"log"
 	"os"
 	"os/user"
@@ -32,7 +33,8 @@ func setupLoggingIn(path string) {
 		log.Fatal(err)
 	}
 	defer logFile.Close()
-	log.SetOutput(logFile)
+	writer := io.MultiWriter(os.Stdout, logFile)
+	log.SetOutput(writer)
 }
 
 func getCurrentUserHomeDir() (string, error) {
