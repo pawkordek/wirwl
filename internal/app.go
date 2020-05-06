@@ -31,7 +31,7 @@ func NewApp(fyneApp fyne.App) *App {
 
 func (app *App) LoadAndDisplay(configDirPath string, appDataDirPath string) {
 	setupLoggingIn(appDataDirPath)
-	app.dataProvider = data.NewBoltProvider(appDataDirPath + "data.db")
+	app.dataProvider = loadDataProviderIn(appDataDirPath)
 	app.config = loadConfigFromDir(configDirPath)
 	app.prepare()
 	app.mainWindow.ShowAndRun()

@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/user"
+	"wirwl/internal/data"
 )
 
 var defaultAppDataPath string
@@ -48,6 +49,14 @@ func setupLoggingIn(path string) {
 	defer logFile.Close()
 	writer := io.MultiWriter(os.Stdout, logFile)
 	log.SetOutput(writer)
+}
+
+func loadDataProviderIn(path string) data.Provider {
+	if path == "" {
+		path = defaultAppDataPath
+	}
+	createDirIfNotExist(path)
+	return data.NewBoltProvider(path + "data.db")
 }
 
 func getCurrentUserHomeDir() (string, error) {

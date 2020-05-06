@@ -17,12 +17,32 @@ func TestThatLoggingFileWithItsDirGetsCreatedIfAppDataDirIsProvided(t *testing.T
 }
 
 func TestThatLoggingFileWithItsDirGetsCreatedInDefaultPathIfAppDataDirIsNotProvided(t *testing.T) {
-	defaultAppDataPath = "../testdata/default/"
+	defaultAppDataPath = defaultTestAppDataDirPath
 	logFilePath := defaultAppDataPath + logFileName
 	data.DeleteFile(defaultAppDataPath)
 	_, cleanup := setupAppForTestingWithNoPathsProvided()
 	defer cleanup()
 	_, err := os.Stat(logFilePath)
+	assert.Nil(t, err)
+	data.DeleteFile(defaultAppDataPath)
+}
+
+func TestThatDbFileWithItsDirGetsCreatedIfAppDataDirIsProvided(t *testing.T) {
+	dbFilePath := testAppDataDirPath + "data.db"
+	data.DeleteFile(dbFilePath)
+	_, cleanup := setupAppForTestingWithDefaultTestingPaths()
+	defer cleanup()
+	_, err := os.Stat(dbFilePath)
+	assert.Nil(t, err)
+}
+
+func TestThatDbFileWithItsDirGetsCreatedInDefaultPathIfAppDataDirIsNotProvided(t *testing.T) {
+	defaultAppDataPath = defaultTestAppDataDirPath
+	dbFilePath := defaultAppDataPath + "data.db"
+	data.DeleteFile(dbFilePath)
+	_, cleanup := setupAppForTestingWithNoPathsProvided()
+	defer cleanup()
+	_, err := os.Stat(dbFilePath)
 	assert.Nil(t, err)
 	data.DeleteFile(defaultAppDataPath)
 }
