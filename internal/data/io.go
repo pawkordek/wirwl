@@ -9,7 +9,7 @@ import (
 func DeleteFile(path string) {
 	_, err := os.Stat(path)
 	if !os.IsNotExist(err) {
-		err = os.Remove(path)
+		err = os.RemoveAll(path)
 		if err != nil {
 			log.Fatal(err)
 		}

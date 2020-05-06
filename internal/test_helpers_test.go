@@ -4,7 +4,6 @@ import (
 	"fyne.io/fyne"
 	fyneTest "fyne.io/fyne/test"
 	"log"
-	"os/user"
 	"wirwl/internal/data"
 )
 
@@ -83,10 +82,18 @@ func deleteTestDb() {
 	data.DeleteFile(firstRunTestAppDataDirPath)
 }
 
-func setupAppForTesting() (*App, func()) {
+func setupAppForTestingWithNoPathsProvided() (*App, func()) {
+	return setupAppForTestingWithPaths("", "")
+}
+
+func setupAppForTestingWithDefaultTestingPaths() (*App, func()) {
+	return setupAppForTestingWithPaths(testAppDataDirPath, testAppDataDirPath)
+}
+
+func setupAppForTestingWithPaths(configDirPath string, appDataDirPath string) (*App, func()) {
 	data.CopyFile(testDbPath, testDbCopyPath)
 	app := NewApp(fyneTest.NewApp())
-	app.LoadAndDisplay(testAppDataDirPath, testAppDataDirPath)
+	app.LoadAndDisplay(configDirPath, appDataDirPath)
 	return app, deleteTestDbCopy
 }
 
@@ -102,14 +109,6 @@ func deleteTestDbCopy() {
 
 func deleteEmptyTestDb() {
 	data.DeleteFile(emptyDbPath)
-}
-
-func getLoggingDirForTesting() string {
-	currentUser, err := user.Current()
-	if err != nil {
-		return "/tmp/wirwl/"
-	}
-	return currentUser.HomeDir + "/.local/share/wirwl/"
 }
 
 func (app *App) SimulateKeyPress(key fyne.KeyName) {

@@ -7,18 +7,29 @@ import (
 	"wirwl/internal/data"
 )
 
-func TestThatLoggingFileWithItsDirGetsCreated(t *testing.T) {
+func TestThatLoggingFileWithItsDirGetsCreatedIfAppDataDirIsProvided(t *testing.T) {
 	logFilePath := testAppDataDirPath + "wirwl.log"
 	data.DeleteFile(logFilePath)
-	_, cleanup := setupAppForTesting()
+	_, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
 	_, err := os.Stat(logFilePath)
 	assert.Nil(t, err)
 }
 
+func TestThatLoggingFileWithItsDirGetsCreatedInDefaultPathIfAppDataDirIsNotProvided(t *testing.T) {
+	defaultAppDataPath = "../testdata/default/"
+	logFilePath := defaultAppDataPath + logFileName
+	data.DeleteFile(defaultAppDataPath)
+	_, cleanup := setupAppForTestingWithNoPathsProvided()
+	defer cleanup()
+	_, err := os.Stat(logFilePath)
+	assert.Nil(t, err)
+	data.DeleteFile(defaultAppDataPath)
+}
+
 func TestThatDefaultConfigGetsLoadedIfNoConfigExists(t *testing.T) {
 	data.DeleteFile(defaultConfigPath)
-	app, cleanup := setupAppForTesting()
+	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
 	app.config.DataDbPath = defaultConfigPath
 }
