@@ -48,8 +48,9 @@ func TestThatDbFileWithItsDirGetsCreatedInDefaultPathIfAppDataDirIsNotProvided(t
 }
 
 func TestThatDefaultConfigGetsLoadedIfNoConfigExists(t *testing.T) {
+	defaultConfigPath = defaultTestConfigDirPath
 	data.DeleteFile(defaultConfigPath)
-	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
+	app, cleanup := setupAppForTestingWithNoPathsProvided()
 	defer cleanup()
 	app.config.DataDbPath = defaultConfigPath
 }

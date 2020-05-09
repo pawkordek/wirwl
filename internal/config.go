@@ -9,7 +9,8 @@ import (
 )
 
 var defaultAppDataPath string
-var defaultConfigPath = defaultAppDataPath + "wirwl.cfg"
+var defaultConfigPath string
+var defaultConfigFilePath = defaultConfigPath + "wirwl.cfg"
 var defaultDataDbPath = defaultAppDataPath + "data.db"
 
 const logFileName = "wirwl.log"
@@ -28,10 +29,15 @@ func init() {
 		log.Fatal(err)
 	}
 	defaultAppDataPath = homeDirPath + "/.local/share/wirwl/"
+	defaultConfigPath = homeDirPath + "/.config/wirwl/"
 }
 
 func loadConfigFromDir(configDirPath string) Config {
-	if _, err := os.Stat(configDirPath); os.IsNotExist(err) {
+	if configDirPath == "" {
+		configDirPath = defaultConfigPath
+	}
+	createDirIfNotExist(configDirPath)
+	if _, err := os.Stat(defaultConfigFilePath); os.IsNotExist(err) {
 		return defaultConfig
 	}
 	return Config{DataDbPath: ""}

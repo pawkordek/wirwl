@@ -10,6 +10,7 @@ import (
 const testDataDirPath = "../testdata/"
 const testAppDataDirPath = "../testdata/app_data/"
 const defaultTestAppDataDirPath = "../testdata/default/"
+const defaultTestConfigDirPath = "../testdata/config/"
 const firstRunTestAppDataDirPath = "../testdata/first_run_app_data/"
 
 /* It's a generated db file which contains:
