@@ -55,3 +55,12 @@ func TestThatDefaultConfigGetsLoadedIfNoConfigExists(t *testing.T) {
 	app.config.DataDbPath = defaultConfigPath
 	app.config.ConfigDirPath = defaultTestConfigDirPath
 }
+
+func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.T) {
+	data.DeleteFile(testConfigDirPath)
+	_, cleanup := setupAppForTestingWithDefaultTestingPaths()
+	defer cleanup()
+	createCorrectSavedWirwlConfigFileInPath(testConfigDirPath)
+	assert.True(t, areFilesInPathsTheSame(testConfigDirPath+"wirwl.cfg", testConfigDirPath+"wirwl_correct.cfg"))
+	data.DeleteFile(testConfigDirPath)
+}

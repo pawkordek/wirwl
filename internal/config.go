@@ -1,6 +1,7 @@
 package wirwl
 
 import (
+	"github.com/BurntSushi/toml"
 	"io"
 	"log"
 	"os"
@@ -81,5 +82,21 @@ func createDirIfNotExist(path string) {
 		if err != nil {
 			log.Fatal(err)
 		}
+	}
+}
+
+func (config *Config) save() {
+	configFilePath := config.ConfigDirPath + "wirwl.cfg"
+	configFile, err := os.OpenFile(configFilePath, os.O_CREATE|os.O_WRONLY, 0700)
+	if err != nil {
+		log.Fatal("Failed to save the config file due to an error", err)
+	}
+	err = toml.NewEncoder(configFile).Encode(config)
+	if err != nil {
+		log.Fatal("Failed to save the config file due to an error", err)
+	}
+	err = configFile.Close()
+	if err != nil {
+		log.Fatal(err)
 	}
 }

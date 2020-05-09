@@ -35,6 +35,7 @@ func (app *App) LoadAndDisplay(configDirPath string, appDataDirPath string) {
 	app.config = loadConfigFromDir(configDirPath)
 	app.prepare()
 	app.mainWindow.ShowAndRun()
+	app.shutdown()
 }
 
 func (app *App) prepare() {
@@ -248,4 +249,8 @@ func (app *App) saveChangesToDb() error {
 		err = app.dataProvider.SaveEntriesToDb(entryType, entry)
 	}
 	return err
+}
+
+func (app *App) shutdown() {
+	app.config.save()
 }

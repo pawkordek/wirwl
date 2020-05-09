@@ -1,14 +1,19 @@
 package wirwl
 
 import (
+	"bytes"
 	"fyne.io/fyne"
 	fyneTest "fyne.io/fyne/test"
+	"io"
+	"io/ioutil"
 	"log"
+	"os"
 	"wirwl/internal/data"
 )
 
 const testDataDirPath = "../testdata/"
 const testAppDataDirPath = "../testdata/app_data/"
+const testConfigDirPath = "../testdata/config/"
 const defaultTestAppDataDirPath = "../testdata/default/"
 const defaultTestConfigDirPath = "../testdata/config/"
 const firstRunTestAppDataDirPath = "../testdata/first_run_app_data/"
@@ -89,7 +94,7 @@ func setupAppForTestingWithNoPathsProvided() (*App, func()) {
 }
 
 func setupAppForTestingWithDefaultTestingPaths() (*App, func()) {
-	return setupAppForTestingWithPaths(testAppDataDirPath, testAppDataDirPath)
+	return setupAppForTestingWithPaths(testConfigDirPath, testAppDataDirPath)
 }
 
 func setupAppForTestingWithPaths(configDirPath string, appDataDirPath string) (*App, func()) {
@@ -111,6 +116,54 @@ func deleteTestDbCopy() {
 
 func deleteEmptyTestDb() {
 	data.DeleteFile(emptyDbPath)
+}
+
+func areFilesInPathsTheSame(filePath1 string, filePath2 string) bool {
+	file1, err := os.Open(filePath1)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file1.Close()
+	file2, err := os.Open(filePath2)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file2.Close()
+	return areFilesTheSame(file1, file2)
+}
+
+func areFilesTheSame(file1 *os.File, file2 *os.File) bool {
+	const chunkSize = 4000
+	for {
+		bytesOfFile1 := make([]byte, chunkSize)
+		_, err1 := file1.Read(bytesOfFile1)
+		bytesOfFile2 := make([]byte, chunkSize)
+		_, err2 := file2.Read(bytesOfFile2)
+		if err1 != nil || err2 != nil {
+			if err1 == io.EOF && err2 == io.EOF {
+				return true
+			} else if err1 == io.EOF || err2 == io.EOF {
+				return false
+			} else {
+				log.Fatal(err1, err2)
+			}
+		}
+		if !bytes.Equal(bytesOfFile1, bytesOfFile2) {
+			return false
+		}
+	}
+	return true
+}
+
+func createCorrectSavedWirwlConfigFileInPath(path string) {
+	createDirIfNotExist(path)
+	fileData := []byte(
+		"DataDbPath = \"\"\n" +
+			"ConfigDirPath = \"" + testConfigDirPath + "\"\n")
+	err := ioutil.WriteFile(path+"wirwl_correct.cfg", fileData, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (app *App) SimulateKeyPress(key fyne.KeyName) {
