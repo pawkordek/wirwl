@@ -53,4 +53,5 @@ func TestThatDefaultConfigGetsLoadedIfNoConfigExists(t *testing.T) {
 	app, cleanup := setupAppForTestingWithNoPathsProvided()
 	defer cleanup()
 	app.config.DataDbPath = defaultConfigPath
+	app.config.ConfigDirPath = defaultTestConfigDirPath
 }
