@@ -11,9 +11,10 @@ import (
 )
 
 func TestMain(m *testing.M) {
+	testSetup()
 	createTestDb()
 	exitCode := m.Run()
-	deleteTestDb()
+	testCleanup()
 	os.Exit(exitCode)
 }
 

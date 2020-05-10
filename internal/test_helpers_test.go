@@ -41,6 +41,10 @@ Should be used for testing situations when application has been run for the firs
 */
 const emptyDbPath = firstRunTestAppDataDirPath + "data.db"
 
+func testSetup() {
+	createDirIfNotExist(testDataDirPath)
+}
+
 func createTestDb() {
 	createDirIfNotExist(testAppDataDirPath)
 	createDirIfNotExist(firstRunTestAppDataDirPath)
@@ -83,10 +87,8 @@ func saveTestMusic(provider data.Provider) {
 	}
 }
 
-func deleteTestDb() {
-	data.DeleteFile(testDbPath)
-	data.DeleteFile(testAppDataDirPath)
-	data.DeleteFile(firstRunTestAppDataDirPath)
+func testCleanup() {
+	data.DeleteFile(testDataDirPath)
 }
 
 func setupAppForTestingWithNoPathsProvided() (*App, func()) {
