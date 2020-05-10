@@ -3,6 +3,7 @@ package wirwl
 import (
 	"github.com/BurntSushi/toml"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/user"
@@ -43,7 +44,20 @@ func loadConfigFromDir(configDirPath string) Config {
 	if _, err := os.Stat(defaultConfigFilePath); os.IsNotExist(err) {
 		return defaultConfig
 	}
-	return Config{DataDbPath: "", ConfigDirPath: configDirPath}
+	return readConfigFromFileIn(configDirPath + "wirwl.cfg")
+}
+
+func readConfigFromFileIn(path string) Config {
+	fileData, err := ioutil.ReadFile(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	config := Config{}
+	_, err = toml.Decode(string(fileData), &config)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return config
 }
 
 func setupLoggingIn(path string) {

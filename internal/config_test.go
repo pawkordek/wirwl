@@ -47,6 +47,14 @@ func TestThatDbFileWithItsDirGetsCreatedInDefaultPathIfAppDataDirIsNotProvided(t
 	data.DeleteFile(defaultAppDataPath)
 }
 
+func TestThatConfigGetsLoadedIfItExists(t *testing.T) {
+	createCorrectWirwlConfigFileForLoadingInPath(testConfigDirPath)
+	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
+	defer cleanup()
+	assert.Equal(t, app.config.DataDbPath, "some db path")
+	assert.Equal(t, app.config.ConfigDirPath, testConfigDirPath)
+}
+
 func TestThatDefaultConfigGetsLoadedIfNoConfigExists(t *testing.T) {
 	defaultConfigPath = defaultTestConfigDirPath
 	data.DeleteFile(defaultConfigPath)

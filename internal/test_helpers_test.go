@@ -168,6 +168,17 @@ func createCorrectSavedWirwlConfigFileInPath(path string) {
 	}
 }
 
+func createCorrectWirwlConfigFileForLoadingInPath(path string) {
+	createDirIfNotExist(path)
+	fileData := []byte(
+		"DataDbPath = \"some db path\"\n" +
+			"ConfigDirPath = \"" + testConfigDirPath + "\"\n")
+	err := ioutil.WriteFile(path+"wirwl.cfg", fileData, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func (app *App) SimulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
 	focusedElement := app.mainWindow.Canvas().Focused()
