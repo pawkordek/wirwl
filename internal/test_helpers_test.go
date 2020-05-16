@@ -91,6 +91,10 @@ func testCleanup() {
 	data.DeleteFile(testDataDirPath)
 }
 
+func removeAllFilesInTestDataDir() {
+	data.DeleteAllInDir(testDataDirPath)
+}
+
 func setupAppForTestingWithNoPathsProvided() (*App, func()) {
 	return setupAppForTestingWithPaths("", "")
 }
@@ -103,21 +107,13 @@ func setupAppForTestingWithPaths(configDirPath string, appDataDirPath string) (*
 	data.CopyFile(testDbPath, testDbCopyPath)
 	app := NewApp(fyneTest.NewApp())
 	app.LoadAndDisplay(configDirPath, appDataDirPath)
-	return app, deleteTestDbCopy
+	return app, removeAllFilesInTestDataDir
 }
 
 func setupFirstRunAppForTesting() (*App, func()) {
 	app := NewApp(fyneTest.NewApp())
 	app.LoadAndDisplay(testAppDataDirPath, firstRunTestAppDataDirPath)
-	return app, deleteEmptyTestDb
-}
-
-func deleteTestDbCopy() {
-	data.DeleteFile(testDbCopyPath)
-}
-
-func deleteEmptyTestDb() {
-	data.DeleteFile(emptyDbPath)
+	return app, removeAllFilesInTestDataDir
 }
 
 func areFilesInPathsTheSame(filePath1 string, filePath2 string) bool {
