@@ -12,15 +12,8 @@ import (
 
 var defaultAppDataPath string
 var defaultConfigPath string
-var defaultConfigFilePath = defaultConfigPath + "wirwl.cfg"
-var defaultDataDbPath = defaultAppDataPath + "data.db"
 
 const logFileName = "wirwl.log"
-
-var defaultConfig = Config{
-	DataDbPath:    defaultDataDbPath,
-	ConfigDirPath: defaultConfigPath,
-}
 
 type Config struct {
 	DataDbPath    string
@@ -41,10 +34,18 @@ func loadConfigFromDir(configDirPath string) Config {
 		configDirPath = defaultConfigPath
 	}
 	createDirIfNotExist(configDirPath)
-	if _, err := os.Stat(defaultConfigFilePath); os.IsNotExist(err) {
-		return defaultConfig
+	configFilePath := configDirPath + "wirwl.cfg"
+	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
+		return getDefaultConfigWithConfigPathIn(configDirPath)
 	}
-	return readConfigFromFileIn(configDirPath + "wirwl.cfg")
+	return readConfigFromFileIn(configFilePath)
+}
+
+func getDefaultConfigWithConfigPathIn(configPath string) Config {
+	return Config{
+		DataDbPath:    defaultAppDataPath,
+		ConfigDirPath: configPath,
+	}
 }
 
 func readConfigFromFileIn(path string) Config {

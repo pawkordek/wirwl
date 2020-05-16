@@ -53,13 +53,13 @@ func TestThatConfigGetsLoadedIfItExists(t *testing.T) {
 	assert.Equal(t, app.config.ConfigDirPath, testConfigDirPath)
 }
 
-func TestThatDefaultConfigGetsLoadedIfNoConfigExists(t *testing.T) {
+func TestThatDefaultConfigWithProvidedConfigPathGetsLoadedIfConfigFileDoesNotExist(t *testing.T) {
 	defaultConfigPath = defaultTestConfigDirPath
 	data.DeleteFile(defaultConfigPath)
-	app, cleanup := setupAppForTestingWithNoPathsProvided()
+	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.config.DataDbPath = defaultConfigPath
-	app.config.ConfigDirPath = defaultTestConfigDirPath
+	assert.Equal(t, app.config.DataDbPath, defaultAppDataPath)
+	assert.Equal(t, app.config.ConfigDirPath, defaultConfigPath)
 }
 
 func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.T) {
