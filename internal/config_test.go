@@ -24,7 +24,6 @@ func TestThatLoggingFileWithItsDirGetsCreatedInDefaultPathIfAppDataDirIsNotProvi
 	defer cleanup()
 	_, err := os.Stat(logFilePath)
 	assert.Nil(t, err)
-	data.DeleteFile(defaultAppDataPath)
 }
 
 func TestThatDbFileWithItsDirGetsCreatedIfAppDataDirIsProvided(t *testing.T) {
@@ -44,7 +43,6 @@ func TestThatDbFileWithItsDirGetsCreatedInDefaultPathIfAppDataDirIsNotProvided(t
 	defer cleanup()
 	_, err := os.Stat(dbFilePath)
 	assert.Nil(t, err)
-	data.DeleteFile(defaultAppDataPath)
 }
 
 func TestThatConfigGetsLoadedIfItExists(t *testing.T) {
@@ -70,5 +68,4 @@ func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.
 	defer cleanup()
 	createCorrectSavedWirwlConfigFileInPath(testConfigDirPath)
 	assert.True(t, areFilesInPathsTheSame(testConfigDirPath+"wirwl.cfg", testConfigDirPath+"wirwl_correct.cfg"))
-	data.DeleteFile(testConfigDirPath)
 }
