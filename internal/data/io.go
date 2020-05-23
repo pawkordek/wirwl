@@ -19,14 +19,26 @@ func DeleteFile(path string) {
 }
 
 func DeleteAllInDir(dirPath string) {
+	DeleteAllInDirExceptForDirs(dirPath, "")
+}
+
+func DeleteAllInDirExceptForDirs(dirPath string, excludedDirsNames ...string) {
 	subDirs, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 	for _, subDir := range subDirs {
-		err = os.RemoveAll(filepath.Join(dirPath, subDir.Name()))
-		if err != nil {
-			log.Fatal(err)
+		shouldBeSkipped := false
+		for _, excludedDirName := range excludedDirsNames {
+			if subDir.Name() == excludedDirName {
+				shouldBeSkipped = true
+			}
+		}
+		if !shouldBeSkipped {
+			err = os.RemoveAll(filepath.Join(dirPath, subDir.Name()))
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}
 }

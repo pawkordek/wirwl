@@ -12,6 +12,9 @@ import (
 )
 
 const testDataDirPath = "../testdata/"
+
+//Should be used for storing data that must persist between tests
+const persistentTestDataDirPath = testDataDirPath + "persistent/"
 const testAppDataDirPath = "../testdata/app_data/"
 const testConfigDirPath = "../testdata/config/"
 const defaultTestAppDataDirPath = "../testdata/default/"
@@ -30,7 +33,7 @@ videos:
 	some video2
 Should be copied to perform any tests that require data to exist.
 */
-const testDbPath = testDataDirPath + "data.db"
+const testDbPath = persistentTestDataDirPath + "data.db"
 
 /* Path which should contain a copy of test db file. It should be used for testing any tests that require data to exists
  */
@@ -48,6 +51,7 @@ func testSetup() {
 func createTestDb() {
 	createDirIfNotExist(testAppDataDirPath)
 	createDirIfNotExist(firstRunTestAppDataDirPath)
+	createDirIfNotExist(persistentTestDataDirPath)
 	dataProvider := data.NewBoltProvider(testDbPath)
 	saveTestEntriesTypes(dataProvider)
 	saveTestComics(dataProvider)
@@ -91,8 +95,8 @@ func testCleanup() {
 	data.DeleteFile(testDataDirPath)
 }
 
-func removeAllFilesInTestDataDir() {
-	data.DeleteAllInDir(testDataDirPath)
+func removeAllNonPersistentFilesInTestDataDir() {
+	data.DeleteAllInDirExceptForDirs(testDataDirPath, "persistent")
 }
 
 func setupAppForTestingWithNoPathsProvided() (*App, func()) {
@@ -107,13 +111,13 @@ func setupAppForTestingWithPaths(configDirPath string, appDataDirPath string) (*
 	data.CopyFile(testDbPath, testDbCopyPath)
 	app := NewApp(fyneTest.NewApp())
 	app.LoadAndDisplay(configDirPath, appDataDirPath)
-	return app, removeAllFilesInTestDataDir
+	return app, removeAllNonPersistentFilesInTestDataDir
 }
 
 func setupFirstRunAppForTesting() (*App, func()) {
 	app := NewApp(fyneTest.NewApp())
 	app.LoadAndDisplay(testAppDataDirPath, firstRunTestAppDataDirPath)
-	return app, removeAllFilesInTestDataDir
+	return app, removeAllNonPersistentFilesInTestDataDir
 }
 
 func areFilesInPathsTheSame(filePath1 string, filePath2 string) bool {
