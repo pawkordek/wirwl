@@ -49,7 +49,6 @@ func testSetup() {
 }
 
 func createTestDb() {
-	createDirIfNotExist(testAppDataDirPath)
 	createDirIfNotExist(firstRunTestAppDataDirPath)
 	createDirIfNotExist(persistentTestDataDirPath)
 	dataProvider := data.NewBoltProvider(testDbPath)
@@ -108,6 +107,7 @@ func setupAppForTestingWithDefaultTestingPaths() (*App, func()) {
 }
 
 func setupAppForTestingWithPaths(configDirPath string, appDataDirPath string) (*App, func()) {
+	createDirIfNotExist(testAppDataDirPath)
 	data.CopyFile(testDbPath, testDbCopyPath)
 	app := NewApp(fyneTest.NewApp())
 	app.LoadAndDisplay(configDirPath, appDataDirPath)
