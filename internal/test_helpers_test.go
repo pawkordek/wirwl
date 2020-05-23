@@ -49,7 +49,6 @@ func testSetup() {
 }
 
 func createTestDb() {
-	createDirIfNotExist(firstRunTestAppDataDirPath)
 	createDirIfNotExist(persistentTestDataDirPath)
 	dataProvider := data.NewBoltProvider(testDbPath)
 	saveTestEntriesTypes(dataProvider)
@@ -115,6 +114,7 @@ func setupAppForTestingWithPaths(configDirPath string, appDataDirPath string) (*
 }
 
 func setupFirstRunAppForTesting() (*App, func()) {
+	createDirIfNotExist(firstRunTestAppDataDirPath)
 	app := NewApp(fyneTest.NewApp())
 	app.LoadAndDisplay(testAppDataDirPath, firstRunTestAppDataDirPath)
 	return app, removeAllNonPersistentFilesInTestDataDir
