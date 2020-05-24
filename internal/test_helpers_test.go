@@ -108,10 +108,6 @@ func removeAllNonPersistentFilesInTestDataDir() {
 	data.DeleteAllInDirExceptForDirs(testDataDirPath, "persistent")
 }
 
-func setupAppForTestingWithNoPathsProvided() (*App, func()) {
-	return setupAppForTestingWithPaths("", "")
-}
-
 func setupAppForTestingWithDefaultTestingPaths() (*App, func()) {
 	return setupAppForTestingWithPaths(testConfigDirPath, testAppDataDirPath)
 }
