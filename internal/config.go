@@ -64,7 +64,7 @@ func setupLoggingIn(path string) {
 	if path == "" {
 		path = defaultAppDataPath
 	}
-	createDirIfNotExist(path)
+	data.CreateDirIfNotExist(path)
 	logFile, err := os.OpenFile(path+logFileName, os.O_CREATE|os.O_WRONLY, 0700)
 	if err != nil {
 		log.Fatal(err)
@@ -78,7 +78,7 @@ func loadDataProviderIn(path string) data.Provider {
 	if path == "" {
 		path = defaultAppDataPath
 	}
-	createDirIfNotExist(path)
+	data.CreateDirIfNotExist(path)
 	return data.NewBoltProvider(path + "data.db")
 }
 
@@ -90,17 +90,8 @@ func getCurrentUserHomeDir() (string, error) {
 	return currentUser.HomeDir, nil
 }
 
-func createDirIfNotExist(path string) {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err := os.Mkdir(path, 0700)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-}
-
 func (config *Config) save() {
-	createDirIfNotExist(config.ConfigDirPath)
+	data.CreateDirIfNotExist(config.ConfigDirPath)
 	configFilePath := config.ConfigDirPath + "wirwl.cfg"
 	configFile, err := os.OpenFile(configFilePath, os.O_CREATE|os.O_WRONLY, 0700)
 	if err != nil {

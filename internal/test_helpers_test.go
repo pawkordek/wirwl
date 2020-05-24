@@ -55,12 +55,12 @@ const testDbPath = persistentTestDataDirPath + "data.db"
 const testDbCopyPath = testAppDataDirPath + "data.db"
 
 func testSetup() {
-	createDirIfNotExist(testDataDirPath)
+	data.CreateDirIfNotExist(testDataDirPath)
 	createTestDb()
 }
 
 func createTestDb() {
-	createDirIfNotExist(persistentTestDataDirPath)
+	data.CreateDirIfNotExist(persistentTestDataDirPath)
 	dataProvider := data.NewBoltProvider(testDbPath)
 	saveTestEntriesTypes(dataProvider)
 	saveTestComics(dataProvider)
@@ -115,7 +115,7 @@ func setupAppForTestingWithTestConfig() (*App, func()) {
 }
 
 func setupAppForTestingWithConfig(config Config) (*App, func()) {
-	createDirIfNotExist(testAppDataDirPath)
+	data.CreateDirIfNotExist(testAppDataDirPath)
 	data.CopyFile(testDbPath, testDbCopyPath)
 	app := NewApp(fyneTest.NewApp(), config)
 	app.LoadAndDisplay()
@@ -168,7 +168,7 @@ func areFilesTheSame(file1 *os.File, file2 *os.File) bool {
 }
 
 func createCorrectSavedWirwlConfigFileInPath(path string) {
-	createDirIfNotExist(path)
+	data.CreateDirIfNotExist(path)
 	fileData := []byte(
 		"AppDataDirPath = \"" + testAppDataDirPath + "\"\n" +
 			"ConfigDirPath = \"" + testConfigDirPath + "\"\n")
@@ -179,7 +179,7 @@ func createCorrectSavedWirwlConfigFileInPath(path string) {
 }
 
 func createCorrectWirwlConfigFileForLoadingInPath(path string) {
-	createDirIfNotExist(path)
+	data.CreateDirIfNotExist(path)
 	fileData := []byte(
 		"AppDataDirPath = \"some db path\"\n" +
 			"ConfigDirPath = \"" + testConfigDirPath + "\"\n")

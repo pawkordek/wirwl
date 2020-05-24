@@ -59,3 +59,12 @@ func CopyFile(sourcePath string, destinationPath string) {
 		log.Fatal(err)
 	}
 }
+
+func CreateDirIfNotExist(path string) {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := os.Mkdir(path, 0700)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
