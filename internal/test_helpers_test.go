@@ -14,6 +14,7 @@ import (
 //Folder that should be used for storing any temporary data when testing and for storing directories used as paths in
 //passed into application's Config file.
 //It's contents are cleared after every test, except for folder 'persistent' and it's contents.
+//The folder itself is created at the beginning before first test is run and removed after all tests are run
 const testDataDirPath = "../testdata/"
 
 //Should be used for storing data that must persist between tests as it's the only folder in testdata directory
