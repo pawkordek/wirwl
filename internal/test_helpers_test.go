@@ -21,19 +21,19 @@ const testDataDirPath = "../testdata/"
 const persistentTestDataDirPath = testDataDirPath + "persistent/"
 
 //Used as application's data directory path when testing
-const testAppDataDirPath = "../testdata/app_data/"
+const testAppDataDirPath = testDataDirPath + "app_data/"
 
 //Used as application's config directory path when testing
-const testConfigDirPath = "../testdata/config/"
+const testConfigDirPath = testDataDirPath + "config/"
 
 //Used as application's default data directory path when testing
-const defaultTestAppDataDirPath = "../testdata/default/"
+const defaultTestAppDataDirPath = testDataDirPath + "default/"
 
 //Used as application's default config directory path when testing
-const defaultTestConfigDirPath = "../testdata/config/"
+const defaultTestConfigDirPath = testDataDirPath + "config/"
 
 //Used as application's data directory path when testing application as if it were run for the first time
-const firstRunTestAppDataDirPath = "../testdata/first_run_app_data/"
+const firstRunTestAppDataDirPath = testDataDirPath + "first_run_app_data/"
 
 /* It's a path to a database file which is generated every time tests are run but before any test executes.
 If shown in the application, the data would look as follows:
