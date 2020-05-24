@@ -49,7 +49,7 @@ func TestThatConfigGetsLoadedIfItExists(t *testing.T) {
 	createCorrectWirwlConfigFileForLoadingInPath(testConfigDirPath)
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	assert.Equal(t, app.config.DataDbPath, "some db path")
+	assert.Equal(t, app.config.AppDataDirPath, "some db path")
 	assert.Equal(t, app.config.ConfigDirPath, testConfigDirPath)
 }
 
@@ -58,7 +58,7 @@ func TestThatDefaultConfigWithProvidedConfigPathGetsLoadedIfConfigFileDoesNotExi
 	data.DeleteFile(defaultConfigPath)
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	assert.Equal(t, app.config.DataDbPath, defaultAppDataPath)
+	assert.Equal(t, app.config.AppDataDirPath, defaultAppDataPath)
 	assert.Equal(t, app.config.ConfigDirPath, defaultConfigPath)
 }
 

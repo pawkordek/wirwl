@@ -16,8 +16,8 @@ var defaultConfigPath string
 const logFileName = "wirwl.log"
 
 type Config struct {
-	DataDbPath    string
-	ConfigDirPath string
+	AppDataDirPath string
+	ConfigDirPath  string
 }
 
 func init() {
@@ -43,8 +43,8 @@ func loadConfigFromDir(configDirPath string) Config {
 
 func getDefaultConfigWithConfigPathIn(configPath string) Config {
 	return Config{
-		DataDbPath:    defaultAppDataPath,
-		ConfigDirPath: configPath,
+		AppDataDirPath: defaultAppDataPath,
+		ConfigDirPath:  configPath,
 	}
 }
 
