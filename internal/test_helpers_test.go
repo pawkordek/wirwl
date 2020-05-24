@@ -123,7 +123,6 @@ func setupAppForTestingWithPaths(configDirPath string, appDataDirPath string) (*
 }
 
 func setupFirstRunAppForTesting() (*App, func()) {
-	createDirIfNotExist(firstRunTestAppDataDirPath)
 	config := getDefaultConfigWithConfigPathIn(testAppDataDirPath)
 	config.AppDataDirPath = firstRunTestAppDataDirPath
 	app := NewApp(fyneTest.NewApp(), config)

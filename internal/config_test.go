@@ -9,6 +9,13 @@ import (
 	"wirwl/internal/data"
 )
 
+func TestThatAppDataDirGetsCreatedWhenApplicationLaunches(t *testing.T) {
+	_, cleanup := setupFirstRunAppForTesting()
+	defer cleanup()
+	_, err := os.Stat(testAppDataDirPath)
+	assert.Nil(t, err)
+}
+
 func TestThatLoggingFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
 	logFilePath := testAppDataDirPath + "wirwl.log"
 	_, cleanup := setupAppForTestingWithDefaultTestingPaths()
