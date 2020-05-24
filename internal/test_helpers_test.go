@@ -28,10 +28,10 @@ const testAppDataDirPath = testDataDirPath + "app_data/"
 const testConfigDirPath = testDataDirPath + "config/"
 
 //Used as application's default data directory path when testing
-const defaultTestAppDataDirPath = testDataDirPath + "default/"
+const defaultTestAppDataDirPath = testDataDirPath + "default_app_data/"
 
 //Used as application's default config directory path when testing
-const defaultTestConfigDirPath = testDataDirPath + "config/"
+const defaultTestConfigDirPath = testDataDirPath + "default_config/"
 
 //Used as application's data directory path when testing application as if it were run for the first time
 const firstRunTestAppDataDirPath = testDataDirPath + "first_run_app_data/"
