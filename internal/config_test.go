@@ -40,8 +40,8 @@ func TestThatConfigGetsLoadedIfItExists(t *testing.T) {
 }
 
 func TestThatDefaultConfigWithProvidedConfigPathGetsLoadedIfConfigFileDoesNotExist(t *testing.T) {
-	defaultConfigPath = defaultTestConfigDirPath
-	defaultAppDataPath = defaultTestAppDataDirPath
+	defaultConfigDirPath = defaultTestConfigDirPath
+	defaultAppDataDirPath = defaultTestAppDataDirPath
 	tmpDir, err := ioutil.TempDir("", "")
 	if err != nil {
 		log.Fatal(err)

@@ -10,8 +10,8 @@ import (
 	"wirwl/internal/data"
 )
 
-var defaultAppDataPath string
-var defaultConfigPath string
+var defaultAppDataDirPath string
+var defaultConfigDirPath string
 
 const logFileName = "wirwl.log"
 
@@ -25,13 +25,13 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defaultAppDataPath = homeDirPath + "/.local/share/wirwl/"
-	defaultConfigPath = homeDirPath + "/.config/wirwl/"
+	defaultAppDataDirPath = homeDirPath + "/.local/share/wirwl/"
+	defaultConfigDirPath = homeDirPath + "/.config/wirwl/"
 }
 
 func LoadConfigFromDir(configDirPath string) Config {
 	if configDirPath == "" {
-		configDirPath = defaultConfigPath
+		configDirPath = defaultConfigDirPath
 	}
 	configFilePath := configDirPath + "wirwl.cfg"
 	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
@@ -42,7 +42,7 @@ func LoadConfigFromDir(configDirPath string) Config {
 
 func getDefaultConfigWithConfigPathIn(configPath string) Config {
 	return Config{
-		AppDataDirPath: defaultAppDataPath,
+		AppDataDirPath: defaultAppDataDirPath,
 		ConfigDirPath:  configPath,
 	}
 }
@@ -62,7 +62,7 @@ func readConfigFromFileIn(path string) Config {
 
 func setupLoggingIn(path string) {
 	if path == "" {
-		path = defaultAppDataPath
+		path = defaultAppDataDirPath
 	}
 	data.CreateDirIfNotExist(path)
 	logFile, err := os.OpenFile(path+logFileName, os.O_CREATE|os.O_WRONLY, 0700)
@@ -76,7 +76,7 @@ func setupLoggingIn(path string) {
 
 func loadDataProviderIn(path string) data.Provider {
 	if path == "" {
-		path = defaultAppDataPath
+		path = defaultAppDataDirPath
 	}
 	data.CreateDirIfNotExist(path)
 	return data.NewBoltProvider(path + "data.db")
