@@ -190,7 +190,7 @@ func createCorrectWirwlConfigFileForLoadingInPath(path string) {
 	}
 }
 
-func (app *App) SimulateKeyPress(key fyne.KeyName) {
+func (app *App) simulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}
 	focusedElement := app.mainWindow.Canvas().Focused()
 	if focusedElement != nil {
@@ -201,45 +201,45 @@ func (app *App) SimulateKeyPress(key fyne.KeyName) {
 	}
 }
 
-func (app *App) SimulateSwitchingToNextEntryType() {
-	app.SimulateKeyPress(fyne.KeyL)
+func (app *App) simulateSwitchingToNextEntryType() {
+	app.simulateKeyPress(fyne.KeyL)
 }
 
-func (app *App) SimulateSwitchingToPreviousEntryType() {
-	app.SimulateKeyPress(fyne.KeyH)
+func (app *App) simulateSwitchingToPreviousEntryType() {
+	app.simulateKeyPress(fyne.KeyH)
 }
 
-func (app *App) SimulateOpeningDialogForAddingEntryType() {
-	app.SimulateKeyPress(fyne.KeyT)
-	app.SimulateKeyPress(fyne.KeyI)
+func (app *App) simulateOpeningDialogForAddingEntryType() {
+	app.simulateKeyPress(fyne.KeyT)
+	app.simulateKeyPress(fyne.KeyI)
 }
 
-func (app *App) SimulateAddingNewEntryTypeWithName(text string) {
-	app.SimulateOpeningDialogForAddingEntryType()
-	app.SimulateKeyPress(fyne.KeyI)
+func (app *App) simulateAddingNewEntryTypeWithName(text string) {
+	app.simulateOpeningDialogForAddingEntryType()
+	app.simulateKeyPress(fyne.KeyI)
 	app.addEntryTypeDialog.Type(text)
-	app.SimulateKeyPress(fyne.KeyEnter)
+	app.simulateKeyPress(fyne.KeyEnter)
 }
 
-func (app *App) SimulateSavingChanges() {
-	app.SimulateKeyPress(fyne.KeyS)
-	app.SimulateKeyPress(fyne.KeyY)
+func (app *App) simulateSavingChanges() {
+	app.simulateKeyPress(fyne.KeyS)
+	app.simulateKeyPress(fyne.KeyY)
 }
 
-func (app *App) SimulateAttemptAtDeletionOfCurrentEntryType() {
-	app.SimulateKeyPress(fyne.KeyT)
-	app.SimulateKeyPress(fyne.KeyD)
+func (app *App) simulateAttemptAtDeletionOfCurrentEntryType() {
+	app.simulateKeyPress(fyne.KeyT)
+	app.simulateKeyPress(fyne.KeyD)
 }
 
-func (app *App) SimulateDeletionOfCurrentEntryType() {
-	app.SimulateAttemptAtDeletionOfCurrentEntryType()
-	app.SimulateKeyPress(fyne.KeyY)
+func (app *App) simulateDeletionOfCurrentEntryType() {
+	app.simulateAttemptAtDeletionOfCurrentEntryType()
+	app.simulateKeyPress(fyne.KeyY)
 }
 
-func (app *App) SimulateEditionOfCurrentEntryTypeTo(text string) {
-	app.SimulateKeyPress(fyne.KeyT)
-	app.SimulateKeyPress(fyne.KeyE)
-	app.SimulateKeyPress(fyne.KeyI)
+func (app *App) simulateEditionOfCurrentEntryTypeTo(text string) {
+	app.simulateKeyPress(fyne.KeyT)
+	app.simulateKeyPress(fyne.KeyE)
+	app.simulateKeyPress(fyne.KeyI)
 	app.editEntryTypeDialog.Type(text)
-	app.SimulateKeyPress(fyne.KeyEnter)
+	app.simulateKeyPress(fyne.KeyEnter)
 }

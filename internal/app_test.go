@@ -39,17 +39,17 @@ func TestSwitchingTabs(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
 	assert.Equal(t, "comics", app.getCurrentTabText())
-	app.SimulateSwitchingToNextEntryType()
+	app.simulateSwitchingToNextEntryType()
 	assert.Equal(t, "music", app.getCurrentTabText())
-	app.SimulateSwitchingToNextEntryType()
+	app.simulateSwitchingToNextEntryType()
 	assert.Equal(t, "videos", app.getCurrentTabText())
-	app.SimulateSwitchingToNextEntryType()
+	app.simulateSwitchingToNextEntryType()
 	assert.Equal(t, "comics", app.getCurrentTabText())
-	app.SimulateSwitchingToPreviousEntryType()
+	app.simulateSwitchingToPreviousEntryType()
 	assert.Equal(t, "videos", app.getCurrentTabText())
-	app.SimulateSwitchingToPreviousEntryType()
+	app.simulateSwitchingToPreviousEntryType()
 	assert.Equal(t, "music", app.getCurrentTabText())
-	app.SimulateSwitchingToPreviousEntryType()
+	app.simulateSwitchingToPreviousEntryType()
 	assert.Equal(t, "comics", app.getCurrentTabText())
 }
 
@@ -59,11 +59,11 @@ func TestEntryHighlightingWhenSwitchingTabs(t *testing.T) {
 	currentTab := app.entriesTypesTabs.CurrentTab()
 	assert.Equal(t, fyne.TextStyle{Bold: true}, widget.GetLabelFromContent(currentTab.Content, "some comic1").TextStyle)
 	assert.Equal(t, fyne.TextStyle{Bold: false}, widget.GetLabelFromContent(currentTab.Content, "some comic2").TextStyle)
-	app.SimulateSwitchingToNextEntryType()
+	app.simulateSwitchingToNextEntryType()
 	currentTab = app.entriesTypesTabs.CurrentTab()
 	assert.Equal(t, fyne.TextStyle{Bold: true}, widget.GetLabelFromContent(currentTab.Content, "some music1").TextStyle)
 	assert.Equal(t, fyne.TextStyle{Bold: false}, widget.GetLabelFromContent(currentTab.Content, "some music2").TextStyle)
-	app.SimulateSwitchingToPreviousEntryType()
+	app.simulateSwitchingToPreviousEntryType()
 	currentTab = app.entriesTypesTabs.CurrentTab()
 	assert.Equal(t, fyne.TextStyle{Bold: true}, widget.GetLabelFromContent(currentTab.Content, "some comic1").TextStyle)
 	assert.Equal(t, fyne.TextStyle{Bold: false}, widget.GetLabelFromContent(currentTab.Content, "some comic2").TextStyle)
@@ -72,10 +72,10 @@ func TestEntryHighlightingWhenSwitchingTabs(t *testing.T) {
 func TestThatApplicationDoesNotCrashWhenTryingToSwitchToATabThatDoesNotExist(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateSwitchingToNextEntryType()
-	app.SimulateSwitchingToNextEntryType()
-	app.SimulateSwitchingToPreviousEntryType()
-	app.SimulateSwitchingToPreviousEntryType()
+	app.simulateSwitchingToNextEntryType()
+	app.simulateSwitchingToNextEntryType()
+	app.simulateSwitchingToPreviousEntryType()
+	app.simulateSwitchingToPreviousEntryType()
 }
 
 func TestThatIfThereAreNoEntriesCorrectMessageDisplays(t *testing.T) {
@@ -89,7 +89,7 @@ func TestWhetherDialogForAddingEntryTypesOpens(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
 	assert.Equal(t, true, app.addEntryTypeDialog.Hidden)
-	app.SimulateOpeningDialogForAddingEntryType()
+	app.simulateOpeningDialogForAddingEntryType()
 	assert.Equal(t, true, app.addEntryTypeDialog.Visible())
 	assert.Equal(t, true, app.addEntryTypeDialog.Focused())
 }
@@ -97,8 +97,8 @@ func TestWhetherDialogForAddingEntryTypesOpens(t *testing.T) {
 func TestWhetherReopeningDialogForAddingEntriesTypesDoesNotPersistPreviouslyInputText(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateAddingNewEntryTypeWithName("some type")
-	app.SimulateOpeningDialogForAddingEntryType()
+	app.simulateAddingNewEntryTypeWithName("some type")
+	app.simulateOpeningDialogForAddingEntryType()
 	name := app.addEntryTypeDialog.ItemValue("Name")
 	imageQuery := app.addEntryTypeDialog.ItemValue("Image query")
 	assert.Empty(t, name)
@@ -108,7 +108,7 @@ func TestWhetherReopeningDialogForAddingEntriesTypesDoesNotPersistPreviouslyInpu
 func TestAddingOfNewEntryType(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateAddingNewEntryTypeWithName("new entry type")
+	app.simulateAddingNewEntryTypeWithName("new entry type")
 	assert.Equal(t, 4, len(app.entriesTypesTabs.Items()))
 	assert.Equal(t, "comics", app.entriesTypesTabs.Items()[0].Text)
 	assert.Equal(t, "music", app.entriesTypesTabs.Items()[1].Text)
@@ -121,8 +121,8 @@ func TestAddingOfNewEntryType(t *testing.T) {
 func TestThatItIsNotPossibleToAddTheSameEntryTypeTwice(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateAddingNewEntryTypeWithName("type")
-	app.SimulateAddingNewEntryTypeWithName("type")
+	app.simulateAddingNewEntryTypeWithName("type")
+	app.simulateAddingNewEntryTypeWithName("type")
 	assert.Equal(t, true, app.msgDialog.Visible())
 	assert.Equal(t, "ERROR", app.msgDialog.Title())
 	assert.Equal(t, "Entry type with name 'type' already exists.", app.msgDialog.Msg())
@@ -133,25 +133,25 @@ func TestThatPressingAnyKeyClosesMessagePopUp(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
 	app.msgDialog.Display("", "")
-	app.SimulateKeyPress(fyne.KeyT)
+	app.simulateKeyPress(fyne.KeyT)
 	assert.Equal(t, true, app.msgDialog.Hidden)
 	app.msgDialog.Display("", "")
-	app.SimulateKeyPress(fyne.KeyReturn)
+	app.simulateKeyPress(fyne.KeyReturn)
 	assert.Equal(t, true, app.msgDialog.Hidden)
 }
 
 func TestThatAddingNewEntryTypeDoesNotChangeCurrentlyOpenedTab(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateSwitchingToNextEntryType()
-	app.SimulateAddingNewEntryTypeWithName("type")
+	app.simulateSwitchingToNextEntryType()
+	app.simulateAddingNewEntryTypeWithName("type")
 	assert.Equal(t, "music", app.getCurrentTabText())
 }
 
 func TestThatAfterAddingNewEntryOpenedTabStillHasTheSameElementHighlighted(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateAddingNewEntryTypeWithName("type")
+	app.simulateAddingNewEntryTypeWithName("type")
 	currentTab := app.entriesTypesTabs.CurrentTab()
 	assert.Equal(t, fyne.TextStyle{Bold: true}, widget.GetLabelFromContent(currentTab.Content, "some comic1").TextStyle)
 	assert.Equal(t, fyne.TextStyle{Bold: false}, widget.GetLabelFromContent(currentTab.Content, "some comic2").TextStyle)
@@ -160,10 +160,10 @@ func TestThatAfterAddingNewEntryOpenedTabStillHasTheSameElementHighlighted(t *te
 func TestThatAfterTryingToAddExistingEntryTypeAndClosingWarningMessageAboutItDialogForAddingEntriesTypesIsStillOpen(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateAddingNewEntryTypeWithName("comics")
+	app.simulateAddingNewEntryTypeWithName("comics")
 	assert.True(t, app.addEntryTypeDialog.Hidden)
 	assert.False(t, app.addEntryTypeDialog.Focused())
-	app.SimulateKeyPress(fyne.KeyEscape)
+	app.simulateKeyPress(fyne.KeyEscape)
 	assert.True(t, app.addEntryTypeDialog.Visible())
 	assert.True(t, app.addEntryTypeDialog.Focused())
 }
@@ -171,7 +171,7 @@ func TestThatAfterTryingToAddExistingEntryTypeAndClosingWarningMessageAboutItDia
 func TestThatAfterTryingToAddEntryTypeWithEmptyNameWarningMessageDisplaysAndEntryTypeIsNotAdded(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateAddingNewEntryTypeWithName("")
+	app.simulateAddingNewEntryTypeWithName("")
 	assert.True(t, app.msgDialog.Visible())
 	assert.Equal(t, "ERROR", app.msgDialog.Title())
 	assert.Equal(t, "You cannot add entry type with empty name", app.msgDialog.Msg())
@@ -181,8 +181,8 @@ func TestThatAfterTryingToAddEntryTypeWithEmptyNameWarningMessageDisplaysAndEntr
 func TestThatSavingChangesWorks(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateAddingNewEntryTypeWithName("type")
-	app.SimulateSavingChanges()
+	app.simulateAddingNewEntryTypeWithName("type")
+	app.simulateSavingChanges()
 	config := getDefaultConfigWithConfigPathIn("/tmp/")
 	config.AppDataDirPath = testAppDataDirPath
 	app = NewApp(fyneTest.NewApp(), config)
@@ -194,7 +194,7 @@ func TestThatSavingChangesWorks(t *testing.T) {
 func TestThatAfterSavingSuccessfullySuccessDialogDisplays(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateSavingChanges()
+	app.simulateSavingChanges()
 	assert.True(t, app.msgDialog.Visible())
 	assert.Equal(t, "SUCCESS", app.msgDialog.Title())
 	assert.Equal(t, "Changes saved.", app.msgDialog.Msg())
@@ -204,7 +204,7 @@ func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
 	app.dataProvider = data.NewAlwaysFailingProvider()
-	app.SimulateSavingChanges()
+	app.simulateSavingChanges()
 	assert.True(t, app.msgDialog.Visible())
 	assert.Equal(t, "ERROR", app.msgDialog.Title())
 	assert.Equal(t, data.AlwaysFailingProviderError.Error(), app.msgDialog.Msg())
@@ -213,7 +213,7 @@ func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
 func TestThatDeletingEntriesTypesWorks(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateDeletionOfCurrentEntryType()
+	app.simulateDeletionOfCurrentEntryType()
 	assert.Equal(t, 2, len(app.entriesTypesTabs.Items()))
 	assert.Equal(t, "music", app.entriesTypesTabs.Items()[0].Text)
 	assert.Equal(t, "videos", app.entriesTypesTabs.Items()[1].Text)
@@ -222,9 +222,9 @@ func TestThatDeletingEntriesTypesWorks(t *testing.T) {
 func TestThatWhenTryingToDeleteLastEntryTypeItIsPreventedAndWarningDialogIsDisplayed(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateDeletionOfCurrentEntryType()
-	app.SimulateDeletionOfCurrentEntryType()
-	app.SimulateAttemptAtDeletionOfCurrentEntryType()
+	app.simulateDeletionOfCurrentEntryType()
+	app.simulateDeletionOfCurrentEntryType()
+	app.simulateAttemptAtDeletionOfCurrentEntryType()
 	assert.Equal(t, 1, len(app.entriesTypesTabs.Items()))
 	assert.Equal(t, true, app.msgDialog.Visible())
 	assert.Equal(t, "WARNING", app.msgDialog.Title())
@@ -234,7 +234,7 @@ func TestThatWhenTryingToDeleteLastEntryTypeItIsPreventedAndWarningDialogIsDispl
 func TestThatEditingEntryTypeWorks(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateEditionOfCurrentEntryTypeTo("2")
+	app.simulateEditionOfCurrentEntryTypeTo("2")
 	assert.Equal(t, "2comics", app.entriesTypesTabs.CurrentTab().Text)
 }
 
@@ -242,8 +242,8 @@ func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) 
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
 	app.LoadAndDisplay()
-	app.SimulateEditionOfCurrentEntryTypeTo("2")
-	app.SimulateSavingChanges()
+	app.simulateEditionOfCurrentEntryTypeTo("2")
+	app.simulateSavingChanges()
 	config := getDefaultConfigWithConfigPathIn(testAppDataDirPath)
 	config.AppDataDirPath = testAppDataDirPath
 	app2 := NewApp(fyneTest.NewApp(), config)
@@ -254,8 +254,8 @@ func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) 
 func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) {
 	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
 	defer cleanup()
-	app.SimulateDeletionOfCurrentEntryType()
-	app.SimulateSavingChanges()
+	app.simulateDeletionOfCurrentEntryType()
+	app.simulateSavingChanges()
 	config := app.config
 	app2 := NewApp(fyneTest.NewApp(), config)
 	app2.LoadAndDisplay()
