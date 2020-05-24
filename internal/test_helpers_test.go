@@ -39,11 +39,6 @@ const testDbPath = persistentTestDataDirPath + "data.db"
  */
 const testDbCopyPath = testAppDataDirPath + "data.db"
 
-/* Doesn't exist on disk when tests are run and will be created by wirwl if it has been loaded and run.
-Should be used for testing situations when application has been run for the first time.
-*/
-const emptyDbPath = firstRunTestAppDataDirPath + "data.db"
-
 func testSetup() {
 	createDirIfNotExist(testDataDirPath)
 }
