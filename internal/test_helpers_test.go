@@ -11,17 +11,32 @@ import (
 	"wirwl/internal/data"
 )
 
+//Folder that should be used for storing any temporary data when testing and for storing directories used as paths in
+//passed into application's Config file.
+//It's contents are cleared after every test, except for folder 'persistent' and it's contents.
 const testDataDirPath = "../testdata/"
 
-//Should be used for storing data that must persist between tests
+//Should be used for storing data that must persist between tests as it's the only folder in testdata directory
+//which is not removed after each test's execution
 const persistentTestDataDirPath = testDataDirPath + "persistent/"
+
+//Used as application's data directory path when testing
 const testAppDataDirPath = "../testdata/app_data/"
+
+//Used as application's config directory path when testing
 const testConfigDirPath = "../testdata/config/"
+
+//Used as application's default data directory path when testing
 const defaultTestAppDataDirPath = "../testdata/default/"
+
+//Used as application's default config directory path when testing
 const defaultTestConfigDirPath = "../testdata/config/"
+
+//Used as application's data directory path when testing application as if it were run for the first time
 const firstRunTestAppDataDirPath = "../testdata/first_run_app_data/"
 
-/* It's a generated db file which contains:
+/* It's a path to a database file which is generated every time tests are run but before any test executes.
+If shown in the application, the data would look as follows:
 comics:
 	some comic1
 	some comic2
@@ -31,12 +46,11 @@ music:
 videos:
 	some video1
 	some video2
-Should be copied to perform any tests that require data to exist.
+The file should be copied to perform any tests that require an existing data.
 */
 const testDbPath = persistentTestDataDirPath + "data.db"
 
-/* Path which should contain a copy of test db file. It should be used for testing any tests that require data to exists
- */
+//Path used by tests to store a copy of test database file so that they don't affect the original file
 const testDbCopyPath = testAppDataDirPath + "data.db"
 
 func testSetup() {
