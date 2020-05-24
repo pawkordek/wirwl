@@ -56,6 +56,7 @@ const testDbCopyPath = testAppDataDirPath + "data.db"
 
 func testSetup() {
 	createDirIfNotExist(testDataDirPath)
+	createTestDb()
 }
 
 func createTestDb() {
