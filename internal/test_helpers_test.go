@@ -108,13 +108,13 @@ func removeAllNonPersistentFilesInTestDataDir() {
 	data.DeleteAllInDirExceptForDirs(testDataDirPath, "persistent")
 }
 
-func setupAppForTestingWithTestConfig() (*App, func()) {
+func setupAndRunAppForTestingWithTestConfig() (*App, func()) {
 	config := getDefaultConfigWithConfigPathIn(testConfigDirPath)
 	config.AppDataDirPath = testAppDataDirPath
-	return setupAppForTestingWithConfig(config)
+	return setupAndRunAppForTestingWithConfig(config)
 }
 
-func setupAppForTestingWithConfig(config Config) (*App, func()) {
+func setupAndRunAppForTestingWithConfig(config Config) (*App, func()) {
 	data.CreateDirIfNotExist(testAppDataDirPath)
 	data.CopyFile(testDbPath, testDbCopyPath)
 	app := NewApp(fyneTest.NewApp(), config)
@@ -122,7 +122,7 @@ func setupAppForTestingWithConfig(config Config) (*App, func()) {
 	return app, removeAllNonPersistentFilesInTestDataDir
 }
 
-func setupFirstRunAppForTesting() (*App, func()) {
+func setupAndRunAppAsIfRunForFirstTime() (*App, func()) {
 	config := getDefaultConfigWithConfigPathIn(testAppDataDirPath)
 	config.AppDataDirPath = firstRunTestAppDataDirPath
 	app := NewApp(fyneTest.NewApp(), config)

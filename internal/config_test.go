@@ -10,7 +10,7 @@ import (
 )
 
 func TestThatAppDataDirGetsCreatedWhenApplicationLaunches(t *testing.T) {
-	_, cleanup := setupFirstRunAppForTesting()
+	_, cleanup := setupAndRunAppAsIfRunForFirstTime()
 	defer cleanup()
 	_, err := os.Stat(testAppDataDirPath)
 	assert.Nil(t, err)
@@ -18,7 +18,7 @@ func TestThatAppDataDirGetsCreatedWhenApplicationLaunches(t *testing.T) {
 
 func TestThatLoggingFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
 	logFilePath := testAppDataDirPath + "wirwl.log"
-	_, cleanup := setupAppForTestingWithTestConfig()
+	_, cleanup := setupAndRunAppForTestingWithTestConfig()
 	defer cleanup()
 	_, err := os.Stat(logFilePath)
 	assert.Nil(t, err)
@@ -26,7 +26,7 @@ func TestThatLoggingFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T
 
 func TestThatDbFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
 	dbFilePath := testAppDataDirPath + "data.db"
-	_, cleanup := setupAppForTestingWithTestConfig()
+	_, cleanup := setupAndRunAppForTestingWithTestConfig()
 	defer cleanup()
 	_, err := os.Stat(dbFilePath)
 	assert.Nil(t, err)
@@ -52,7 +52,7 @@ func TestThatDefaultConfigWithProvidedConfigPathGetsLoadedIfConfigFileDoesNotExi
 }
 
 func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.T) {
-	_, cleanup := setupAppForTestingWithTestConfig()
+	_, cleanup := setupAndRunAppForTestingWithTestConfig()
 	defer cleanup()
 	createCorrectSavedWirwlConfigFileInPath(testConfigDirPath)
 	assert.True(t, areFilesInPathsTheSame(testConfigDirPath+"wirwl.cfg", testConfigDirPath+"wirwl_correct.cfg"))
