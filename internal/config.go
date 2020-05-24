@@ -33,7 +33,6 @@ func LoadConfigFromDir(configDirPath string) Config {
 	if configDirPath == "" {
 		configDirPath = defaultConfigPath
 	}
-	createDirIfNotExist(configDirPath)
 	configFilePath := configDirPath + "wirwl.cfg"
 	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
 		return getDefaultConfigWithConfigPathIn(configDirPath)
@@ -101,6 +100,7 @@ func createDirIfNotExist(path string) {
 }
 
 func (config *Config) save() {
+	createDirIfNotExist(config.ConfigDirPath)
 	configFilePath := config.ConfigDirPath + "wirwl.cfg"
 	configFile, err := os.OpenFile(configFilePath, os.O_CREATE|os.O_WRONLY, 0700)
 	if err != nil {

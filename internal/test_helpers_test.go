@@ -164,7 +164,7 @@ func areFilesTheSame(file1 *os.File, file2 *os.File) bool {
 func createCorrectSavedWirwlConfigFileInPath(path string) {
 	createDirIfNotExist(path)
 	fileData := []byte(
-		"AppDataDirPath = \"\"\n" +
+		"AppDataDirPath = \"" + testAppDataDirPath + "\"\n" +
 			"ConfigDirPath = \"" + testConfigDirPath + "\"\n")
 	err := ioutil.WriteFile(path+"wirwl_correct.cfg", fileData, 0644)
 	if err != nil {
