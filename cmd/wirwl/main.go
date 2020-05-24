@@ -8,8 +8,9 @@ import (
 
 func main() {
 	flags := readCommandLineFlags()
-	wirwlApp := wirwl.NewApp(app.New())
-	wirwlApp.LoadAndDisplay(flags["configDirPath"], flags["appDataDirPath"])
+	config := wirwl.LoadConfigFromDir(flags["configDirPath"])
+	wirwlApp := wirwl.NewApp(app.New(), config)
+	wirwlApp.LoadAndDisplay()
 }
 
 func readCommandLineFlags() map[string]string {

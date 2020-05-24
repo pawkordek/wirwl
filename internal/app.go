@@ -25,14 +25,13 @@ type App struct {
 	editEntryTypeDialog *widget.FormDialog
 }
 
-func NewApp(fyneApp fyne.App) *App {
-	return &App{fyneApp: fyneApp}
+func NewApp(fyneApp fyne.App, config Config) *App {
+	return &App{fyneApp: fyneApp, config: config}
 }
 
-func (app *App) LoadAndDisplay(configDirPath string, appDataDirPath string) {
-	setupLoggingIn(appDataDirPath)
-	app.dataProvider = loadDataProviderIn(appDataDirPath)
-	app.config = loadConfigFromDir(configDirPath)
+func (app *App) LoadAndDisplay() {
+	setupLoggingIn(app.config.AppDataDirPath)
+	app.dataProvider = loadDataProviderIn(app.config.AppDataDirPath)
 	app.prepare()
 	app.mainWindow.ShowAndRun()
 	app.shutdown()

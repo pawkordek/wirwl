@@ -108,15 +108,19 @@ func setupAppForTestingWithDefaultTestingPaths() (*App, func()) {
 func setupAppForTestingWithPaths(configDirPath string, appDataDirPath string) (*App, func()) {
 	createDirIfNotExist(testAppDataDirPath)
 	data.CopyFile(testDbPath, testDbCopyPath)
-	app := NewApp(fyneTest.NewApp())
-	app.LoadAndDisplay(configDirPath, appDataDirPath)
+	config := getDefaultConfigWithConfigPathIn(configDirPath)
+	config.AppDataDirPath = appDataDirPath
+	app := NewApp(fyneTest.NewApp(), config)
+	app.LoadAndDisplay()
 	return app, removeAllNonPersistentFilesInTestDataDir
 }
 
 func setupFirstRunAppForTesting() (*App, func()) {
 	createDirIfNotExist(firstRunTestAppDataDirPath)
-	app := NewApp(fyneTest.NewApp())
-	app.LoadAndDisplay(testAppDataDirPath, firstRunTestAppDataDirPath)
+	config := getDefaultConfigWithConfigPathIn(testAppDataDirPath)
+	config.AppDataDirPath = firstRunTestAppDataDirPath
+	app := NewApp(fyneTest.NewApp(), config)
+	app.LoadAndDisplay()
 	return app, removeAllNonPersistentFilesInTestDataDir
 }
 

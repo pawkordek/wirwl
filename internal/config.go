@@ -29,7 +29,7 @@ func init() {
 	defaultConfigPath = homeDirPath + "/.config/wirwl/"
 }
 
-func loadConfigFromDir(configDirPath string) Config {
+func LoadConfigFromDir(configDirPath string) Config {
 	if configDirPath == "" {
 		configDirPath = defaultConfigPath
 	}

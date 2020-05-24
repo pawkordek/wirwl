@@ -2,6 +2,8 @@ package wirwl
 
 import (
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"log"
 	"os"
 	"testing"
 	"wirwl/internal/data"
@@ -47,19 +49,21 @@ func TestThatDbFileWithItsDirGetsCreatedInDefaultPathIfAppDataDirIsNotProvided(t
 
 func TestThatConfigGetsLoadedIfItExists(t *testing.T) {
 	createCorrectWirwlConfigFileForLoadingInPath(testConfigDirPath)
-	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
-	defer cleanup()
-	assert.Equal(t, app.config.AppDataDirPath, "some db path")
-	assert.Equal(t, app.config.ConfigDirPath, testConfigDirPath)
+	config := LoadConfigFromDir(testConfigDirPath)
+	assert.Equal(t, "some db path", config.AppDataDirPath)
+	assert.Equal(t, testConfigDirPath, config.ConfigDirPath)
 }
 
 func TestThatDefaultConfigWithProvidedConfigPathGetsLoadedIfConfigFileDoesNotExist(t *testing.T) {
 	defaultConfigPath = defaultTestConfigDirPath
-	data.DeleteFile(defaultConfigPath)
-	app, cleanup := setupAppForTestingWithDefaultTestingPaths()
-	defer cleanup()
-	assert.Equal(t, app.config.AppDataDirPath, defaultAppDataPath)
-	assert.Equal(t, app.config.ConfigDirPath, defaultConfigPath)
+	tmpDir, err := ioutil.TempDir("", "")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer data.DeleteFile(tmpDir)
+	config := LoadConfigFromDir(tmpDir)
+	assert.Equal(t, defaultAppDataPath, config.AppDataDirPath)
+	assert.Equal(t, tmpDir, config.ConfigDirPath)
 }
 
 func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.T) {
