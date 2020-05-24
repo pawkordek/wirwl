@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fyne.io/fyne"
 	fyneTest "fyne.io/fyne/test"
+	"github.com/BurntSushi/toml"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"wirwl/internal/data"
@@ -169,21 +169,32 @@ func areFilesTheSame(file1 *os.File, file2 *os.File) bool {
 
 func createCorrectSavedWirwlConfigFileInPath(path string) {
 	data.CreateDirIfNotExist(path)
-	fileData := []byte(
-		"AppDataDirPath = \"" + testAppDataDirPath + "\"\n" +
-			"ConfigDirPath = \"" + testConfigDirPath + "\"\n")
-	err := ioutil.WriteFile(path+"wirwl_correct.cfg", fileData, 0644)
-	if err != nil {
-		log.Fatal(err)
+	config := Config{
+		AppDataDirPath: testAppDataDirPath,
+		ConfigDirPath:  testConfigDirPath,
 	}
+	config.saveConfigIn(path + "wirwl_correct.cfg")
 }
 
 func createCorrectWirwlConfigFileForLoadingInPath(path string) {
 	data.CreateDirIfNotExist(path)
-	fileData := []byte(
-		"AppDataDirPath = \"some db path\"\n" +
-			"ConfigDirPath = \"" + testConfigDirPath + "\"\n")
-	err := ioutil.WriteFile(path+"wirwl.cfg", fileData, 0644)
+	config := Config{
+		AppDataDirPath: "some db path",
+		ConfigDirPath:  testConfigDirPath,
+	}
+	config.saveConfigIn(path + "wirwl.cfg")
+}
+
+func (config *Config) saveConfigIn(configFilePath string) {
+	configFile, err := os.OpenFile(configFilePath, os.O_CREATE|os.O_WRONLY, 0700)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = toml.NewEncoder(configFile).Encode(config)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = configFile.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
