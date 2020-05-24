@@ -257,7 +257,7 @@ func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T)
 	defer cleanup()
 	app.SimulateDeletionOfCurrentEntryType()
 	app.SimulateSavingChanges()
-	config := getDefaultConfigWithConfigPathIn(testAppDataDirPath)
+	config := app.config
 	app2 := NewApp(fyneTest.NewApp(), config)
 	app2.LoadAndDisplay()
 	assert.Equal(t, "music", app2.entriesTypesTabs.CurrentTab().Text)
