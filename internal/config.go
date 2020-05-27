@@ -22,12 +22,16 @@ type Config struct {
 }
 
 func init() {
+	defaultAppDataDirPath = getDefaultAppDataDirPath()
+	defaultConfigDirPath = getDefaultConfigDirPath()
+}
+
+func getDefaultAppDataDirPath() string {
 	homeDirPath, err := getCurrentUserHomeDir()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defaultAppDataDirPath = homeDirPath + "/.local/share/wirwl/"
-	defaultConfigDirPath = getDefaultConfigDirPath()
+	return path.Join(homeDirPath, ".local", "share", "wirwl")
 }
 
 func getDefaultConfigDirPath() string {
