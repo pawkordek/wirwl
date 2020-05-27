@@ -26,12 +26,16 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defaultAppDataDirPath = homeDirPath + "/.local/share/wirwl/"
+	defaultConfigDirPath = getDefaultConfigDirPath()
+}
+
+func getDefaultConfigDirPath() string {
 	userConfigDirPath, err := os.UserConfigDir()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defaultAppDataDirPath = homeDirPath + "/.local/share/wirwl/"
-	defaultConfigDirPath = path.Join(userConfigDirPath, "wirwl")
+	return path.Join(userConfigDirPath, "wirwl")
 }
 
 func LoadConfigFromDir(configDirPath string) Config {
