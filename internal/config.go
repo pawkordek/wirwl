@@ -38,7 +38,12 @@ func getDefaultAppDataDirPath() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return filepath.Join(homeDirPath, ".local", "share", appName)
+	xdgDataHome := os.Getenv("XDG_DATA_HOME")
+	if xdgDataHome != "" {
+		return filepath.Join(xdgDataHome, appName)
+	} else {
+		return filepath.Join(homeDirPath, ".local", "share", appName)
+	}
 }
 
 func getDefaultConfigDirPath() string {

@@ -5,9 +5,35 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/user"
+	"path/filepath"
 	"testing"
 	"wirwl/internal/data"
 )
+
+func TestThatDefaultAppDataDirPathIsSetToXDG_DATA_HOMEIfItIsSet(t *testing.T) {
+	err := os.Setenv("XDG_DATA_HOME", "some path")
+	if err != nil {
+		log.Fatal(err)
+	}
+	config := NewConfig("")
+	expectedPath := filepath.Join("some path", "wirwl")
+	assert.Equal(t, expectedPath, config.defaultAppDataDirPath)
+	err = os.Unsetenv("XDG_DATA_HOME")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func TestThatDefaultAppDirDefaultsToLocalShareIfXDG_DATA_HOMEIsNotSet(t *testing.T) {
+	config := NewConfig("")
+	currentUser, err := user.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+	expectedPath := filepath.Join(currentUser.HomeDir, ".local", "share", "wirwl")
+	assert.Equal(t, expectedPath, config.defaultAppDataDirPath)
+}
 
 func TestThatAppDataDirGetsCreatedWhenApplicationLaunches(t *testing.T) {
 	_, cleanup := setupAndRunAppAsIfRunForFirstTime()
