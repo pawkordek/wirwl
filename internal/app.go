@@ -30,9 +30,9 @@ func NewApp(fyneApp fyne.App, config Config) *App {
 }
 
 func (app *App) LoadAndDisplay() {
-	setupLoggingIn(app.config.AppDataDirPath)
+	app.config.setupLoggingIn(app.config.AppDataDirPath)
 	data.CreateDirIfNotExist(app.config.AppDataDirPath)
-	app.dataProvider = loadDataProviderIn(app.config.AppDataDirPath)
+	app.dataProvider = app.config.loadDataProviderIn(app.config.AppDataDirPath)
 	app.prepare()
 	app.mainWindow.ShowAndRun()
 	app.shutdown()

@@ -34,20 +34,22 @@ func TestThatDbFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
 
 func TestThatConfigGetsLoadedIfItExists(t *testing.T) {
 	createCorrectWirwlConfigFileForLoadingInPath(testConfigDirPath)
-	config := LoadConfigFromDir(testConfigDirPath)
+	config := NewConfig(testConfigDirPath)
+	config.Load()
 	assert.Equal(t, "some db path", config.AppDataDirPath)
 	assert.Equal(t, testConfigDirPath, config.ConfigDirPath)
 }
 
 func TestThatDefaultConfigWithProvidedConfigPathGetsLoadedIfConfigFileDoesNotExist(t *testing.T) {
-	defaultConfigDirPath = defaultTestConfigDirPath
-	defaultAppDataDirPath = defaultTestAppDataDirPath
 	tmpDir, err := ioutil.TempDir("", "")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer data.DeleteFile(tmpDir)
-	config := LoadConfigFromDir(tmpDir)
+	config := NewConfig(tmpDir)
+	config.defaultConfigDirPath = defaultTestConfigDirPath
+	config.defaultAppDataDirPath = defaultTestAppDataDirPath
+	config.Load()
 	assert.Equal(t, defaultTestAppDataDirPath, config.AppDataDirPath)
 	assert.Equal(t, tmpDir, config.ConfigDirPath)
 }

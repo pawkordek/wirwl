@@ -11,19 +11,24 @@ import (
 	"wirwl/internal/data"
 )
 
-var defaultAppDataDirPath string
-var defaultConfigDirPath string
-
 const logFileName = "wirwl.log"
 
 type Config struct {
-	AppDataDirPath string
-	ConfigDirPath  string
+	defaultAppDataDirPath string
+	defaultConfigDirPath  string
+	AppDataDirPath        string
+	ConfigDirPath         string
 }
 
-func init() {
-	defaultAppDataDirPath = getDefaultAppDataDirPath()
-	defaultConfigDirPath = getDefaultConfigDirPath()
+func NewConfig(configDirPath string) Config {
+	config := Config{ConfigDirPath: configDirPath}
+	config.setupDefaultDirPaths()
+	return config
+}
+
+func (config *Config) setupDefaultDirPaths() {
+	config.defaultConfigDirPath = getDefaultConfigDirPath()
+	config.defaultAppDataDirPath = getDefaultAppDataDirPath()
 }
 
 func getDefaultAppDataDirPath() string {
@@ -42,40 +47,38 @@ func getDefaultConfigDirPath() string {
 	return path.Join(userConfigDirPath, "wirwl")
 }
 
-func LoadConfigFromDir(configDirPath string) Config {
-	if configDirPath == "" {
-		configDirPath = defaultConfigDirPath
+func (config *Config) Load() {
+	if config.ConfigDirPath == "" {
+		config.ConfigDirPath = config.defaultConfigDirPath
 	}
-	configFilePath := configDirPath + "wirwl.cfg"
+	configFilePath := config.ConfigDirPath + "wirwl.cfg"
 	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
-		return getDefaultConfigWithConfigPathIn(configDirPath)
+		config.AppDataDirPath = config.defaultAppDataDirPath
 	}
-	return readConfigFromFileIn(configFilePath)
+	config.readConfigFromConfigFilePath(configFilePath)
 }
 
 func getDefaultConfigWithConfigPathIn(configPath string) Config {
 	return Config{
-		AppDataDirPath: defaultAppDataDirPath,
+		AppDataDirPath: getDefaultAppDataDirPath(),
 		ConfigDirPath:  configPath,
 	}
 }
 
-func readConfigFromFileIn(path string) Config {
+func (config *Config) readConfigFromConfigFilePath(path string) {
 	fileData, err := ioutil.ReadFile(path)
 	if err != nil {
 		log.Fatal(err)
 	}
-	config := Config{}
 	_, err = toml.Decode(string(fileData), &config)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return config
 }
 
-func setupLoggingIn(path string) {
+func (config *Config) setupLoggingIn(path string) {
 	if path == "" {
-		path = defaultAppDataDirPath
+		path = config.defaultAppDataDirPath
 	}
 	data.CreateDirIfNotExist(path)
 	logFile, err := os.OpenFile(path+logFileName, os.O_CREATE|os.O_WRONLY, 0700)
@@ -87,9 +90,9 @@ func setupLoggingIn(path string) {
 	log.SetOutput(writer)
 }
 
-func loadDataProviderIn(path string) data.Provider {
+func (config *Config) loadDataProviderIn(path string) data.Provider {
 	if path == "" {
-		path = defaultAppDataDirPath
+		path = config.defaultAppDataDirPath
 	}
 	data.CreateDirIfNotExist(path)
 	return data.NewBoltProvider(path + "data.db")
