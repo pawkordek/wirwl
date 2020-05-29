@@ -40,6 +40,13 @@ func TestThatConfigGetsLoadedIfItExists(t *testing.T) {
 	assert.Equal(t, testConfigDirPath, config.ConfigDirPath)
 }
 
+func TestThatDefaultConfigPathIsUsedIfConfigIsCreatedWithEmptyPath(t *testing.T) {
+	config := NewConfig("")
+	config.defaultConfigDirPath = defaultTestConfigDirPath
+	config.Load()
+	assert.Equal(t, defaultTestConfigDirPath, config.ConfigDirPath)
+}
+
 func TestThatDefaultConfigWithProvidedConfigPathGetsLoadedIfConfigFileDoesNotExist(t *testing.T) {
 	tmpDir, err := ioutil.TempDir("", "")
 	if err != nil {
