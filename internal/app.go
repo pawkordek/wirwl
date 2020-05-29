@@ -33,7 +33,7 @@ func (app *App) LoadAndDisplay() {
 	app.config.Load()
 	app.config.setupLoggingIn(app.config.AppDataDirPath)
 	data.CreateDirIfNotExist(app.config.AppDataDirPath)
-	app.dataProvider = app.config.loadDataProviderIn(app.config.AppDataDirPath)
+	app.dataProvider = app.config.loadDataProvider()
 	app.prepare()
 	app.mainWindow.ShowAndRun()
 	app.shutdown()

@@ -85,12 +85,8 @@ func (config *Config) setupLoggingIn(path string) {
 	log.SetOutput(writer)
 }
 
-func (config *Config) loadDataProviderIn(path string) data.Provider {
-	if path == "" {
-		path = config.defaultAppDataDirPath
-	}
-	data.CreateDirIfNotExist(path)
-	return data.NewBoltProvider(filepath.Join(path, "data.db"))
+func (config *Config) loadDataProvider() data.Provider {
+	return data.NewBoltProvider(filepath.Join(config.AppDataDirPath, "data.db"))
 }
 
 func getCurrentUserHomeDir() (string, error) {
