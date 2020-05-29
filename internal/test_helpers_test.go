@@ -109,7 +109,7 @@ func removeAllNonPersistentFilesInTestDataDir() {
 }
 
 func setupAndRunAppForTestingWithTestConfig() (*App, func()) {
-	config := getDefaultConfigWithConfigPathIn(testConfigDirPath)
+	config := getTestConfigWithConfigPathIn(testConfigDirPath)
 	config.AppDataDirPath = testAppDataDirPath
 	return setupAndRunAppForTestingWithExistingTestData(config)
 }
@@ -123,11 +123,15 @@ func setupAndRunAppForTestingWithExistingTestData(config Config) (*App, func()) 
 }
 
 func setupAndRunAppAsIfRunForFirstTime() (*App, func()) {
-	config := getDefaultConfigWithConfigPathIn(testAppDataDirPath)
+	config := getTestConfigWithConfigPathIn(testAppDataDirPath)
 	config.AppDataDirPath = firstRunTestAppDataDirPath
 	app := NewApp(fyneTest.NewApp(), config)
 	app.LoadAndDisplay()
 	return app, removeAllNonPersistentFilesInTestDataDir
+}
+
+func getTestConfigWithConfigPathIn(path string) Config {
+	return NewConfig(path)
 }
 
 func areFilesInPathsTheSame(filePath1 string, filePath2 string) bool {

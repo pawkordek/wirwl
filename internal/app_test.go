@@ -183,7 +183,7 @@ func TestThatSavingChangesWorks(t *testing.T) {
 	defer cleanup()
 	app.simulateAddingNewEntryTypeWithName("type")
 	app.simulateSavingChanges()
-	config := getDefaultConfigWithConfigPathIn("/tmp/")
+	config := getTestConfigWithConfigPathIn("/tmp/")
 	config.AppDataDirPath = testAppDataDirPath
 	app = NewApp(fyneTest.NewApp(), config)
 	app.LoadAndDisplay()
@@ -244,7 +244,7 @@ func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) 
 	app.LoadAndDisplay()
 	app.simulateEditionOfCurrentEntryTypeTo("2")
 	app.simulateSavingChanges()
-	config := getDefaultConfigWithConfigPathIn(testAppDataDirPath)
+	config := getTestConfigWithConfigPathIn(testAppDataDirPath)
 	config.AppDataDirPath = testAppDataDirPath
 	app2 := NewApp(fyneTest.NewApp(), config)
 	app2.LoadAndDisplay()

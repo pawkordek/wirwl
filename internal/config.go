@@ -60,13 +60,6 @@ func (config *Config) Load() {
 	}
 }
 
-func getDefaultConfigWithConfigPathIn(configPath string) Config {
-	return Config{
-		AppDataDirPath: getDefaultAppDataDirPath(),
-		ConfigDirPath:  configPath,
-	}
-}
-
 func (config *Config) readConfigFromConfigFile() {
 	fileData, err := ioutil.ReadFile(config.configFilePath)
 	if err != nil {
