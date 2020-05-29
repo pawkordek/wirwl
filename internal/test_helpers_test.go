@@ -109,8 +109,10 @@ func removeAllNonPersistentFilesInTestDataDir() {
 }
 
 func setupAndRunAppForTestingWithTestConfig() (*App, func()) {
+	data.CreateDirIfNotExist(testConfigDirPath)
 	config := getTestConfigWithConfigPathIn(testConfigDirPath)
 	config.AppDataDirPath = testAppDataDirPath
+	config.saveConfigIn(config.ConfigDirPath + "wirwl.cfg")
 	return setupAndRunAppForTestingWithExistingTestData(config)
 }
 
