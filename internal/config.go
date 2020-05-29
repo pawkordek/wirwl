@@ -48,7 +48,7 @@ func getDefaultConfigDirPath() string {
 	return filepath.Join(userConfigDirPath, "wirwl")
 }
 
-func (config *Config) Load() {
+func (config *Config) load() {
 	if config.ConfigDirPath == "" {
 		config.ConfigDirPath = config.defaultConfigDirPath
 	}
