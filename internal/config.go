@@ -71,12 +71,8 @@ func (config *Config) readConfigFromConfigFile() {
 	}
 }
 
-func (config *Config) setupLoggingIn(path string) {
-	if path == "" {
-		path = config.defaultAppDataDirPath
-	}
-	data.CreateDirIfNotExist(path)
-	logFile, err := os.OpenFile(path+logFileName, os.O_CREATE|os.O_WRONLY, 0700)
+func (config *Config) setupLogger() {
+	logFile, err := os.OpenFile(filepath.Join(config.AppDataDirPath, logFileName), os.O_CREATE|os.O_WRONLY, 0700)
 	if err != nil {
 		log.Fatal(err)
 	}
