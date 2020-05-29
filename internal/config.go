@@ -51,7 +51,7 @@ func (config *Config) Load() {
 	if config.ConfigDirPath == "" {
 		config.ConfigDirPath = config.defaultConfigDirPath
 	}
-	configFilePath := config.ConfigDirPath + "wirwl.cfg"
+	configFilePath := filepath.Join(config.ConfigDirPath, "wirwl.cfg")
 	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
 		config.AppDataDirPath = config.defaultAppDataDirPath
 	}
@@ -95,7 +95,7 @@ func (config *Config) loadDataProviderIn(path string) data.Provider {
 		path = config.defaultAppDataDirPath
 	}
 	data.CreateDirIfNotExist(path)
-	return data.NewBoltProvider(path + "data.db")
+	return data.NewBoltProvider(filepath.Join(path, "data.db"))
 }
 
 func getCurrentUserHomeDir() (string, error) {
@@ -108,7 +108,7 @@ func getCurrentUserHomeDir() (string, error) {
 
 func (config *Config) save() {
 	data.CreateDirIfNotExist(config.ConfigDirPath)
-	configFilePath := config.ConfigDirPath + "wirwl.cfg"
+	configFilePath := filepath.Join(config.ConfigDirPath, "wirwl.cfg")
 	configFile, err := os.OpenFile(configFilePath, os.O_CREATE|os.O_WRONLY, 0700)
 	if err != nil {
 		log.Fatal("Failed to save the config file due to an error", err)
