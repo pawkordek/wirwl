@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 	"os/user"
-	"path"
+	"path/filepath"
 	"wirwl/internal/data"
 )
 
@@ -36,7 +36,7 @@ func getDefaultAppDataDirPath() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return path.Join(homeDirPath, ".local", "share", "wirwl")
+	return filepath.Join(homeDirPath, ".local", "share", "wirwl")
 }
 
 func getDefaultConfigDirPath() string {
@@ -44,7 +44,7 @@ func getDefaultConfigDirPath() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return path.Join(userConfigDirPath, "wirwl")
+	return filepath.Join(userConfigDirPath, "wirwl")
 }
 
 func (config *Config) Load() {
