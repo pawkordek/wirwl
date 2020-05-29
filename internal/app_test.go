@@ -241,12 +241,9 @@ func TestThatEditingEntryTypeWorks(t *testing.T) {
 func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) {
 	app, cleanup := setupAndRunAppForTestingWithTestConfig()
 	defer cleanup()
-	app.LoadAndDisplay()
 	app.simulateEditionOfCurrentEntryTypeTo("2")
 	app.simulateSavingChanges()
-	config := getTestConfigWithConfigPathIn(testAppDataDirPath)
-	config.AppDataDirPath = testAppDataDirPath
-	app2 := NewApp(fyneTest.NewApp(), config)
+	app2 := NewApp(fyneTest.NewApp(), app.config)
 	app2.LoadAndDisplay()
 	assert.Equal(t, "2comics", app2.entriesTypesTabs.CurrentTab().Text)
 }
