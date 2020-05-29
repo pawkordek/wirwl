@@ -11,7 +11,8 @@ import (
 	"wirwl/internal/data"
 )
 
-const logFileName = "wirwl.log"
+const appName = "wirwl"
+const logFileName = appName + ".log"
 
 type Config struct {
 	defaultAppDataDirPath string
@@ -37,7 +38,7 @@ func getDefaultAppDataDirPath() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return filepath.Join(homeDirPath, ".local", "share", "wirwl")
+	return filepath.Join(homeDirPath, ".local", "share", appName)
 }
 
 func getDefaultConfigDirPath() string {
@@ -45,14 +46,14 @@ func getDefaultConfigDirPath() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return filepath.Join(userConfigDirPath, "wirwl")
+	return filepath.Join(userConfigDirPath, appName)
 }
 
 func (config *Config) load() {
 	if config.ConfigDirPath == "" {
 		config.ConfigDirPath = config.defaultConfigDirPath
 	}
-	config.configFilePath = filepath.Join(config.ConfigDirPath, "wirwl.cfg")
+	config.configFilePath = filepath.Join(config.ConfigDirPath, appName+".cfg")
 	if _, err := os.Stat(config.configFilePath); os.IsNotExist(err) {
 		config.AppDataDirPath = config.defaultAppDataDirPath
 	} else {
