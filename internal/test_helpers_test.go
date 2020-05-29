@@ -123,7 +123,7 @@ func setupAndRunAppForTestingWithExistingTestData(config Config) (*App, func()) 
 }
 
 func setupAndRunAppAsIfRunForFirstTime() (*App, func()) {
-	config := getTestConfigWithConfigPathIn(testAppDataDirPath)
+	config := getTestConfigWithConfigPathIn(testConfigDirPath)
 	config.AppDataDirPath = firstRunTestAppDataDirPath
 	app := NewApp(fyneTest.NewApp(), config)
 	app.LoadAndDisplay()
