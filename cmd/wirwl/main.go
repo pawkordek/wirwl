@@ -9,7 +9,6 @@ import (
 func main() {
 	flags := readCommandLineFlags()
 	config := wirwl.NewConfig(flags["configDirPath"])
-	config.Load()
 	wirwlApp := wirwl.NewApp(app.New(), config)
 	wirwlApp.LoadAndDisplay()
 }
