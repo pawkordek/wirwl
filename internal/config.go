@@ -54,8 +54,9 @@ func (config *Config) Load() {
 	configFilePath := filepath.Join(config.ConfigDirPath, "wirwl.cfg")
 	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
 		config.AppDataDirPath = config.defaultAppDataDirPath
+	} else{
+		config.readConfigFromConfigFilePath(configFilePath)
 	}
-	config.readConfigFromConfigFilePath(configFilePath)
 }
 
 func getDefaultConfigWithConfigPathIn(configPath string) Config {
