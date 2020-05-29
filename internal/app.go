@@ -31,8 +31,8 @@ func NewApp(fyneApp fyne.App, config Config) *App {
 
 func (app *App) LoadAndDisplay() {
 	app.config.load()
-	app.config.setupLogger()
 	data.CreateDirIfNotExist(app.config.AppDataDirPath)
+	app.config.setupLogger()
 	app.dataProvider = app.config.loadDataProvider()
 	app.prepare()
 	app.mainWindow.ShowAndRun()

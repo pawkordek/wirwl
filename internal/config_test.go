@@ -16,6 +16,14 @@ func TestThatAppDataDirGetsCreatedWhenApplicationLaunches(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestThatLoggingFileWithItsDirGetsCreatedWhenAppLaunchesForFirstTime(t *testing.T) {
+	logFilePath := defaultTestAppDataDirPath + "wirwl.log"
+	_, cleanup := setupAndRunAppAsIfRunForFirstTime()
+	defer cleanup()
+	_, err := os.Stat(logFilePath)
+	assert.Nil(t, err)
+}
+
 func TestThatLoggingFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
 	logFilePath := testAppDataDirPath + "wirwl.log"
 	_, cleanup := setupAndRunAppForTestingWithTestConfig()
