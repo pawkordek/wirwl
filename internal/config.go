@@ -16,6 +16,7 @@ const logFileName = "wirwl.log"
 type Config struct {
 	defaultAppDataDirPath string
 	defaultConfigDirPath  string
+	configFilePath        string
 	AppDataDirPath        string
 	ConfigDirPath         string
 }
@@ -51,11 +52,11 @@ func (config *Config) Load() {
 	if config.ConfigDirPath == "" {
 		config.ConfigDirPath = config.defaultConfigDirPath
 	}
-	configFilePath := filepath.Join(config.ConfigDirPath, "wirwl.cfg")
-	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
+	config.configFilePath = filepath.Join(config.ConfigDirPath, "wirwl.cfg")
+	if _, err := os.Stat(config.configFilePath); os.IsNotExist(err) {
 		config.AppDataDirPath = config.defaultAppDataDirPath
-	} else{
-		config.readConfigFromConfigFilePath(configFilePath)
+	} else {
+		config.readConfigFromConfigFile()
 	}
 }
 
@@ -66,8 +67,8 @@ func getDefaultConfigWithConfigPathIn(configPath string) Config {
 	}
 }
 
-func (config *Config) readConfigFromConfigFilePath(path string) {
-	fileData, err := ioutil.ReadFile(path)
+func (config *Config) readConfigFromConfigFile() {
+	fileData, err := ioutil.ReadFile(config.configFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -109,8 +110,7 @@ func getCurrentUserHomeDir() (string, error) {
 
 func (config *Config) save() {
 	data.CreateDirIfNotExist(config.ConfigDirPath)
-	configFilePath := filepath.Join(config.ConfigDirPath, "wirwl.cfg")
-	configFile, err := os.OpenFile(configFilePath, os.O_CREATE|os.O_WRONLY, 0700)
+	configFile, err := os.OpenFile(config.configFilePath, os.O_CREATE|os.O_WRONLY, 0700)
 	if err != nil {
 		log.Fatal("Failed to save the config file due to an error", err)
 	}
