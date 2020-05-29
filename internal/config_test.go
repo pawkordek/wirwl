@@ -12,7 +12,7 @@ import (
 func TestThatAppDataDirGetsCreatedWhenApplicationLaunches(t *testing.T) {
 	_, cleanup := setupAndRunAppAsIfRunForFirstTime()
 	defer cleanup()
-	_, err := os.Stat(testAppDataDirPath)
+	_, err := os.Stat(defaultTestAppDataDirPath)
 	assert.Nil(t, err)
 }
 

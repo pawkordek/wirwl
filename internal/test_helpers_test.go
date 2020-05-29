@@ -33,9 +33,6 @@ const defaultTestAppDataDirPath = testDataDirPath + "default_app_data/"
 //Used as application's default config directory path when testing
 const defaultTestConfigDirPath = testDataDirPath + "default_config/"
 
-//Used as application's data directory path when testing application as if it were run for the first time
-const firstRunTestAppDataDirPath = testDataDirPath + "first_run_app_data/"
-
 /* It's a path to a database file which is generated every time tests are run but before any test executes.
 If shown in the application, the data would look as follows:
 comics:
@@ -126,7 +123,7 @@ func setupAndRunAppForTestingWithExistingTestData(config Config) (*App, func()) 
 
 func setupAndRunAppAsIfRunForFirstTime() (*App, func()) {
 	config := getTestConfigWithConfigPathIn(testConfigDirPath)
-	config.AppDataDirPath = firstRunTestAppDataDirPath
+	config.defaultAppDataDirPath = defaultTestAppDataDirPath
 	app := NewApp(fyneTest.NewApp(), config)
 	app.LoadAndDisplay()
 	return app, removeAllNonPersistentFilesInTestDataDir
