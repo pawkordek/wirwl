@@ -41,7 +41,15 @@ func (provider *BoltProvider) SaveEntriesToDb(table string, entries []Entry) err
 	defer func() {
 		err = provider.closeDb()
 	}()
-	err = provider.deleteTableIfExists(table)
+	err = provider.saveEntriesInTable(table, entries)
+	if err != nil {
+		return err
+	}
+	return err
+}
+
+func (provider *BoltProvider) saveEntriesInTable(table string, entries []Entry) error {
+	err := provider.deleteTableIfExists(table)
 	if len(entries) == 0 {
 		err = provider.createNewTable(table)
 	} else {
