@@ -50,8 +50,14 @@ func (provider *BoltProvider) SaveEntriesToDb(table string, entries []Entry) err
 
 func (provider *BoltProvider) saveEntriesInTable(table string, entries []Entry) error {
 	err := provider.deleteTableIfExists(table)
+	if err != nil {
+		return err
+	}
 	if len(entries) == 0 {
 		err = provider.createNewTable(table)
+		if err != nil {
+			return err
+		}
 	} else {
 		for _, entry := range entries {
 			err := provider.saveEntryToTable(table, entry)
@@ -60,7 +66,7 @@ func (provider *BoltProvider) saveEntriesInTable(table string, entries []Entry) 
 			}
 		}
 	}
-	return err
+	return nil
 }
 
 func (provider *BoltProvider) createNewTable(name string) error {
