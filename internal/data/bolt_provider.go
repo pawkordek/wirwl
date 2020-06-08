@@ -2,9 +2,8 @@ package data
 
 import (
 	"encoding/json"
-	"errors"
 	"github.com/boltdb/bolt"
-	"log"
+	"github.com/pkg/errors"
 	"strconv"
 	"time"
 )
@@ -26,11 +25,12 @@ func (provider *BoltProvider) openDb() error {
 	return err
 }
 
-func (provider *BoltProvider) closeDb() {
+func (provider *BoltProvider) closeDb() error {
 	err := provider.db.Close()
 	if err != nil {
-		log.Fatal(err)
+		return errors.Wrap(err, "An error occurred when closing the BoltProvider's database")
 	}
+	return nil
 }
 
 func (provider *BoltProvider) SaveEntriesToDb(table string, entries []Entry) error {
@@ -38,7 +38,9 @@ func (provider *BoltProvider) SaveEntriesToDb(table string, entries []Entry) err
 	if err != nil {
 		return err
 	}
-	defer provider.closeDb()
+	defer func() {
+		err = provider.closeDb()
+	}()
 	err = provider.deleteTableIfExists(table)
 	if len(entries) == 0 {
 		err = provider.createNewTable(table)
@@ -50,7 +52,7 @@ func (provider *BoltProvider) SaveEntriesToDb(table string, entries []Entry) err
 			}
 		}
 	}
-	return nil
+	return err
 }
 
 func (provider *BoltProvider) createNewTable(name string) error {
@@ -96,7 +98,9 @@ func (provider *BoltProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer provider.closeDb()
+	defer func() {
+		err = provider.closeDb()
+	}()
 	var entries []Entry
 	err = provider.db.View(func(transaction *bolt.Tx) error {
 		entries, err = getEntriesDataFromTable(transaction, table)
@@ -105,7 +109,7 @@ func (provider *BoltProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
 	if err != nil {
 		return nil, err
 	}
-	return entries, nil
+	return entries, err
 }
 
 func getEntriesDataFromTable(transaction *bolt.Tx, table string) ([]Entry, error) {
@@ -164,7 +168,9 @@ func (provider *BoltProvider) LoadEntriesTypesFromDb() ([]EntryType, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer provider.closeDb()
+	defer func() {
+		err = provider.closeDb()
+	}()
 	var types []EntryType
 	err = provider.db.View(func(transaction *bolt.Tx) error {
 		types, err = getEntriesTypesFromTable(transaction)
@@ -173,7 +179,7 @@ func (provider *BoltProvider) LoadEntriesTypesFromDb() ([]EntryType, error) {
 	if err != nil {
 		return nil, err
 	}
-	return types, nil
+	return types, err
 }
 
 func getEntriesTypesFromTable(transaction *bolt.Tx) ([]EntryType, error) {
