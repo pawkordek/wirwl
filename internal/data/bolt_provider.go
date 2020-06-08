@@ -22,7 +22,10 @@ func NewBoltProvider(dbPath string) Provider {
 func (provider *BoltProvider) openDb() error {
 	db, err := bolt.Open(provider.dbPath, 0600, &bolt.Options{Timeout: 10 * time.Second})
 	provider.db = db
-	return err
+	if err != nil {
+		return errors.Wrap(err, "An error occurred when opening the BoltProvider's database")
+	}
+	return nil
 }
 
 func (provider *BoltProvider) closeDb() error {
