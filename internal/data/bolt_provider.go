@@ -23,7 +23,7 @@ func (provider *BoltProvider) openDb() error {
 	db, err := bolt.Open(provider.dbPath, 0600, &bolt.Options{Timeout: 10 * time.Second})
 	provider.db = db
 	if err != nil {
-		return errors.Wrap(err, "An error occurred when opening the BoltProvider's database")
+		return errors.Wrap(err, "An error occurred when opening the database")
 	}
 	return nil
 }
@@ -31,7 +31,7 @@ func (provider *BoltProvider) openDb() error {
 func (provider *BoltProvider) closeDb() error {
 	err := provider.db.Close()
 	if err != nil {
-		return errors.Wrap(err, "An error occurred when closing the BoltProvider's database")
+		return errors.Wrap(err, "An error occurred when closing the database")
 	}
 	return nil
 }
