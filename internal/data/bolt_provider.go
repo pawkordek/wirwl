@@ -165,17 +165,17 @@ func (provider *BoltProvider) SaveEntriesTypesToDb(entriesTypes []EntryType) err
 func (provider *BoltProvider) saveEntryTypeToTable(entryType EntryType) error {
 	typeAsJSON, err := json.Marshal(entryType)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "An error occurred when marshaling entry type during entry type saving")
 	}
 	err = provider.db.Update(func(transaction *bolt.Tx) error {
 		bucket, err := transaction.CreateBucketIfNotExists([]byte(entriesTypesTableName))
 		if err != nil {
-			return err
+			return errors.Wrap(err, "An error occurred when creating bucket during entry type saving")
 		}
 		return bucket.Put([]byte(entryType.Name), typeAsJSON)
 	})
 	if err != nil {
-		return err
+		return errors.Wrap(err, "An error occurred when making update on the database during entry type saving")
 	}
 	return nil
 }
