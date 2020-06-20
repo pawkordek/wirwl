@@ -103,7 +103,7 @@ func (provider *BoltProvider) deleteTableIfExists(table string) error {
 		if bucket != nil {
 			err := transaction.DeleteBucket([]byte(table))
 			if err != nil {
-				return err
+				return errors.Wrap(err, "An error occurred when deleting an existing table")
 			}
 		}
 		return nil
