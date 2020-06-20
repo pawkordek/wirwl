@@ -75,6 +75,9 @@ func (provider *BoltProvider) saveEntriesInTable(table string, entries []Entry) 
 func (provider *BoltProvider) createNewTable(name string) error {
 	return provider.db.Update(func(transaction *bolt.Tx) error {
 		_, err := transaction.CreateBucketIfNotExists([]byte(name))
+		if err != nil {
+			return errors.Wrap(err, "An error occurred when creating a new table with name="+name)
+		}
 		return err
 	})
 }
