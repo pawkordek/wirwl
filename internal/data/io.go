@@ -37,9 +37,9 @@ func DeleteAllInDirExceptForDirs(dirPath string, excludedDirsNames ...string) er
 			}
 		}
 		if !shouldBeSkipped {
-			err = os.RemoveAll(filepath.Join(dirPath, subDir.Name()))
+			err = DeleteDirWithContents(filepath.Join(dirPath, subDir.Name()))
 			if err != nil {
-				log.Fatal(err)
+				return err
 			}
 		}
 	}
