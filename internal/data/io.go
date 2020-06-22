@@ -46,21 +46,22 @@ func DeleteAllInDirExceptForDirs(dirPath string, excludedDirsNames ...string) er
 	return nil
 }
 
-func CopyFile(sourcePath string, destinationPath string) {
+func CopyFile(sourcePath string, destinationPath string) error {
 	sourceFile, err := os.Open(sourcePath)
 	if err != nil {
-		log.Fatal(err)
+		return errors.Wrap(err, "An error occurred when trying to open source file in path "+sourcePath+" to copy")
 	}
 	defer sourceFile.Close()
 	destinationFile, err := os.Create(destinationPath)
 	if err != nil {
-		log.Fatal(err)
+		return errors.Wrap(err, "An error occurred when trying to open a copy destination file in path "+destinationPath)
 	}
 	defer destinationFile.Close()
 	_, err = io.Copy(destinationFile, sourceFile)
 	if err != nil {
-		log.Fatal(err)
+		return errors.Wrap(err, "An error occurred when copying files from "+sourcePath+" to "+destinationPath)
 	}
+	return nil
 }
 
 func CreateDirIfNotExist(path string) {
