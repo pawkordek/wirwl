@@ -206,13 +206,13 @@ func getEntriesTypesFromTable(transaction *bolt.Tx) ([]EntryType, error) {
 	var types []EntryType
 	bucket := transaction.Bucket([]byte(entriesTypesTableName))
 	if bucket == nil {
-		return types, nil
+		return types, errors.New("An error occurred when loading entries types from table with name " + entriesTypesTableName + ". No such table")
 	}
 	err := bucket.ForEach(func(key, value []byte) error {
 		var entryType EntryType
 		err := json.Unmarshal(value, &entryType)
 		if err != nil {
-			return err
+			return errors.Wrap(err, "An error occurred when unmarshalling an entry type "+entryType.String())
 		}
 		types = append(types, entryType)
 		return nil
