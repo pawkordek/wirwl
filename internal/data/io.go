@@ -24,10 +24,10 @@ func DeleteAllInDir(dirPath string) {
 	DeleteAllInDirExceptForDirs(dirPath, "")
 }
 
-func DeleteAllInDirExceptForDirs(dirPath string, excludedDirsNames ...string) {
+func DeleteAllInDirExceptForDirs(dirPath string, excludedDirsNames ...string) error {
 	subDirs, err := ioutil.ReadDir(dirPath)
 	if err != nil {
-		log.Fatal(err)
+		return errors.Wrap(err, "An error occurred when reading directory "+dirPath)
 	}
 	for _, subDir := range subDirs {
 		shouldBeSkipped := false
@@ -43,6 +43,7 @@ func DeleteAllInDirExceptForDirs(dirPath string, excludedDirsNames ...string) {
 			}
 		}
 	}
+	return nil
 }
 
 func CopyFile(sourcePath string, destinationPath string) {
