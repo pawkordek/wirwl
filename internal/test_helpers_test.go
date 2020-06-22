@@ -98,7 +98,7 @@ func saveTestMusic(provider data.Provider) {
 }
 
 func testCleanup() {
-	data.DeleteFile(testDataDirPath)
+	data.DeleteDirWithContents(testDataDirPath)
 }
 
 func removeAllNonPersistentFilesInTestDataDir() {

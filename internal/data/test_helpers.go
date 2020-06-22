@@ -117,7 +117,7 @@ func GetExampleMusicEntries() []Entry {
 }
 
 func DeleteTestDb() {
-	DeleteFile(TestDbPath)
+	DeleteDirWithContents(TestDbPath)
 }
 
 func GetTestEntriesToSave() []Entry {

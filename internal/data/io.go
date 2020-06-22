@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 )
 
-func DeleteFile(path string) error {
+func DeleteDirWithContents(path string) error {
 	_, err := os.Stat(path)
 	if !os.IsNotExist(err) {
 		err = os.RemoveAll(path)
