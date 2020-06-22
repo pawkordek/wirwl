@@ -85,17 +85,17 @@ func (provider *BoltProvider) createNewTable(name string) error {
 func (provider *BoltProvider) saveEntryToTable(table string, entry Entry) error {
 	entryAsJSON, err := json.Marshal(entry)
 	if err != nil {
-		return errors.Wrap(err, "An error occurred when marshaling entry during entry saving")
+		return errors.Wrap(err, "An error occurred when marshaling entry during entry saving to table with name "+table+". Entry to save was: "+entry.String())
 	}
 	err = provider.db.Update(func(transaction *bolt.Tx) error {
 		bucket, err := transaction.CreateBucketIfNotExists([]byte(table))
 		if err != nil {
-			return errors.Wrap(err, "An error occurred when creating bucket during entry saving")
+			return errors.Wrap(err, "An error occurred when creating bucket for table with name "+table+" during entry saving. Entry to save was: "+entry.String())
 		}
 		return bucket.Put([]byte(strconv.Itoa(entry.Id)), entryAsJSON)
 	})
 	if err != nil {
-		return errors.Wrap(err, "An error occurred when making update on the database during entry saving")
+		return errors.Wrap(err, "An error occurred when making update on the database during entry saving for table with name "+table+". Entry to save was:"+entry.String())
 	}
 	return nil
 }
