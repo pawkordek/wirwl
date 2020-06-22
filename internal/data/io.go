@@ -1,6 +1,7 @@
 package data
 
 import (
+	"github.com/pkg/errors"
 	"io"
 	"io/ioutil"
 	"log"
@@ -8,14 +9,15 @@ import (
 	"path/filepath"
 )
 
-func DeleteFile(path string) {
+func DeleteFile(path string) error {
 	_, err := os.Stat(path)
 	if !os.IsNotExist(err) {
 		err = os.RemoveAll(path)
 		if err != nil {
-			log.Fatal(err)
+			return errors.Wrap(err, "An error occurred when deleting folder in path "+path+" and it's contents")
 		}
 	}
+	return nil
 }
 
 func DeleteAllInDir(dirPath string) {
