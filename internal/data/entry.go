@@ -1,5 +1,7 @@
 package data
 
+import "fmt"
+
 type Entry struct {
 	Id                         int
 	Status                     string
@@ -14,7 +16,15 @@ type Entry struct {
 	Tags                       string
 }
 
+func (entry Entry) String() string {
+	return fmt.Sprintf("%#v", entry)
+}
+
 type EntryType struct {
 	Name       string
 	ImageQuery string
+}
+
+func (entryType EntryType) String() string {
+	return fmt.Sprintf("%#v", entryType)
 }
