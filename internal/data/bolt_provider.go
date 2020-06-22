@@ -142,7 +142,7 @@ func getEntriesDataFromTable(transaction *bolt.Tx, table string) ([]Entry, error
 		var entry Entry
 		err := json.Unmarshal(value, &entry)
 		if err != nil {
-			return errors.Wrap(err, "An error occurred when unmarshaling an entry "+entry.String())
+			return errors.Wrap(err, "An error occurred when unmarshalling an entry "+entry.String())
 		}
 		entries = append(entries, entry)
 		return nil
