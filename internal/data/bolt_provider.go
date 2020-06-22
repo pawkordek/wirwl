@@ -136,7 +136,7 @@ func getEntriesDataFromTable(transaction *bolt.Tx, table string) ([]Entry, error
 	var entries []Entry
 	bucket := transaction.Bucket([]byte(table))
 	if bucket == nil {
-		return nil, errors.New("No table with name=" + table)
+		return nil, errors.New("No table with name " + table)
 	}
 	err := bucket.ForEach(func(key, value []byte) error {
 		var entry Entry
