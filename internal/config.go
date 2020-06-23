@@ -100,7 +100,10 @@ func getCurrentUserHomeDir() (string, error) {
 }
 
 func (config *Config) save() {
-	data.CreateDirIfNotExist(config.ConfigDirPath)
+	err := data.CreateDirIfNotExist(config.ConfigDirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
 	configFile, err := os.OpenFile(config.configFilePath, os.O_CREATE|os.O_WRONLY, 0700)
 	if err != nil {
 		log.Fatal("Failed to save the config file due to an error", err)

@@ -52,12 +52,18 @@ const testDbPath = persistentTestDataDirPath + "data.db"
 const testDbCopyPath = testAppDataDirPath + "data.db"
 
 func testSetup() {
-	data.CreateDirIfNotExist(testDataDirPath)
+	err := data.CreateDirIfNotExist(testDataDirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
 	createTestDb()
 }
 
 func createTestDb() {
-	data.CreateDirIfNotExist(persistentTestDataDirPath)
+	err := data.CreateDirIfNotExist(persistentTestDataDirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
 	dataProvider := data.NewBoltProvider(testDbPath)
 	saveTestEntriesTypes(dataProvider)
 	saveTestComics(dataProvider)
@@ -112,7 +118,10 @@ func removeAllNonPersistentFilesInTestDataDir() {
 }
 
 func setupAndRunAppForTestingWithTestConfig() (*App, func()) {
-	data.CreateDirIfNotExist(testConfigDirPath)
+	err := data.CreateDirIfNotExist(testConfigDirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
 	config := getTestConfigWithConfigPathIn(testConfigDirPath)
 	config.AppDataDirPath = testAppDataDirPath
 	config.saveConfigIn(config.ConfigDirPath + "wirwl.cfg")
@@ -180,7 +189,10 @@ func areFilesTheSame(file1 *os.File, file2 *os.File) bool {
 }
 
 func createCorrectSavedWirwlConfigFileInPath(path string) {
-	data.CreateDirIfNotExist(path)
+	err := data.CreateDirIfNotExist(path)
+	if err != nil {
+		log.Fatal(err)
+	}
 	config := Config{
 		AppDataDirPath: testAppDataDirPath,
 		ConfigDirPath:  testConfigDirPath,
@@ -189,7 +201,10 @@ func createCorrectSavedWirwlConfigFileInPath(path string) {
 }
 
 func createCorrectWirwlConfigFileForLoadingInPath(path string) {
-	data.CreateDirIfNotExist(path)
+	err := data.CreateDirIfNotExist(path)
+	if err != nil {
+		log.Fatal(err)
+	}
 	config := Config{
 		AppDataDirPath: "some db path",
 		ConfigDirPath:  testConfigDirPath,
