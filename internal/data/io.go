@@ -4,7 +4,6 @@ import (
 	"github.com/pkg/errors"
 	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -64,11 +63,12 @@ func CopyFile(sourcePath string, destinationPath string) error {
 	return nil
 }
 
-func CreateDirIfNotExist(path string) {
+func CreateDirIfNotExist(path string) error {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		err := os.Mkdir(path, 0700)
 		if err != nil {
-			log.Fatal(err)
+			return errors.Wrap(err, "An error occurred when creating a directory in path "+path)
 		}
 	}
+	return nil
 }
