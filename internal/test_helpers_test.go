@@ -105,7 +105,10 @@ func testCleanup() {
 }
 
 func removeAllNonPersistentFilesInTestDataDir() {
-	data.DeleteAllInDirExceptForDirs(testDataDirPath, "persistent")
+	err := data.DeleteAllInDirExceptForDirs(testDataDirPath, "persistent")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func setupAndRunAppForTestingWithTestConfig() (*App, func()) {
