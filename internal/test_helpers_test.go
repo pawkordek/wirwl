@@ -121,7 +121,10 @@ func setupAndRunAppForTestingWithTestConfig() (*App, func()) {
 
 func setupAndRunAppForTestingWithExistingTestData(config Config) (*App, func()) {
 	data.CreateDirIfNotExist(testAppDataDirPath)
-	data.CopyFile(testDbPath, testDbCopyPath)
+	err := data.CopyFile(testDbPath, testDbCopyPath)
+	if err != nil {
+		log.Fatal(err)
+	}
 	app := NewApp(fyneTest.NewApp(), config)
 	app.LoadAndDisplay()
 	return app, removeAllNonPersistentFilesInTestDataDir
