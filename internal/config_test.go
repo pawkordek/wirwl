@@ -86,7 +86,12 @@ func TestThatDefaultConfigWithProvidedConfigPathGetsLoadedIfConfigFileDoesNotExi
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer data.DeleteDirWithContents(tmpDir)
+	defer func() {
+		err = data.DeleteDirWithContents(tmpDir)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
 	config := NewConfig(tmpDir)
 	config.defaultConfigDirPath = defaultTestConfigDirPath
 	config.defaultAppDataDirPath = defaultTestAppDataDirPath

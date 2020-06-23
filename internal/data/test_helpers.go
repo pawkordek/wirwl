@@ -2,6 +2,7 @@ package data
 
 import (
 	"errors"
+	"log"
 )
 
 const TestDbPath = "../../testdata/testDb.db"
@@ -117,7 +118,10 @@ func GetExampleMusicEntries() []Entry {
 }
 
 func DeleteTestDb() {
-	DeleteDirWithContents(TestDbPath)
+	err := DeleteDirWithContents(TestDbPath)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func GetTestEntriesToSave() []Entry {
