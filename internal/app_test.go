@@ -4,6 +4,7 @@ import (
 	"fyne.io/fyne"
 	fyneTest "fyne.io/fyne/test"
 	"github.com/stretchr/testify/assert"
+	"log"
 	"os"
 	"testing"
 	"wirwl/internal/data"
@@ -183,7 +184,10 @@ func TestThatSavingChangesWorks(t *testing.T) {
 	defer cleanup()
 	app.simulateAddingNewEntryTypeWithName("type")
 	app.simulateSavingChanges()
-	config := getTestConfigWithConfigPathIn("/tmp/")
+	config, err := getTestConfigWithConfigPathIn("/tmp/")
+	if err != nil {
+		log.Fatal(err)
+	}
 	config.AppDataDirPath = testAppDataDirPath
 	app = NewApp(fyneTest.NewApp(), config)
 	app.LoadAndDisplay()
