@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"io"
 	"log"
+	"os"
 )
 
 type stackTracer interface {
@@ -18,6 +19,14 @@ func Info(info string) {
 
 func Error(err error) {
 	printError("ERROR:", err)
+}
+
+//Should only be used in tests to quickly fail and report an error.
+//In code all errors should be handled if possible, otherwise they should bubble up to the main function,
+//where application can exit.
+func Fatal(err error) {
+	printError("FATAL", err)
+	os.Exit(1)
 }
 
 func printError(textBefore string, err error) {
