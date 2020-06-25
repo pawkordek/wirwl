@@ -1,10 +1,9 @@
 package data
 
 import (
-	"errors"
 	"github.com/stretchr/testify/assert"
-	"wirwl/internal/log"
 	"testing"
+	"wirwl/internal/log"
 )
 
 func TestDbOperationsOnEntries(t *testing.T) {
@@ -27,7 +26,7 @@ func TestThatTryingToLoadDataIntoNonExistingTableReturnsError(t *testing.T) {
 	dataProvider := NewBoltProvider(TestDbPath)
 	types, err := dataProvider.LoadEntriesFromDb("non existing table")
 	assert.Nil(t, types)
-	assert.Equal(t, err, errors.New("No table with name=non existing table"))
+	assert.Contains(t, err.Error(), "An error occurred when loading entries from table with name non existing table. No such table")
 	DeleteTestDb()
 }
 
