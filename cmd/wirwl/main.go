@@ -3,14 +3,21 @@ package main
 import (
 	"flag"
 	"fyne.io/fyne/app"
+	"github.com/pkg/errors"
 	wirwl "wirwl/internal"
+	"wirwl/internal/log"
 )
 
 func main() {
 	flags := readCommandLineFlags()
-	config := wirwl.NewConfig(flags["configDirPath"])
-	wirwlApp := wirwl.NewApp(app.New(), config)
-	wirwlApp.LoadAndDisplay()
+	config, err := wirwl.NewConfig(flags["configDirPath"])
+	if err == nil {
+		wirwlApp := wirwl.NewApp(app.New(), config)
+		wirwlApp.LoadAndDisplay()
+	} else {
+		err = errors.Wrap(err, "A fatal error occurred. Application cannot continue")
+		log.Error(err)
+	}
 }
 
 func readCommandLineFlags() map[string]string {

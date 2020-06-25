@@ -2,6 +2,7 @@ package wirwl
 
 import (
 	"github.com/BurntSushi/toml"
+	"github.com/pkg/errors"
 	"io"
 	"io/ioutil"
 	"log"
@@ -22,27 +23,36 @@ type Config struct {
 	ConfigDirPath         string
 }
 
-func NewConfig(configDirPath string) Config {
+func NewConfig(configDirPath string) (Config, error) {
 	config := Config{ConfigDirPath: configDirPath}
-	config.setupDefaultDirPaths()
-	return config
+	err := config.setupDefaultDirPaths()
+	if err != nil {
+		return Config{}, err
+	}
+	return config, nil
 }
 
-func (config *Config) setupDefaultDirPaths() {
+func (config *Config) setupDefaultDirPaths() error {
 	config.defaultConfigDirPath = getDefaultConfigDirPath()
-	config.defaultAppDataDirPath = getDefaultAppDataDirPath()
+	defaultAppDataDirPath, err := getDefaultAppDataDirPath()
+	if err != nil {
+		return err
+	} else {
+		config.defaultAppDataDirPath = defaultAppDataDirPath
+	}
+	return nil
 }
 
-func getDefaultAppDataDirPath() string {
+func getDefaultAppDataDirPath() (string, error) {
 	xdgDataHome := os.Getenv("XDG_DATA_HOME")
 	if xdgDataHome != "" {
-		return filepath.Join(xdgDataHome, appName)
+		return filepath.Join(xdgDataHome, appName), nil
 	} else {
 		homeDirPath, err := getCurrentUserHomeDir()
 		if err != nil {
-			log.Fatal(err)
+			return "", errors.Wrap(err, "Failed to setup default app data dir path")
 		}
-		return filepath.Join(homeDirPath, ".local", "share", appName)
+		return filepath.Join(homeDirPath, ".local", "share", appName), nil
 	}
 }
 
