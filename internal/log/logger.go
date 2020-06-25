@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/pkg/errors"
+	"io"
 	"log"
 )
 
@@ -34,4 +35,8 @@ func getPrintableError(err error) string {
 	} else {
 		return err.Error()
 	}
+}
+
+func SetOutput(w io.Writer) {
+	log.SetOutput(w)
 }
