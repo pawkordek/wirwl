@@ -112,7 +112,7 @@ func (config *Config) loadDataProvider() data.Provider {
 func getCurrentUserHomeDir() (string, error) {
 	currentUser, err := user.Current()
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "Failed to get the current user")
 	}
 	return currentUser.HomeDir, nil
 }
