@@ -117,21 +117,22 @@ func getCurrentUserHomeDir() (string, error) {
 	return currentUser.HomeDir, nil
 }
 
-func (config *Config) save() {
+func (config *Config) save() error {
 	err := data.CreateDirIfNotExist(config.ConfigDirPath)
 	if err != nil {
-		log.Fatal(err)
+		return errors.Wrap(err, "Failed to save the config because config directory in "+config.ConfigDirPath+" could not be created")
 	}
 	configFile, err := os.OpenFile(config.configFilePath, os.O_CREATE|os.O_WRONLY, 0700)
 	if err != nil {
-		log.Fatal("Failed to save the config file due to an error", err)
+		return errors.Wrap(err, "Failed to save the config file because config file in "+config.configFilePath+" could not be opened")
 	}
 	err = toml.NewEncoder(configFile).Encode(config)
 	if err != nil {
-		log.Fatal("Failed to save the config file due to an error", err)
+		return errors.Wrap(err, "Failed to save the config file because encoding failed")
 	}
 	err = configFile.Close()
 	if err != nil {
-		log.Fatal(err)
+		return errors.Wrap(err, "Failed to close the config file in "+config.configFilePath+" after saving")
 	}
+	return nil
 }
