@@ -1,6 +1,7 @@
 package wirwl
 
 import (
+	"fmt"
 	"github.com/BurntSushi/toml"
 	"github.com/pkg/errors"
 	"io"
@@ -135,4 +136,8 @@ func (config *Config) save() error {
 		return errors.Wrap(err, "Failed to close the config file in "+config.configFilePath+" after saving")
 	}
 	return nil
+}
+
+func (config Config) String() string {
+	return fmt.Sprintf("%#v", config)
 }
