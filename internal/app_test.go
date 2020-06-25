@@ -4,7 +4,7 @@ import (
 	"fyne.io/fyne"
 	fyneTest "fyne.io/fyne/test"
 	"github.com/stretchr/testify/assert"
-	"log"
+	"wirwl/internal/log"
 	"os"
 	"testing"
 	"wirwl/internal/data"

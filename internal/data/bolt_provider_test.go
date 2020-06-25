@@ -3,7 +3,7 @@ package data
 import (
 	"errors"
 	"github.com/stretchr/testify/assert"
-	"log"
+	"wirwl/internal/log"
 	"testing"
 )
 

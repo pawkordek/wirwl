@@ -5,7 +5,7 @@ import (
 	"fyne.io/fyne"
 	"fyne.io/fyne/theme"
 	fyneWidget "fyne.io/fyne/widget"
-	"log"
+	"wirwl/internal/log"
 	"wirwl/internal/data"
 	"wirwl/internal/widget"
 )

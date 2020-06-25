@@ -2,7 +2,7 @@ package data
 
 import (
 	"errors"
-	"log"
+	"wirwl/internal/log"
 )
 
 const TestDbPath = "../../testdata/testDb.db"

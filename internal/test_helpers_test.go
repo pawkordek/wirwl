@@ -6,9 +6,9 @@ import (
 	fyneTest "fyne.io/fyne/test"
 	"github.com/BurntSushi/toml"
 	"io"
-	"log"
 	"os"
 	"wirwl/internal/data"
+	"wirwl/internal/log"
 )
 
 //Folder that should be used for storing any temporary data when testing and for storing directories used as paths in
@@ -184,7 +184,8 @@ func areFilesTheSame(file1 *os.File, file2 *os.File) bool {
 			} else if err1 == io.EOF || err2 == io.EOF {
 				return false
 			} else {
-				log.Fatal(err1, err2)
+				log.Error(err1)
+				log.Fatal(err2)
 			}
 		}
 		if !bytes.Equal(bytesOfFile1, bytesOfFile2) {

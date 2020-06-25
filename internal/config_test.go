@@ -3,12 +3,12 @@ package wirwl
 import (
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/user"
 	"path/filepath"
 	"testing"
 	"wirwl/internal/data"
+	"wirwl/internal/log"
 )
 
 func TestThatDefaultAppDataDirPathIsSetToXDG_DATA_HOMEIfItIsSet(t *testing.T) {
