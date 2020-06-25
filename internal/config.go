@@ -129,7 +129,7 @@ func (config *Config) save() error {
 	}
 	err = toml.NewEncoder(configFile).Encode(config)
 	if err != nil {
-		return errors.Wrap(err, "Failed to save the config file because encoding failed")
+		return errors.Wrap(err, "Failed to save the config file because encoding failed. Config data: "+config.String())
 	}
 	err = configFile.Close()
 	if err != nil {
