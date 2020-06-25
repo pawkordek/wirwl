@@ -1,7 +1,6 @@
 package log
 
 import (
-	"log"
 	"os"
 )
 
@@ -37,10 +36,10 @@ func (output mockOutput) Write(p []byte) (n int, err error) {
 func setupLoggerTesting() (*writeResult, func()) {
 	writeResult := newMockWrite()
 	output := mockOutput{writeResult.storeWriteValue}
-	log.SetOutput(output)
+	SetOutput(output)
 	return writeResult, cleanupLoggerTesting
 }
 
 func cleanupLoggerTesting() {
-	log.SetOutput(os.Stdout)
+	SetOutput(os.Stdout)
 }
