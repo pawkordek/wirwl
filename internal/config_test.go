@@ -16,7 +16,10 @@ func TestThatDefaultAppDataDirPathIsSetToXDG_DATA_HOMEIfItIsSet(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	config := NewConfig("")
+	config, err := NewConfig("")
+	if err != nil {
+		log.Fatal(err)
+	}
 	expectedPath := filepath.Join("some path", "wirwl")
 	assert.Equal(t, expectedPath, config.defaultAppDataDirPath)
 	err = os.Unsetenv("XDG_DATA_HOME")
@@ -26,7 +29,10 @@ func TestThatDefaultAppDataDirPathIsSetToXDG_DATA_HOMEIfItIsSet(t *testing.T) {
 }
 
 func TestThatDefaultAppDirDefaultsToLocalShareIfXDG_DATA_HOMEIsNotSet(t *testing.T) {
-	config := NewConfig("")
+	config, err := NewConfig("")
+	if err != nil {
+		log.Fatal(err)
+	}
 	currentUser, err := user.Current()
 	if err != nil {
 		log.Fatal(err)
@@ -68,14 +74,20 @@ func TestThatDbFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
 
 func TestThatConfigGetsLoadedIfItExists(t *testing.T) {
 	createCorrectWirwlConfigFileForLoadingInPath(testConfigDirPath)
-	config := NewConfig(testConfigDirPath)
+	config, err := NewConfig(testConfigDirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
 	config.load()
 	assert.Equal(t, "some db path", config.AppDataDirPath)
 	assert.Equal(t, testConfigDirPath, config.ConfigDirPath)
 }
 
 func TestThatDefaultConfigPathIsUsedIfConfigIsCreatedWithEmptyPath(t *testing.T) {
-	config := NewConfig("")
+	config, err := NewConfig("")
+	if err != nil {
+		log.Fatal(err)
+	}
 	config.defaultConfigDirPath = defaultTestConfigDirPath
 	config.load()
 	assert.Equal(t, defaultTestConfigDirPath, config.ConfigDirPath)
@@ -92,7 +104,10 @@ func TestThatDefaultConfigWithProvidedConfigPathGetsLoadedIfConfigFileDoesNotExi
 			log.Fatal(err)
 		}
 	}()
-	config := NewConfig(tmpDir)
+	config, err := NewConfig(tmpDir)
+	if err != nil {
+		log.Fatal(err)
+	}
 	config.defaultConfigDirPath = defaultTestConfigDirPath
 	config.defaultAppDataDirPath = defaultTestAppDataDirPath
 	config.load()
