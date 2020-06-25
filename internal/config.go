@@ -33,7 +33,11 @@ func NewConfig(configDirPath string) (Config, error) {
 }
 
 func (config *Config) setupDefaultDirPaths() error {
-	config.defaultConfigDirPath = getDefaultConfigDirPath()
+	defaultConfigDirPath, err := getDefaultConfigDirPath()
+	if err != nil {
+		return err
+	}
+	config.defaultConfigDirPath = defaultConfigDirPath
 	defaultAppDataDirPath, err := getDefaultAppDataDirPath()
 	if err != nil {
 		return err
@@ -56,12 +60,12 @@ func getDefaultAppDataDirPath() (string, error) {
 	}
 }
 
-func getDefaultConfigDirPath() string {
+func getDefaultConfigDirPath() (string, error) {
 	userConfigDirPath, err := os.UserConfigDir()
 	if err != nil {
-		log.Fatal(err)
+		return "", errors.Wrap(err, "Failed to setup default user config dir path")
 	}
-	return filepath.Join(userConfigDirPath, appName)
+	return filepath.Join(userConfigDirPath, appName), nil
 }
 
 func (config *Config) load() {
