@@ -68,27 +68,29 @@ func getDefaultConfigDirPath() (string, error) {
 	return filepath.Join(userConfigDirPath, appName), nil
 }
 
-func (config *Config) load() {
+func (config *Config) load() error {
 	if config.ConfigDirPath == "" {
 		config.ConfigDirPath = config.defaultConfigDirPath
 	}
 	config.configFilePath = filepath.Join(config.ConfigDirPath, appName+".cfg")
 	if _, err := os.Stat(config.configFilePath); os.IsNotExist(err) {
 		config.AppDataDirPath = config.defaultAppDataDirPath
+		return nil
 	} else {
-		config.readConfigFromConfigFile()
+		return config.readConfigFromConfigFile()
 	}
 }
 
-func (config *Config) readConfigFromConfigFile() {
+func (config *Config) readConfigFromConfigFile() error {
 	fileData, err := ioutil.ReadFile(config.configFilePath)
 	if err != nil {
-		log.Fatal(err)
+		return errors.Wrap(err, "Failed to read the config file in path "+config.configFilePath)
 	}
 	_, err = toml.Decode(string(fileData), &config)
 	if err != nil {
-		log.Fatal(err)
+		return errors.Wrap(err, "Failed to decode the config from the file in "+config.configFilePath+". File data: "+string(fileData))
 	}
+	return nil
 }
 
 func (config *Config) setupLogger() {
