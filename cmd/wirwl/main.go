@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fyne.io/fyne/app"
 	"github.com/pkg/errors"
+	"os"
 	wirwl "wirwl/internal"
 	"wirwl/internal/log"
 )
@@ -17,6 +18,7 @@ func main() {
 	} else {
 		err = errors.Wrap(err, "A fatal error occurred. Application cannot continue")
 		log.Error(err)
+		os.Exit(1)
 	}
 }
 
