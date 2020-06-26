@@ -1,3 +1,9 @@
+#Files generated for running the application when developing 
+wirwl.log
+wirwl.cfg
+data.db
+#Private todo file
+todo
 ### Go ###
 # Binaries for programs and plugins
 *.exe
