@@ -94,6 +94,11 @@ func (config *Config) readConfigFromConfigFile() error {
 	return nil
 }
 
+func (config *Config) loadDefaults() {
+	config.ConfigDirPath = config.defaultConfigDirPath
+	config.AppDataDirPath = config.defaultAppDataDirPath
+}
+
 func (config *Config) setupLogger() {
 	logFilePath := filepath.Join(config.AppDataDirPath, logFileName)
 	logFile, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY, 0700)

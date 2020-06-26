@@ -121,3 +121,13 @@ func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.
 	createCorrectSavedWirwlConfigFileInPath(testConfigDirPath)
 	assert.True(t, areFilesInPathsTheSame(testConfigDirPath+"wirwl.cfg", testConfigDirPath+"wirwl_correct.cfg"))
 }
+
+func TestThatAfterLoadingDefaultsConfigHasDefaultValues(t *testing.T) {
+	config, err := NewConfig(testConfigDirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	config.loadDefaults()
+	assert.Equal(t, config.ConfigDirPath, config.defaultConfigDirPath)
+	assert.Equal(t, config.AppDataDirPath, config.defaultAppDataDirPath)
+}
