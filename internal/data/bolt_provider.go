@@ -206,7 +206,8 @@ func getEntriesTypesFromTable(transaction *bolt.Tx) ([]EntryType, error) {
 	var types []EntryType
 	bucket := transaction.Bucket([]byte(entriesTypesTableName))
 	if bucket == nil {
-		return types, errors.New("An error occurred when loading entries types from table with name " + entriesTypesTableName + ". No such table")
+		//If there is no entries types table it simply means that the db is new and types are yet to be created
+		return types, nil
 	}
 	err := bucket.ForEach(func(key, value []byte) error {
 		var entryType EntryType
