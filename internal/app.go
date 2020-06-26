@@ -2,11 +2,12 @@ package wirwl
 
 import (
 	"errors"
+	"fmt"
 	"fyne.io/fyne"
 	"fyne.io/fyne/theme"
 	fyneWidget "fyne.io/fyne/widget"
-	"wirwl/internal/log"
 	"wirwl/internal/data"
+	"wirwl/internal/log"
 	"wirwl/internal/widget"
 )
 
@@ -30,14 +31,21 @@ func NewApp(fyneApp fyne.App, config Config) *App {
 }
 
 func (app *App) LoadAndDisplay() {
-	app.config.load()
-	err := data.CreateDirIfNotExist(app.config.AppDataDirPath)
+	var loadingErrors []string
+	err := app.config.load()
+	if err != nil {
+		loadingErrors = append(loadingErrors, "An error occurred when loading the config file in "+app.config.ConfigDirPath+"wirwl.cfg. Default config has been loaded instead.")
+		log.Error(err)
+		app.config.loadDefaults()
+	}
+	err = data.CreateDirIfNotExist(app.config.AppDataDirPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 	app.config.setupLogger()
 	app.dataProvider = app.config.loadDataProvider()
 	app.prepare()
+	app.displayLoadingErrors(loadingErrors)
 	app.mainWindow.ShowAndRun()
 	app.shutdown()
 }
@@ -117,6 +125,16 @@ func (app *App) getNoEntriesTab() map[string][]string {
 
 func (app *App) prepareMainWindowContent() {
 	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTypesTabs))
+}
+
+func (app *App) displayLoadingErrors(loadingErrors []string) {
+	if len(loadingErrors) != 0 {
+		errorsList := ""
+		for _, err := range loadingErrors {
+			errorsList += fmt.Sprintln("- " + err)
+		}
+		app.msgDialog.Display(widget.WarningPopUp, errorsList)
+	}
 }
 
 func (app *App) prepareDialogs() {

@@ -6,7 +6,9 @@ import (
 	fyneTest "fyne.io/fyne/test"
 	"github.com/BurntSushi/toml"
 	"io"
+	"io/ioutil"
 	"os"
+	"path/filepath"
 	"wirwl/internal/data"
 	"wirwl/internal/log"
 )
@@ -115,6 +117,27 @@ func removeAllNonPersistentFilesInTestDataDir() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func setupAndRunAppForTestingWithFailingToLoadConfig() (*App, func()) {
+	err := data.CreateDirIfNotExist(testConfigDirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	testConfigFile := filepath.Join(testConfigDirPath + "wirwl.cfg")
+	nonsenseContents := []byte("qkrhqwroqwprhqr")
+	//Having a config file with non-parsable contents will always cause an error when it gets loaded
+	err = ioutil.WriteFile(testConfigFile, nonsenseContents, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	config, err := NewConfig(testConfigDirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	app := NewApp(fyneTest.NewApp(), config)
+	app.LoadAndDisplay()
+	return app, removeAllNonPersistentFilesInTestDataDir
 }
 
 func setupAndRunAppForTestingWithTestConfig() (*App, func()) {

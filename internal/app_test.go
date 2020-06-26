@@ -1,13 +1,14 @@
 package wirwl
 
 import (
+	"fmt"
 	"fyne.io/fyne"
 	fyneTest "fyne.io/fyne/test"
 	"github.com/stretchr/testify/assert"
-	"wirwl/internal/log"
 	"os"
 	"testing"
 	"wirwl/internal/data"
+	"wirwl/internal/log"
 	"wirwl/internal/widget"
 )
 
@@ -16,6 +17,22 @@ func TestMain(m *testing.M) {
 	exitCode := m.Run()
 	testCleanup()
 	os.Exit(exitCode)
+}
+
+func TestThatAppLoadsDefaultConfigIfErrorHappenedWhenItWasLoadedAndDisplaysWarningMsgAboutIt(t *testing.T) {
+	app, cleanup := setupAndRunAppForTestingWithFailingToLoadConfig()
+	defer cleanup()
+	assert.Equal(t, app.config.defaultConfigDirPath, app.config.ConfigDirPath)
+	assert.Equal(t, app.config.defaultAppDataDirPath, app.config.AppDataDirPath)
+	assert.True(t, app.msgDialog.Visible())
+	assert.Equal(t, "WARNING", app.msgDialog.Title())
+	assert.Equal(t, fmt.Sprintln("- An error occurred when loading the config file in "+testConfigDirPath+"wirwl.cfg. Default config has been loaded instead."), app.msgDialog.Msg())
+}
+
+func TestThatLoadingErrorsMsgDialogDoesNotDisplayIfThereAreNoErrors(t *testing.T) {
+	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	defer cleanup()
+	assert.True(t, app.msgDialog.Hidden)
 }
 
 func TestThatEntriesTabsWithContentDisplayInCorrectOrder(t *testing.T) {
