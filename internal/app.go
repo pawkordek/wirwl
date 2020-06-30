@@ -15,6 +15,7 @@ type App struct {
 	fyneApp             fyne.App
 	mainWindow          fyne.Window
 	config              Config
+	loadingErrors       []string
 	addEntryTypeDialog  *widget.FormDialog
 	msgDialog           *widget.MsgDialog
 	confirmationDialog  *widget.ConfirmationDialog
@@ -31,10 +32,9 @@ func NewApp(fyneApp fyne.App, config Config) *App {
 }
 
 func (app *App) LoadAndDisplay() {
-	var loadingErrors []string
 	err := app.config.load()
 	if err != nil {
-		loadingErrors = append(loadingErrors, "An error occurred when loading the config file in "+app.config.ConfigDirPath+"wirwl.cfg. Default config has been loaded instead.")
+		app.loadingErrors = append(app.loadingErrors, "An error occurred when loading the config file in "+app.config.ConfigDirPath+"wirwl.cfg. Default config has been loaded instead.")
 		log.Error(err)
 		app.config.loadDefaults()
 	}
@@ -45,7 +45,7 @@ func (app *App) LoadAndDisplay() {
 	app.config.setupLogger()
 	app.dataProvider = app.config.loadDataProvider()
 	app.prepare()
-	app.displayLoadingErrors(loadingErrors)
+	app.displayLoadingErrors()
 	app.mainWindow.ShowAndRun()
 	app.shutdown()
 }
@@ -127,10 +127,10 @@ func (app *App) prepareMainWindowContent() {
 	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTypesTabs))
 }
 
-func (app *App) displayLoadingErrors(loadingErrors []string) {
-	if len(loadingErrors) != 0 {
+func (app *App) displayLoadingErrors() {
+	if len(app.loadingErrors) != 0 {
 		errorsList := ""
-		for _, err := range loadingErrors {
+		for _, err := range app.loadingErrors {
 			errorsList += fmt.Sprintln("- " + err)
 		}
 		app.msgDialog.Display(widget.WarningPopUp, errorsList)
