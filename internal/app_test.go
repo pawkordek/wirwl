@@ -291,3 +291,17 @@ func TestThatConfigIsNotSavedIfItFailedToLoad(t *testing.T) {
 	}
 	assert.Equal(t, "qkrhqwroqwprhqr", string(configFileContents))
 }
+
+func TestThatApplicationExitsWithErrorIfAppDataDirCanNotBeCreated(t *testing.T) {
+	config, err := NewConfig(testConfigDirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	config.defaultAppDataDirPath = filepath.Join(testAppDataDirPath, "app_data_dir_creation")
+	app := NewApp(fyneTest.NewApp(), config)
+	err = data.DeleteDirWithContents(testAppDataDirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.NotNil(t, app.LoadAndDisplay())
+}

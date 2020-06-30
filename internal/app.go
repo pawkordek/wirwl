@@ -1,11 +1,11 @@
 package wirwl
 
 import (
-	"errors"
 	"fmt"
 	"fyne.io/fyne"
 	"fyne.io/fyne/theme"
 	fyneWidget "fyne.io/fyne/widget"
+	"github.com/pkg/errors"
 	"wirwl/internal/data"
 	"wirwl/internal/log"
 	"wirwl/internal/widget"
@@ -31,11 +31,11 @@ func NewApp(fyneApp fyne.App, config Config) *App {
 	return &App{fyneApp: fyneApp, config: config, loadingErrors: make(map[string]string)}
 }
 
-func (app *App) LoadAndDisplay() {
+func (app *App) LoadAndDisplay() error {
 	app.loadConfig()
-	err := data.CreateDirIfNotExist(app.config.AppDataDirPath)
+	err := app.createAppDataDirIfNotExist()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	app.config.setupLogger()
 	app.dataProvider = app.config.loadDataProvider()
@@ -43,6 +43,7 @@ func (app *App) LoadAndDisplay() {
 	app.displayLoadingErrors()
 	app.mainWindow.ShowAndRun()
 	app.shutdown()
+	return nil
 }
 
 func (app *App) loadConfig() {
@@ -52,6 +53,14 @@ func (app *App) loadConfig() {
 		log.Error(err)
 		app.config.loadDefaults()
 	}
+}
+
+func (app *App) createAppDataDirIfNotExist() error {
+	err := data.CreateDirIfNotExist(app.config.AppDataDirPath)
+	if err != nil {
+		return errors.Wrap(err, "Failed to create application directory in "+app.config.AppDataDirPath+". Application must exit")
+	}
+	return nil
 }
 
 func (app *App) prepare() {
