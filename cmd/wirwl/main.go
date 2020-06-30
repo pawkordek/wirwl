@@ -14,7 +14,12 @@ func main() {
 	config, err := wirwl.NewConfig(flags["configDirPath"])
 	if err == nil {
 		wirwlApp := wirwl.NewApp(app.New(), config)
-		wirwlApp.LoadAndDisplay()
+		err = wirwlApp.LoadAndDisplay()
+		if err != nil {
+			err = errors.Wrap(err, "An error occurred when loading the application preventing it from continuing")
+			log.Error(err)
+			os.Exit(1)
+		}
 	} else {
 		err = errors.Wrap(err, "A fatal error occurred. Application cannot continue")
 		log.Error(err)
