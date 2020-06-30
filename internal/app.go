@@ -32,13 +32,8 @@ func NewApp(fyneApp fyne.App, config Config) *App {
 }
 
 func (app *App) LoadAndDisplay() {
-	err := app.config.load()
-	if err != nil {
-		app.loadingErrors = append(app.loadingErrors, "An error occurred when loading the config file in "+app.config.ConfigDirPath+"wirwl.cfg. Default config has been loaded instead.")
-		log.Error(err)
-		app.config.loadDefaults()
-	}
-	err = data.CreateDirIfNotExist(app.config.AppDataDirPath)
+	app.loadConfig()
+	err := data.CreateDirIfNotExist(app.config.AppDataDirPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -48,6 +43,15 @@ func (app *App) LoadAndDisplay() {
 	app.displayLoadingErrors()
 	app.mainWindow.ShowAndRun()
 	app.shutdown()
+}
+
+func (app *App) loadConfig() {
+	err := app.config.load()
+	if err != nil {
+		app.loadingErrors = append(app.loadingErrors, "An error occurred when loading the config file in "+app.config.ConfigDirPath+"wirwl.cfg. Default config has been loaded instead.")
+		log.Error(err)
+		app.config.loadDefaults()
+	}
 }
 
 func (app *App) prepare() {
