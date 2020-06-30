@@ -54,6 +54,9 @@ const testDbPath = persistentTestDataDirPath + "data.db"
 const testDbCopyPath = testAppDataDirPath + "data.db"
 
 func testSetup() {
+	/*Cleanup is run in the case that a test crashed in the previous run and couldn't run it's cleanup functions, leaving
+	potentially unwanted files and directories*/
+	testCleanup()
 	err := data.CreateDirIfNotExist(testDataDirPath)
 	if err != nil {
 		log.Fatal(err)
