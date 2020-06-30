@@ -278,5 +278,7 @@ func (app *App) saveChangesToDb() error {
 }
 
 func (app *App) shutdown() {
-	app.config.save()
+	if _, configLoadingErrorExists := app.loadingErrors["config"]; !configLoadingErrorExists {
+		app.config.save()
+	}
 }

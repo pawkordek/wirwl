@@ -5,7 +5,9 @@ import (
 	"fyne.io/fyne"
 	fyneTest "fyne.io/fyne/test"
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
 	"os"
+	"path/filepath"
 	"testing"
 	"wirwl/internal/data"
 	"wirwl/internal/log"
@@ -278,4 +280,14 @@ func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T)
 	app2 := NewApp(fyneTest.NewApp(), config)
 	app2.LoadAndDisplay()
 	assert.Equal(t, "music", app2.entriesTypesTabs.CurrentTab().Text)
+}
+
+func TestThatConfigIsNotSavedIfItFailedToLoad(t *testing.T) {
+	_, cleanup := setupAndRunAppForTestingWithFailingToLoadConfig()
+	defer cleanup()
+	configFileContents, err := ioutil.ReadFile(filepath.Join(testConfigDirPath + "wirwl.cfg"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, "qkrhqwroqwprhqr", string(configFileContents))
 }
