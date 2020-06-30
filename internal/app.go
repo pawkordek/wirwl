@@ -15,7 +15,7 @@ type App struct {
 	fyneApp             fyne.App
 	mainWindow          fyne.Window
 	config              Config
-	loadingErrors       []string
+	loadingErrors       map[string]string
 	addEntryTypeDialog  *widget.FormDialog
 	msgDialog           *widget.MsgDialog
 	confirmationDialog  *widget.ConfirmationDialog
@@ -28,7 +28,7 @@ type App struct {
 }
 
 func NewApp(fyneApp fyne.App, config Config) *App {
-	return &App{fyneApp: fyneApp, config: config}
+	return &App{fyneApp: fyneApp, config: config, loadingErrors: make(map[string]string)}
 }
 
 func (app *App) LoadAndDisplay() {
@@ -48,7 +48,7 @@ func (app *App) LoadAndDisplay() {
 func (app *App) loadConfig() {
 	err := app.config.load()
 	if err != nil {
-		app.loadingErrors = append(app.loadingErrors, "An error occurred when loading the config file in "+app.config.ConfigDirPath+"wirwl.cfg. Default config has been loaded instead.")
+		app.loadingErrors["config"] = "An error occurred when loading the config file in " + app.config.ConfigDirPath + "wirwl.cfg. Default config has been loaded instead."
 		log.Error(err)
 		app.config.loadDefaults()
 	}
