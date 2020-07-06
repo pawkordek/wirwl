@@ -1,6 +1,6 @@
 # wirwl
 *wirwl* (short for *what I've watched read listened*) will be a keyboard-driven GUI application for tracking consumed media. 
-It is currently a work in progress.
+It is being made using Go and [fyne](https://github.com/fyne-io/fyne) for UI and is currently a work in progress.
 
 ### Working functionality:
 - displaying the GUI
