@@ -25,7 +25,7 @@ func Error(err error) {
 //In code all errors should be handled if possible, otherwise they should bubble up to the main function,
 //where application can exit.
 func Fatal(err error) {
-	printError("FATAL", err)
+	printError("FATAL:", err)
 	os.Exit(1)
 }
 
