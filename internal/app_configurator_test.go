@@ -60,3 +60,20 @@ func TestThatProperErrorIsReturnedIfAnAttemptIsMadeToCreateDirectoriesWithConfig
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "Failed to create application directory in /nonsense path. Application must exit")
 }
+
+func TestThatLogIsWrittenToFileAfterLoggerIsSetup(t *testing.T) {
+	err := data.CreateDirIfNotExist(testAppDataDirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	configurator := NewAppConfigurator(testConfigDirPath)
+	cleanup := configurator.SetupLoggerIn(testAppDataDirPath)
+	defer cleanup()
+	expectedTextInLogFile := "Just some text in log file"
+	log.Info(expectedTextInLogFile)
+	logFileContents, err := ioutil.ReadFile(testAppDataDirPath + "wirwl.log")
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Contains(t, string(logFileContents), expectedTextInLogFile)
+}
