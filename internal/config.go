@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"github.com/BurntSushi/toml"
 	"github.com/pkg/errors"
-	"io"
 	"io/ioutil"
 	"os"
 	"os/user"
 	"path/filepath"
 	"wirwl/internal/data"
-	"wirwl/internal/log"
 )
 
 const appName = "wirwl"
@@ -97,18 +95,6 @@ func (config *Config) readConfigFromConfigFile() error {
 func (config *Config) loadDefaults() {
 	config.ConfigDirPath = config.defaultConfigDirPath
 	config.AppDataDirPath = config.defaultAppDataDirPath
-}
-
-func (config *Config) setupLogger() {
-	logFilePath := filepath.Join(config.AppDataDirPath, logFileName)
-	logFile, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY, 0700)
-	defer logFile.Close()
-	if err != nil {
-		log.Error(errors.Wrap(err, "Failed to open the logfile in path "+logFilePath))
-	} else {
-		writer := io.MultiWriter(os.Stdout, logFile)
-		log.SetOutput(writer)
-	}
 }
 
 func (config *Config) loadDataProvider() data.Provider {
