@@ -41,14 +41,6 @@ func TestThatDefaultAppDirDefaultsToLocalShareIfXDG_DATA_HOMEIsNotSet(t *testing
 	assert.Equal(t, expectedPath, config.defaultAppDataDirPath)
 }
 
-func TestThatDbFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
-	dbFilePath := testAppDataDirPath + "data.db"
-	_, cleanup := setupAndRunAppForTestingWithTestConfig()
-	defer cleanup()
-	_, err := os.Stat(dbFilePath)
-	assert.Nil(t, err)
-}
-
 func TestThatConfigGetsLoadedIfItExists(t *testing.T) {
 	createCorrectWirwlConfigFileForLoadingInPath(testConfigDirPath)
 	config, err := NewConfig(testConfigDirPath)
@@ -90,13 +82,6 @@ func TestThatDefaultConfigWithProvidedConfigPathGetsLoadedIfConfigFileDoesNotExi
 	config.load()
 	assert.Equal(t, defaultTestAppDataDirPath, config.AppDataDirPath)
 	assert.Equal(t, tmpDir, config.ConfigDirPath)
-}
-
-func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.T) {
-	_, cleanup := setupAndRunAppForTestingWithTestConfig()
-	defer cleanup()
-	createCorrectSavedWirwlConfigFileInPath(testConfigDirPath)
-	assert.True(t, areFilesInPathsTheSame(testConfigDirPath+"wirwl.cfg", testConfigDirPath+"wirwl_correct.cfg"))
 }
 
 func TestThatAfterLoadingDefaultsConfigHasDefaultValues(t *testing.T) {

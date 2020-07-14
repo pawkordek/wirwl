@@ -26,6 +26,21 @@ func TestThatLoadingErrorsMsgDialogDoesNotDisplayIfThereAreNoErrors(t *testing.T
 	assert.True(t, app.msgDialog.Hidden)
 }
 
+func TestThatDbFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
+	dbFilePath := testAppDataDirPath + "data.db"
+	_, cleanup := setupAndRunAppForTestingWithTestConfig()
+	defer cleanup()
+	_, err := os.Stat(dbFilePath)
+	assert.Nil(t, err)
+}
+
+func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.T) {
+	_, cleanup := setupAndRunAppForTestingWithTestConfig()
+	defer cleanup()
+	createCorrectSavedWirwlConfigFileInPath(testConfigDirPath)
+	assert.True(t, areFilesInPathsTheSame(testConfigDirPath+"wirwl.cfg", testConfigDirPath+"wirwl_correct.cfg"))
+}
+
 func TestThatEntriesTabsWithContentDisplayInCorrectOrder(t *testing.T) {
 	app, cleanup := setupAndRunAppForTestingWithTestConfig()
 	defer cleanup()
