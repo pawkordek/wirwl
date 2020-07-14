@@ -41,13 +41,6 @@ func TestThatDefaultAppDirDefaultsToLocalShareIfXDG_DATA_HOMEIsNotSet(t *testing
 	assert.Equal(t, expectedPath, config.defaultAppDataDirPath)
 }
 
-func TestThatAppDataDirGetsCreatedWhenApplicationLaunches(t *testing.T) {
-	_, cleanup := setupAndRunAppAsIfRunForFirstTime()
-	defer cleanup()
-	_, err := os.Stat(defaultTestAppDataDirPath)
-	assert.Nil(t, err)
-}
-
 func TestThatDbFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
 	dbFilePath := testAppDataDirPath + "data.db"
 	_, cleanup := setupAndRunAppForTestingWithTestConfig()

@@ -1,7 +1,6 @@
 package wirwl
 
 import (
-	"fmt"
 	"fyne.io/fyne"
 	fyneTest "fyne.io/fyne/test"
 	"github.com/stretchr/testify/assert"
@@ -19,16 +18,6 @@ func TestMain(m *testing.M) {
 	exitCode := m.Run()
 	testCleanup()
 	os.Exit(exitCode)
-}
-
-func TestThatAppLoadsDefaultConfigIfErrorHappenedWhenItWasLoadedAndDisplaysWarningMsgAboutIt(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithFailingToLoadConfig()
-	defer cleanup()
-	assert.Equal(t, app.config.defaultConfigDirPath, app.config.ConfigDirPath)
-	assert.Equal(t, app.config.defaultAppDataDirPath, app.config.AppDataDirPath)
-	assert.True(t, app.msgDialog.Visible())
-	assert.Equal(t, "WARNING", app.msgDialog.Title())
-	assert.Equal(t, fmt.Sprintln("- An error occurred when loading the config file in "+testConfigDirPath+"wirwl.cfg. Default config has been loaded instead."), app.msgDialog.Msg())
 }
 
 func TestThatLoadingErrorsMsgDialogDoesNotDisplayIfThereAreNoErrors(t *testing.T) {
@@ -208,7 +197,7 @@ func TestThatSavingChangesWorks(t *testing.T) {
 		log.Fatal(err)
 	}
 	config.AppDataDirPath = testAppDataDirPath
-	app = NewApp(fyneTest.NewApp(), config)
+	app = NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
 	app.LoadAndDisplay()
 	assert.Equal(t, 4, len(app.entriesTypesTabs.Items()))
 	assert.Equal(t, "comics", app.getCurrentTabText())
@@ -266,7 +255,7 @@ func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) 
 	defer cleanup()
 	app.simulateEditionOfCurrentEntryTypeTo("2")
 	app.simulateSavingChanges()
-	app2 := NewApp(fyneTest.NewApp(), app.config)
+	app2 := NewApp(fyneTest.NewApp(), app.config, app.config.loadDataProvider())
 	app2.LoadAndDisplay()
 	assert.Equal(t, "2comics", app2.entriesTypesTabs.CurrentTab().Text)
 }
@@ -277,7 +266,7 @@ func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T)
 	app.simulateDeletionOfCurrentEntryType()
 	app.simulateSavingChanges()
 	config := app.config
-	app2 := NewApp(fyneTest.NewApp(), config)
+	app2 := NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
 	app2.LoadAndDisplay()
 	assert.Equal(t, "music", app2.entriesTypesTabs.CurrentTab().Text)
 }
@@ -290,18 +279,4 @@ func TestThatConfigIsNotSavedIfItFailedToLoad(t *testing.T) {
 		log.Fatal(err)
 	}
 	assert.Equal(t, "qkrhqwroqwprhqr", string(configFileContents))
-}
-
-func TestThatApplicationExitsWithErrorIfAppDataDirCanNotBeCreated(t *testing.T) {
-	config, err := NewConfig(testConfigDirPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	config.defaultAppDataDirPath = filepath.Join(testAppDataDirPath, "app_data_dir_creation")
-	app := NewApp(fyneTest.NewApp(), config)
-	err = data.DeleteDirWithContents(testAppDataDirPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	assert.NotNil(t, app.LoadAndDisplay())
 }

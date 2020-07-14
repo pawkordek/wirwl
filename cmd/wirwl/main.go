@@ -5,15 +5,25 @@ import (
 	"fyne.io/fyne/app"
 	"github.com/pkg/errors"
 	"os"
+	"path/filepath"
 	wirwl "wirwl/internal"
 	"wirwl/internal/log"
 )
 
 func main() {
 	flags := readCommandLineFlags()
-	config, err := wirwl.NewConfig(flags["configDirPath"])
+	configurator := wirwl.NewAppConfigurator(flags["configDirPath"])
+	config, err := configurator.LoadConfig()
 	if err == nil {
-		wirwlApp := wirwl.NewApp(app.New(), config)
+		err = configurator.SetupNeededPaths(config)
+		if err != nil {
+			log.Error(err)
+			os.Exit(1)
+		}
+		cleanup := configurator.SetupLoggerIn(config.AppDataDirPath)
+		defer cleanup()
+		dataProvider := configurator.LoadDataProvider(filepath.Join(config.AppDataDirPath, "data.db"))
+		wirwlApp := wirwl.NewApp(app.New(), config, dataProvider)
 		err = wirwlApp.LoadAndDisplay()
 		if err != nil {
 			err = errors.Wrap(err, "An error occurred when loading the application preventing it from continuing")

@@ -27,39 +27,15 @@ type App struct {
 	editEntryTypeDialog *widget.FormDialog
 }
 
-func NewApp(fyneApp fyne.App, config Config) *App {
-	return &App{fyneApp: fyneApp, config: config, loadingErrors: make(map[string]string)}
+func NewApp(fyneApp fyne.App, config Config, dataProvider data.Provider) *App {
+	return &App{fyneApp: fyneApp, config: config, dataProvider: dataProvider, loadingErrors: make(map[string]string)}
 }
 
 func (app *App) LoadAndDisplay() error {
-	app.loadConfig()
-	err := app.createAppDataDirIfNotExist()
-	if err != nil {
-		return err
-	}
-	app.config.setupLogger()
-	app.dataProvider = app.config.loadDataProvider()
 	app.prepare()
 	app.displayLoadingErrors()
 	app.mainWindow.ShowAndRun()
 	app.shutdown()
-	return nil
-}
-
-func (app *App) loadConfig() {
-	err := app.config.load()
-	if err != nil {
-		app.loadingErrors["config"] = "An error occurred when loading the config file in " + app.config.ConfigDirPath + "wirwl.cfg. Default config has been loaded instead."
-		log.Error(err)
-		app.config.loadDefaults()
-	}
-}
-
-func (app *App) createAppDataDirIfNotExist() error {
-	err := data.CreateDirIfNotExist(app.config.AppDataDirPath)
-	if err != nil {
-		return errors.Wrap(err, "Failed to create application directory in "+app.config.AppDataDirPath+". Application must exit")
-	}
 	return nil
 }
 

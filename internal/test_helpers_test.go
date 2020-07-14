@@ -138,7 +138,7 @@ func setupAndRunAppForTestingWithFailingToLoadConfig() (*App, func()) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	app := NewApp(fyneTest.NewApp(), config)
+	app := NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
 	app.LoadAndDisplay()
 	return app, removeAllNonPersistentFilesInTestDataDir
 }
@@ -163,7 +163,7 @@ func setupAndRunAppForTestingWithExistingTestData(config Config) (*App, func()) 
 	if err != nil {
 		log.Fatal(err)
 	}
-	app := NewApp(fyneTest.NewApp(), config)
+	app := NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
 	app.LoadAndDisplay()
 	return app, removeAllNonPersistentFilesInTestDataDir
 }
@@ -174,7 +174,7 @@ func setupAndRunAppAsIfRunForFirstTime() (*App, func()) {
 		log.Fatal(err)
 	}
 	config.defaultAppDataDirPath = defaultTestAppDataDirPath
-	app := NewApp(fyneTest.NewApp(), config)
+	app := NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
 	app.LoadAndDisplay()
 	return app, removeAllNonPersistentFilesInTestDataDir
 }
