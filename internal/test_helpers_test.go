@@ -13,27 +13,32 @@ import (
 	"wirwl/internal/log"
 )
 
+/*File containing various functions allowing to setup/clean up the test environment
+All path variables below should be treated as constants. They cannot be made const as they need to have slashes adapted
+for cross platform compatibility.
+*/
+
 //Folder that should be used for storing any temporary data when testing and for storing directories used as paths in
 //passed into application's Config file.
 //It's contents are cleared after every test, except for folder 'persistent' and it's contents.
 //The folder itself is created at the beginning before first test is run and removed after all tests are run
-const testDataDirPath = "../testdata/"
+var testDataDirPath = filepath.FromSlash("../testdata/")
 
 //Should be used for storing data that must persist between tests as it's the only folder in testdata directory
 //which is not removed after each test's execution
-const persistentTestDataDirPath = testDataDirPath + "persistent/"
+var persistentTestDataDirPath = filepath.FromSlash(testDataDirPath + "persistent/")
 
 //Used as application's data directory path when testing
-const testAppDataDirPath = testDataDirPath + "app_data/"
+var testAppDataDirPath = filepath.FromSlash(testDataDirPath + "app_data/")
 
 //Used as application's config directory path when testing
-const testConfigDirPath = testDataDirPath + "config/"
+var testConfigDirPath = filepath.FromSlash(testDataDirPath + "config/")
 
 //Used as application's default data directory path when testing
-const defaultTestAppDataDirPath = testDataDirPath + "default_app_data/"
+var defaultTestAppDataDirPath = filepath.FromSlash(testDataDirPath + "default_app_data/")
 
 //Used as application's default config directory path when testing
-const defaultTestConfigDirPath = testDataDirPath + "default_config/"
+var defaultTestConfigDirPath = filepath.FromSlash(testDataDirPath + "default_config/")
 
 /* It's a path to a database file which is generated every time tests are run but before any test executes.
 If shown in the application, the data would look as follows:
@@ -48,10 +53,10 @@ videos:
 	some video2
 The file should be copied to perform any tests that require an existing data.
 */
-const testDbPath = persistentTestDataDirPath + "data.db"
+var testDbPath = filepath.FromSlash(persistentTestDataDirPath + "data.db")
 
 //Path used by tests to store a copy of test database file so that they don't affect the original file
-const testDbCopyPath = testAppDataDirPath + "data.db"
+var testDbCopyPath = filepath.FromSlash(testAppDataDirPath + "data.db")
 
 func testSetup() {
 	/*Cleanup is run in the case that a test crashed in the previous run and couldn't run it's cleanup functions, leaving
