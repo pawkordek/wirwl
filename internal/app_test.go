@@ -241,9 +241,7 @@ func TestThatSavingChangesWorks(t *testing.T) {
 	defer cleanup()
 	app.simulateAddingNewEntryTypeWithName("type")
 	app.simulateSavingChanges()
-	config := NewConfig("/tmp/")
-	config.AppDataDirPath = testAppDataDirPath
-	app = NewApp(fyneTest.NewApp(), config, app.dataProvider, make(map[string]string))
+	app = NewApp(fyneTest.NewApp(), app.config, app.dataProvider, make(map[string]string))
 	app.LoadAndDisplay()
 	assert.Equal(t, 4, len(app.entriesTypesTabs.Items()))
 	assert.Equal(t, "comics", app.getCurrentTabText())
