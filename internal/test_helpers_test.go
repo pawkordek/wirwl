@@ -145,38 +145,6 @@ func setupAndRunAppForTestingWithFailingToLoadConfig() (*App, func()) {
 	return app, removeAllNonPersistentFilesInTestDataDir
 }
 
-func setupAndRunAppForTestingWithTestConfig() (*App, func()) {
-	err := data.CreateDirIfNotExist(testConfigDirPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	config := getTestConfigWithConfigPathIn(testConfigDirPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	config.AppDataDirPath = testAppDataDirPath
-	config.saveConfigIn(config.ConfigDirPath + "wirwl.cfg")
-	return setupAndRunAppForTestingWithExistingTestData(config)
-}
-
-func setupAndRunAppForTestingWithExistingTestData(config Config) (*App, func()) {
-	data.CreateDirIfNotExist(testAppDataDirPath)
-	err := data.CopyFile(testDbPath, testDbCopyPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	app := NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
-	app.LoadAndDisplay()
-	return app, removeAllNonPersistentFilesInTestDataDir
-}
-
-func setupAndRunAppAsIfRunForFirstTime() (*App, func()) {
-	config := getTestConfigWithConfigPathIn(testConfigDirPath)
-	app := NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
-	app.LoadAndDisplay()
-	return app, removeAllNonPersistentFilesInTestDataDir
-}
-
 func getTestConfigWithConfigPathIn(path string) Config {
 	return NewConfig(path)
 }
