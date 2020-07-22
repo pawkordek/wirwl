@@ -15,9 +15,8 @@ const appName = "wirwl"
 const logFileName = appName + ".log"
 
 type Config struct {
-	configFilePath        string
-	AppDataDirPath        string
-	ConfigDirPath         string
+	AppDataDirPath string
+	ConfigDirPath  string
 }
 
 func NewConfig(configDirPath string) Config {
@@ -26,22 +25,21 @@ func NewConfig(configDirPath string) Config {
 }
 
 func (config *Config) load() error {
-	config.configFilePath = filepath.Join(config.ConfigDirPath, appName+".cfg")
-	if _, err := os.Stat(config.configFilePath); os.IsNotExist(err) {
-		return errors.New("Failed to find config file in path " + config.configFilePath)
+	if _, err := os.Stat(config.ConfigFilePath()); os.IsNotExist(err) {
+		return errors.New("Failed to find config file in path " + config.ConfigFilePath())
 	} else {
 		return config.readConfigFromConfigFile()
 	}
 }
 
 func (config *Config) readConfigFromConfigFile() error {
-	fileData, err := ioutil.ReadFile(config.configFilePath)
+	fileData, err := ioutil.ReadFile(config.ConfigFilePath())
 	if err != nil {
-		return errors.Wrap(err, "Failed to read the config file in path "+config.configFilePath)
+		return errors.Wrap(err, "Failed to read the config file in path "+config.ConfigFilePath())
 	}
 	_, err = toml.Decode(string(fileData), &config)
 	if err != nil {
-		return errors.Wrap(err, "Failed to decode the config from the file in "+config.configFilePath+". File data: "+string(fileData))
+		return errors.Wrap(err, "Failed to decode the config from the file in "+config.ConfigFilePath()+". File data: "+string(fileData))
 	}
 	return nil
 }
@@ -98,9 +96,9 @@ func (config *Config) save() error {
 	if err != nil {
 		return errors.Wrap(err, "Failed to save the config because config directory in "+config.ConfigDirPath+" could not be created")
 	}
-	configFile, err := os.OpenFile(config.configFilePath, os.O_CREATE|os.O_WRONLY, 0700)
+	configFile, err := os.OpenFile(config.ConfigFilePath(), os.O_CREATE|os.O_WRONLY, 0700)
 	if err != nil {
-		return errors.Wrap(err, "Failed to save the config file because config file in "+config.configFilePath+" could not be opened")
+		return errors.Wrap(err, "Failed to save the config file because config file in "+config.ConfigFilePath()+" could not be opened")
 	}
 	err = toml.NewEncoder(configFile).Encode(config)
 	if err != nil {
@@ -108,9 +106,13 @@ func (config *Config) save() error {
 	}
 	err = configFile.Close()
 	if err != nil {
-		return errors.Wrap(err, "Failed to close the config file in "+config.configFilePath+" after saving")
+		return errors.Wrap(err, "Failed to close the config file in "+config.ConfigFilePath()+" after saving")
 	}
 	return nil
+}
+
+func (config *Config) ConfigFilePath() string {
+	return filepath.Join(config.ConfigDirPath, appName+".cfg")
 }
 
 func (config Config) String() string {

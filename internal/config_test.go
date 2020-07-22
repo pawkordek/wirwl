@@ -68,3 +68,10 @@ func TestThatConfigGetsLoadedIfItExists(t *testing.T) {
 	assert.Equal(t, "some db path", config.AppDataDirPath)
 	assert.Equal(t, testConfigDirPath, config.ConfigDirPath)
 }
+
+func TestThatConfigFilePathGetterReturnsCorrectPath(t *testing.T) {
+	config := NewConfig(testConfigDirPath)
+	actualPath := config.ConfigFilePath()
+	expectedPath := filepath.Join(config.ConfigDirPath, appName+".cfg")
+	assert.Equal(t, expectedPath, actualPath)
+}
