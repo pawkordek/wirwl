@@ -2,7 +2,6 @@ package wirwl
 
 import (
 	"fyne.io/fyne"
-	fyneTest "fyne.io/fyne/test"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"os"
@@ -241,8 +240,8 @@ func TestThatSavingChangesWorks(t *testing.T) {
 	defer cleanup()
 	app.simulateAddingNewEntryTypeWithName("type")
 	app.simulateSavingChanges()
-	app = NewApp(fyneTest.NewApp(), app.config, app.dataProvider, make(map[string]string))
-	app.LoadAndDisplay()
+	app, cleanup = configurator.getRunningTestApplication()
+	defer cleanup()
 	assert.Equal(t, 4, len(app.entriesTypesTabs.Items()))
 	assert.Equal(t, "comics", app.getCurrentTabText())
 }
@@ -305,9 +304,9 @@ func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) 
 	defer cleanup()
 	app.simulateEditionOfCurrentEntryTypeTo("2")
 	app.simulateSavingChanges()
-	app2 := NewApp(fyneTest.NewApp(), app.config, app.dataProvider, make(map[string]string))
-	app2.LoadAndDisplay()
-	assert.Equal(t, "2comics", app2.entriesTypesTabs.CurrentTab().Text)
+	app, cleanup = configurator.getRunningTestApplication()
+	defer cleanup()
+	assert.Equal(t, "2comics", app.entriesTypesTabs.CurrentTab().Text)
 }
 
 func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) {
@@ -316,10 +315,9 @@ func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T)
 	defer cleanup()
 	app.simulateDeletionOfCurrentEntryType()
 	app.simulateSavingChanges()
-	config := app.config
-	app2 := NewApp(fyneTest.NewApp(), config, app.dataProvider, make(map[string]string))
-	app2.LoadAndDisplay()
-	assert.Equal(t, "music", app2.entriesTypesTabs.CurrentTab().Text)
+	app, cleanup = configurator.getRunningTestApplication()
+	defer cleanup()
+	assert.Equal(t, "music", app.entriesTypesTabs.CurrentTab().Text)
 }
 
 func TestThatConfigIsNotSavedIfItFailedToLoad(t *testing.T) {
