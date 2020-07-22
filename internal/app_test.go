@@ -325,11 +325,18 @@ func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T)
 }
 
 func TestThatConfigIsNotSavedIfItFailedToLoad(t *testing.T) {
-	_, cleanup := setupAndRunAppForTestingWithFailingToLoadConfig()
+	configurator := NewTestAppConfigurator()
+	loadingErrors := make(map[string]string)
+	loadingErrors["config"] = "Config failed to load"
+	_, cleanup := configurator.prepareConfiguratorForTestingWithExistingData().
+		setLoadingErrors(loadingErrors).
+		createFailingToLoadConfigFile().
+		createTestApplication().
+		getRunningTestApplication()
 	defer cleanup()
 	configFileContents, err := ioutil.ReadFile(filepath.Join(testConfigDirPath + "wirwl.cfg"))
 	if err != nil {
 		log.Fatal(err)
 	}
-	assert.Equal(t, "qkrhqwroqwprhqr", string(configFileContents))
+	assert.Equal(t, failingToLoadConfigFileContents, string(configFileContents))
 }
