@@ -68,14 +68,18 @@ func (configurator *TestAppConfigurator) createTestApplication() *TestAppConfigu
 	return configurator
 }
 
-func (configurator *TestAppConfigurator) createTestApplicationThatUsesExistingData() *TestAppConfigurator {
+func (configurator *TestAppConfigurator) prepareConfiguratorForTestingWithExistingData() *TestAppConfigurator {
 	configurator.
 		createTestDirectories().
 		createTestDb().
 		createTestConfig().
 		createTestConfigFile().
-		createDefaultDataProvider().
-		createTestApplication()
+		createDefaultDataProvider()
+	return configurator
+}
+
+func (configurator *TestAppConfigurator) createTestApplicationThatUsesExistingData() *TestAppConfigurator {
+	configurator.prepareConfiguratorForTestingWithExistingData().createTestApplication()
 	return configurator
 }
 
