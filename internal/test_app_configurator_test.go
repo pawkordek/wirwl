@@ -3,6 +3,7 @@ package wirwl
 import (
 	fyneTest "fyne.io/fyne/test"
 	"github.com/pkg/errors"
+	"io/ioutil"
 	"path/filepath"
 	"wirwl/internal/data"
 	"wirwl/internal/log"
@@ -54,6 +55,17 @@ func (configurator *TestAppConfigurator) createTestConfig() *TestAppConfigurator
 //Should be only called if config has been already created
 func (configurator *TestAppConfigurator) createTestConfigFile() *TestAppConfigurator {
 	configurator.config.saveConfigIn(configurator.config.ConfigDirPath + "wirwl.cfg")
+	return configurator
+}
+
+func (configurator *TestAppConfigurator) createFailingToLoadConfigFile() *TestAppConfigurator {
+	testConfigFile := filepath.Join(testConfigDirPath + "wirwl.cfg")
+	nonsenseContents := []byte("qkrhqwroqwprhqr")
+	//Having a config file with non-parsable contents will always cause an error when it gets loaded
+	err := ioutil.WriteFile(testConfigFile, nonsenseContents, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return configurator
 }
 
