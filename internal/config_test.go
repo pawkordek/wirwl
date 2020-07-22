@@ -68,10 +68,3 @@ func TestThatConfigGetsLoadedIfItExists(t *testing.T) {
 	assert.Equal(t, "some db path", config.AppDataDirPath)
 	assert.Equal(t, testConfigDirPath, config.ConfigDirPath)
 }
-
-func TestThatDefaultConfigPathIsUsedIfConfigIsCreatedWithEmptyPath(t *testing.T) {
-	config := NewConfig("")
-	config.defaultConfigDirPath = defaultTestConfigDirPath
-	config.load()
-	assert.Equal(t, defaultTestConfigDirPath, config.ConfigDirPath)
-}
