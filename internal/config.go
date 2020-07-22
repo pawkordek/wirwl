@@ -22,49 +22,9 @@ type Config struct {
 	ConfigDirPath         string
 }
 
-func NewConfig(configDirPath string) (Config, error) {
+func NewConfig(configDirPath string) Config {
 	config := Config{ConfigDirPath: configDirPath}
-	err := config.setupDefaultDirPaths()
-	if err != nil {
-		return Config{}, err
-	}
-	return config, nil
-}
-
-func (config *Config) setupDefaultDirPaths() error {
-	defaultConfigDirPath, err := getDefaultConfigDirPath()
-	if err != nil {
-		return err
-	}
-	config.defaultConfigDirPath = defaultConfigDirPath
-	defaultAppDataDirPath, err := getDefaultAppDataDirPath()
-	if err != nil {
-		return err
-	} else {
-		config.defaultAppDataDirPath = defaultAppDataDirPath
-	}
-	return nil
-}
-
-func getDefaultAppDataDirPath() (string, error) {
-	xdgDataHome := os.Getenv("XDG_DATA_HOME")
-	if xdgDataHome != "" {
-		return filepath.Join(xdgDataHome, appName), nil
-	} else {
-		homeDirPath, err := getCurrentUserHomeDir()
-		if err != nil {
-			return "", errors.Wrap(err, "Failed to setup default app data dir path")
-		}
-		return filepath.Join(homeDirPath, ".local", "share", appName), nil
-	}
-}
-
-func getDefaultConfigDirPath() (string, error) {
-	userConfigDirPath, err := os.UserConfigDir()
-	if err != nil {
-		return "", errors.Wrap(err, "Failed to setup default user config dir path")
-	}
-	return filepath.Join(userConfigDirPath, appName), nil
+	return config
 }
 
 func (config *Config) load() error {
@@ -92,9 +52,39 @@ func (config *Config) readConfigFromConfigFile() error {
 	return nil
 }
 
-func (config *Config) loadDefaults() {
-	config.ConfigDirPath = config.defaultConfigDirPath
-	config.AppDataDirPath = config.defaultAppDataDirPath
+func (config *Config) loadDefaults() error {
+	defaultConfigDirPath, err := getDefaultConfigDirPath()
+	if err != nil {
+		return errors.Wrap(err, "An error occurred when trying to load default config directory path in config")
+	}
+	config.ConfigDirPath = defaultConfigDirPath
+	defaultAppDataDirPath, err := getDefaultAppDataDirPath()
+	if err != nil {
+		return errors.Wrap(err, "An error occurred when trying to load default app directory path in config")
+	}
+	config.AppDataDirPath = defaultAppDataDirPath
+	return nil
+}
+
+func getDefaultConfigDirPath() (string, error) {
+	userConfigDirPath, err := os.UserConfigDir()
+	if err != nil {
+		return "", errors.Wrap(err, "Failed to setup default user config dir path")
+	}
+	return filepath.Join(userConfigDirPath, appName), nil
+}
+
+func getDefaultAppDataDirPath() (string, error) {
+	xdgDataHome := os.Getenv("XDG_DATA_HOME")
+	if xdgDataHome != "" {
+		return filepath.Join(xdgDataHome, appName), nil
+	} else {
+		homeDirPath, err := getCurrentUserHomeDir()
+		if err != nil {
+			return "", errors.Wrap(err, "Failed to setup default app data dir path")
+		}
+		return filepath.Join(homeDirPath, ".local", "share", appName), nil
+	}
 }
 
 func (config *Config) loadDataProvider() data.Provider {

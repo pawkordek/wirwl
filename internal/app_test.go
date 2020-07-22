@@ -207,10 +207,7 @@ func TestThatSavingChangesWorks(t *testing.T) {
 	defer cleanup()
 	app.simulateAddingNewEntryTypeWithName("type")
 	app.simulateSavingChanges()
-	config, err := getTestConfigWithConfigPathIn("/tmp/")
-	if err != nil {
-		log.Fatal(err)
-	}
+	config := getTestConfigWithConfigPathIn("/tmp/")
 	config.AppDataDirPath = testAppDataDirPath
 	app = NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
 	app.LoadAndDisplay()

@@ -18,12 +18,17 @@ func TestThatDefaultConfigGetsReturnedIfConfigFileHasUnreadableDataAndConfigurat
 		log.Fatal(err)
 	}
 	configurator := NewAppConfigurator(testConfigDirPath)
-	config, err := configurator.LoadConfig()
+	actualConfig, err := configurator.LoadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
-	assert.Equal(t, config.defaultConfigDirPath, config.ConfigDirPath)
-	assert.Equal(t, config.defaultAppDataDirPath, config.AppDataDirPath)
+	expectedConfig := NewConfig(testConfigDirPath)
+	err = expectedConfig.loadDefaults()
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, expectedConfig.ConfigDirPath, actualConfig.ConfigDirPath)
+	assert.Equal(t, expectedConfig.AppDataDirPath, actualConfig.AppDataDirPath)
 	assert.Equal(t, configurator.loadingErrors["config"], "An error occurred when loading the config file in "+testConfigDirPath+"wirwl.cfg. Default config has been loaded instead.")
 }
 
@@ -35,13 +40,10 @@ func TestThatProperDataProviderIsLoaded(t *testing.T) {
 }
 
 func TestThatNeededDirectoriesWereCreatedAfterPathsSetup(t *testing.T) {
-	config, err := NewConfig(testConfigDirPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	config := NewConfig(testConfigDirPath)
 	config.AppDataDirPath = testAppDataDirPath
 	configurator := NewAppConfigurator(testConfigDirPath)
-	err = configurator.SetupNeededPaths(config)
+	err := configurator.SetupNeededPaths(config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,13 +52,10 @@ func TestThatNeededDirectoriesWereCreatedAfterPathsSetup(t *testing.T) {
 
 func TestThatProperErrorIsReturnedIfAnAttemptIsMadeToCreateDirectoriesWithConfigContainingWrongPaths(t *testing.T) {
 	nonsensePath := "/nonsense path"
-	config, err := NewConfig(nonsensePath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	config := NewConfig(nonsensePath)
 	config.AppDataDirPath = nonsensePath
 	configurator := NewAppConfigurator(nonsensePath)
-	err = configurator.SetupNeededPaths(config)
+	err := configurator.SetupNeededPaths(config)
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "Failed to create application directory in /nonsense path. Application must exit")
 }

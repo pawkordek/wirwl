@@ -24,15 +24,15 @@ func NewAppConfigurator(configDirPath string) AppConfigurator {
 }
 
 func (configurator *AppConfigurator) LoadConfig() (Config, error) {
-	config, err := NewConfig(configurator.configDirPath)
-	if err != nil {
-		return config, err
-	}
-	err = config.load()
+	config := NewConfig(configurator.configDirPath)
+	err := config.load()
 	if err != nil {
 		configurator.loadingErrors["config"] = "An error occurred when loading the config file in " + config.ConfigDirPath + "wirwl.cfg. Default config has been loaded instead."
 		log.Error(err)
-		config.loadDefaults()
+		err = config.loadDefaults()
+		if err != nil {
+			return config, err
+		}
 	}
 	return config, nil
 }

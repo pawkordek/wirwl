@@ -139,10 +139,7 @@ func setupAndRunAppForTestingWithFailingToLoadConfig() (*App, func()) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	config, err := NewConfig(testConfigDirPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	config := NewConfig(testConfigDirPath)
 	app := NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
 	app.LoadAndDisplay()
 	return app, removeAllNonPersistentFilesInTestDataDir
@@ -153,7 +150,7 @@ func setupAndRunAppForTestingWithTestConfig() (*App, func()) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	config, err := getTestConfigWithConfigPathIn(testConfigDirPath)
+	config := getTestConfigWithConfigPathIn(testConfigDirPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -174,17 +171,14 @@ func setupAndRunAppForTestingWithExistingTestData(config Config) (*App, func()) 
 }
 
 func setupAndRunAppAsIfRunForFirstTime() (*App, func()) {
-	config, err := getTestConfigWithConfigPathIn(testConfigDirPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	config := getTestConfigWithConfigPathIn(testConfigDirPath)
 	config.defaultAppDataDirPath = defaultTestAppDataDirPath
 	app := NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
 	app.LoadAndDisplay()
 	return app, removeAllNonPersistentFilesInTestDataDir
 }
 
-func getTestConfigWithConfigPathIn(path string) (Config, error) {
+func getTestConfigWithConfigPathIn(path string) Config {
 	return NewConfig(path)
 }
 
