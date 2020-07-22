@@ -2,14 +2,18 @@ package wirwl
 
 import (
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
 	"os"
 	"os/user"
 	"path/filepath"
 	"testing"
-	"wirwl/internal/data"
 	"wirwl/internal/log"
 )
+
+func TestThatErrorGetsReturnedIfConfigFileDoesNotExist(t *testing.T) {
+	config := NewConfig("/nonsensepath")
+	err := config.load()
+	assert.NotNil(t, err)
+}
 
 func TestThatAppDataDirPathDefaultsToXDG_DATA_HOMEIfItIsSet(t *testing.T) {
 	err := os.Setenv("XDG_DATA_HOME", "some path")
@@ -70,23 +74,4 @@ func TestThatDefaultConfigPathIsUsedIfConfigIsCreatedWithEmptyPath(t *testing.T)
 	config.defaultConfigDirPath = defaultTestConfigDirPath
 	config.load()
 	assert.Equal(t, defaultTestConfigDirPath, config.ConfigDirPath)
-}
-
-func TestThatDefaultConfigWithProvidedConfigPathGetsLoadedIfConfigFileDoesNotExist(t *testing.T) {
-	tmpDir, err := ioutil.TempDir("", "")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func() {
-		err = data.DeleteDirWithContents(tmpDir)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}()
-	config := NewConfig(tmpDir)
-	config.defaultConfigDirPath = defaultTestConfigDirPath
-	config.defaultAppDataDirPath = defaultTestAppDataDirPath
-	config.load()
-	assert.Equal(t, defaultTestAppDataDirPath, config.AppDataDirPath)
-	assert.Equal(t, tmpDir, config.ConfigDirPath)
 }

@@ -33,8 +33,7 @@ func (config *Config) load() error {
 	}
 	config.configFilePath = filepath.Join(config.ConfigDirPath, appName+".cfg")
 	if _, err := os.Stat(config.configFilePath); os.IsNotExist(err) {
-		config.AppDataDirPath = config.defaultAppDataDirPath
-		return nil
+		return errors.New("Failed to find config file in path " + config.configFilePath)
 	} else {
 		return config.readConfigFromConfigFile()
 	}
