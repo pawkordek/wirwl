@@ -172,7 +172,6 @@ func setupAndRunAppForTestingWithExistingTestData(config Config) (*App, func()) 
 
 func setupAndRunAppAsIfRunForFirstTime() (*App, func()) {
 	config := getTestConfigWithConfigPathIn(testConfigDirPath)
-	config.defaultAppDataDirPath = defaultTestAppDataDirPath
 	app := NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
 	app.LoadAndDisplay()
 	return app, removeAllNonPersistentFilesInTestDataDir

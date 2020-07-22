@@ -15,8 +15,6 @@ const appName = "wirwl"
 const logFileName = appName + ".log"
 
 type Config struct {
-	defaultAppDataDirPath string
-	defaultConfigDirPath  string
 	configFilePath        string
 	AppDataDirPath        string
 	ConfigDirPath         string
