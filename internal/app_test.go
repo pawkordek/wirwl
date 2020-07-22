@@ -21,28 +21,32 @@ func TestMain(m *testing.M) {
 }
 
 func TestThatLoadingErrorsMsgDialogDoesNotDisplayIfThereAreNoErrors(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	assert.True(t, app.msgDialog.Hidden)
 }
 
 func TestThatDbFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
 	dbFilePath := testAppDataDirPath + "data.db"
-	_, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	_, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	_, err := os.Stat(dbFilePath)
 	assert.Nil(t, err)
 }
 
 func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.T) {
-	_, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	_, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	createCorrectSavedWirwlConfigFileInPath(testConfigDirPath)
 	assert.True(t, areFilesInPathsTheSame(testConfigDirPath+"wirwl.cfg", testConfigDirPath+"wirwl_correct.cfg"))
 }
 
 func TestThatEntriesTabsWithContentDisplayInCorrectOrder(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	assert.Equal(t, 3, len(app.entriesTypesTabs.Items()))
 	firstTab := app.entriesTypesTabs.Items()[0]
@@ -60,7 +64,8 @@ func TestThatEntriesTabsWithContentDisplayInCorrectOrder(t *testing.T) {
 }
 
 func TestSwitchingTabs(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	assert.Equal(t, "comics", app.getCurrentTabText())
 	app.simulateSwitchingToNextEntryType()
@@ -78,7 +83,8 @@ func TestSwitchingTabs(t *testing.T) {
 }
 
 func TestEntryHighlightingWhenSwitchingTabs(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	currentTab := app.entriesTypesTabs.CurrentTab()
 	assert.Equal(t, fyne.TextStyle{Bold: true}, widget.GetLabelFromContent(currentTab.Content, "some comic1").TextStyle)
@@ -94,7 +100,8 @@ func TestEntryHighlightingWhenSwitchingTabs(t *testing.T) {
 }
 
 func TestThatApplicationDoesNotCrashWhenTryingToSwitchToATabThatDoesNotExist(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateSwitchingToNextEntryType()
 	app.simulateSwitchingToNextEntryType()
@@ -110,7 +117,8 @@ func TestThatIfThereAreNoEntriesCorrectMessageDisplays(t *testing.T) {
 }
 
 func TestWhetherDialogForAddingEntryTypesOpens(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	assert.Equal(t, true, app.addEntryTypeDialog.Hidden)
 	app.simulateOpeningDialogForAddingEntryType()
@@ -119,7 +127,8 @@ func TestWhetherDialogForAddingEntryTypesOpens(t *testing.T) {
 }
 
 func TestWhetherReopeningDialogForAddingEntriesTypesDoesNotPersistPreviouslyInputText(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateAddingNewEntryTypeWithName("some type")
 	app.simulateOpeningDialogForAddingEntryType()
@@ -130,7 +139,8 @@ func TestWhetherReopeningDialogForAddingEntriesTypesDoesNotPersistPreviouslyInpu
 }
 
 func TestAddingOfNewEntryType(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateAddingNewEntryTypeWithName("new entry type")
 	assert.Equal(t, 4, len(app.entriesTypesTabs.Items()))
@@ -143,7 +153,8 @@ func TestAddingOfNewEntryType(t *testing.T) {
 }
 
 func TestThatItIsNotPossibleToAddTheSameEntryTypeTwice(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateAddingNewEntryTypeWithName("type")
 	app.simulateAddingNewEntryTypeWithName("type")
@@ -154,7 +165,8 @@ func TestThatItIsNotPossibleToAddTheSameEntryTypeTwice(t *testing.T) {
 }
 
 func TestThatPressingAnyKeyClosesMessagePopUp(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.msgDialog.Display("", "")
 	app.simulateKeyPress(fyne.KeyT)
@@ -165,7 +177,8 @@ func TestThatPressingAnyKeyClosesMessagePopUp(t *testing.T) {
 }
 
 func TestThatAddingNewEntryTypeDoesNotChangeCurrentlyOpenedTab(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateSwitchingToNextEntryType()
 	app.simulateAddingNewEntryTypeWithName("type")
@@ -173,7 +186,8 @@ func TestThatAddingNewEntryTypeDoesNotChangeCurrentlyOpenedTab(t *testing.T) {
 }
 
 func TestThatAfterAddingNewEntryOpenedTabStillHasTheSameElementHighlighted(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateAddingNewEntryTypeWithName("type")
 	currentTab := app.entriesTypesTabs.CurrentTab()
@@ -182,7 +196,8 @@ func TestThatAfterAddingNewEntryOpenedTabStillHasTheSameElementHighlighted(t *te
 }
 
 func TestThatAfterTryingToAddExistingEntryTypeAndClosingWarningMessageAboutItDialogForAddingEntriesTypesIsStillOpen(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateAddingNewEntryTypeWithName("comics")
 	assert.True(t, app.addEntryTypeDialog.Hidden)
@@ -193,7 +208,8 @@ func TestThatAfterTryingToAddExistingEntryTypeAndClosingWarningMessageAboutItDia
 }
 
 func TestThatAfterTryingToAddEntryTypeWithEmptyNameWarningMessageDisplaysAndEntryTypeIsNotAdded(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateAddingNewEntryTypeWithName("")
 	assert.True(t, app.msgDialog.Visible())
@@ -203,7 +219,8 @@ func TestThatAfterTryingToAddEntryTypeWithEmptyNameWarningMessageDisplaysAndEntr
 }
 
 func TestThatSavingChangesWorks(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateAddingNewEntryTypeWithName("type")
 	app.simulateSavingChanges()
@@ -216,7 +233,8 @@ func TestThatSavingChangesWorks(t *testing.T) {
 }
 
 func TestThatAfterSavingSuccessfullySuccessDialogDisplays(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateSavingChanges()
 	assert.True(t, app.msgDialog.Visible())
@@ -225,7 +243,8 @@ func TestThatAfterSavingSuccessfullySuccessDialogDisplays(t *testing.T) {
 }
 
 func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.dataProvider = data.NewAlwaysFailingProvider()
 	app.simulateSavingChanges()
@@ -235,7 +254,8 @@ func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
 }
 
 func TestThatDeletingEntriesTypesWorks(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateDeletionOfCurrentEntryType()
 	assert.Equal(t, 2, len(app.entriesTypesTabs.Items()))
@@ -244,7 +264,8 @@ func TestThatDeletingEntriesTypesWorks(t *testing.T) {
 }
 
 func TestThatWhenTryingToDeleteLastEntryTypeItIsPreventedAndWarningDialogIsDisplayed(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateDeletionOfCurrentEntryType()
 	app.simulateDeletionOfCurrentEntryType()
@@ -256,14 +277,16 @@ func TestThatWhenTryingToDeleteLastEntryTypeItIsPreventedAndWarningDialogIsDispl
 }
 
 func TestThatEditingEntryTypeWorks(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateEditionOfCurrentEntryTypeTo("2")
 	assert.Equal(t, "2comics", app.entriesTypesTabs.CurrentTab().Text)
 }
 
 func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateEditionOfCurrentEntryTypeTo("2")
 	app.simulateSavingChanges()
@@ -273,7 +296,8 @@ func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) 
 }
 
 func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) {
-	app, cleanup := setupAndRunAppForTestingWithTestConfig()
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
 	app.simulateDeletionOfCurrentEntryType()
 	app.simulateSavingChanges()
