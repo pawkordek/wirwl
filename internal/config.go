@@ -79,10 +79,6 @@ func getDefaultAppDataDirPath() (string, error) {
 	}
 }
 
-func (config *Config) loadDataProvider() data.Provider {
-	return data.NewBoltProvider(filepath.Join(config.AppDataDirPath, "data.db"))
-}
-
 func getCurrentUserHomeDir() (string, error) {
 	currentUser, err := user.Current()
 	if err != nil {

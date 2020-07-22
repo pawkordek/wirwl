@@ -140,7 +140,8 @@ func setupAndRunAppForTestingWithFailingToLoadConfig() (*App, func()) {
 		log.Fatal(err)
 	}
 	config := NewConfig(testConfigDirPath)
-	app := NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
+	dataProvider := data.NewBoltProvider(filepath.Join(config.AppDataDirPath, "data.db"))
+	app := NewApp(fyneTest.NewApp(), config, dataProvider)
 	app.LoadAndDisplay()
 	return app, removeAllNonPersistentFilesInTestDataDir
 }

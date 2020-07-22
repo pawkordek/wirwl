@@ -227,7 +227,7 @@ func TestThatSavingChangesWorks(t *testing.T) {
 	app.simulateSavingChanges()
 	config := getTestConfigWithConfigPathIn("/tmp/")
 	config.AppDataDirPath = testAppDataDirPath
-	app = NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
+	app = NewApp(fyneTest.NewApp(), config, app.dataProvider)
 	app.LoadAndDisplay()
 	assert.Equal(t, 4, len(app.entriesTypesTabs.Items()))
 	assert.Equal(t, "comics", app.getCurrentTabText())
@@ -291,7 +291,7 @@ func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) 
 	defer cleanup()
 	app.simulateEditionOfCurrentEntryTypeTo("2")
 	app.simulateSavingChanges()
-	app2 := NewApp(fyneTest.NewApp(), app.config, app.config.loadDataProvider())
+	app2 := NewApp(fyneTest.NewApp(), app.config, app.dataProvider)
 	app2.LoadAndDisplay()
 	assert.Equal(t, "2comics", app2.entriesTypesTabs.CurrentTab().Text)
 }
@@ -303,7 +303,7 @@ func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T)
 	app.simulateDeletionOfCurrentEntryType()
 	app.simulateSavingChanges()
 	config := app.config
-	app2 := NewApp(fyneTest.NewApp(), config, config.loadDataProvider())
+	app2 := NewApp(fyneTest.NewApp(), config, app.dataProvider)
 	app2.LoadAndDisplay()
 	assert.Equal(t, "music", app2.entriesTypesTabs.CurrentTab().Text)
 }
