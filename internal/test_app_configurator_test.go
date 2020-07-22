@@ -47,8 +47,13 @@ func (configurator *TestAppConfigurator) createTestDb() *TestAppConfigurator {
 func (configurator *TestAppConfigurator) createTestConfig() *TestAppConfigurator {
 	config := NewConfig(testConfigDirPath)
 	config.AppDataDirPath = testAppDataDirPath
-	config.saveConfigIn(config.ConfigDirPath + "wirwl.cfg")
 	configurator.config = config
+	return configurator
+}
+
+//Should be only called if config has been already created
+func (configurator *TestAppConfigurator) createTestConfigFile() *TestAppConfigurator {
+	configurator.config.saveConfigIn(configurator.config.ConfigDirPath + "wirwl.cfg")
 	return configurator
 }
 
@@ -68,6 +73,7 @@ func (configurator *TestAppConfigurator) createTestApplicationThatUsesExistingDa
 		createTestDirectories().
 		createTestDb().
 		createTestConfig().
+		createTestConfigFile().
 		createDefaultDataProvider().
 		createTestApplication()
 	return configurator
