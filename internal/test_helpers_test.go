@@ -32,12 +32,6 @@ var testAppDataDirPath = filepath.FromSlash(testDataDirPath + "app_data/")
 //Used as application's config directory path when testing
 var testConfigDirPath = filepath.FromSlash(testDataDirPath + "config/")
 
-//Used as application's default data directory path when testing
-var defaultTestAppDataDirPath = filepath.FromSlash(testDataDirPath + "default_app_data/")
-
-//Used as application's default config directory path when testing
-var defaultTestConfigDirPath = filepath.FromSlash(testDataDirPath + "default_config/")
-
 /* It's a path to a database file which is generated every time tests are run but before any test executes.
 If shown in the application, the data would look as follows:
 comics:
