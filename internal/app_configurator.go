@@ -70,3 +70,7 @@ func (configurator *AppConfigurator) CloseLogFile() {
 		log.Error(err)
 	}
 }
+
+func (configurator *AppConfigurator) LoadingErrors() map[string]string {
+	return configurator.loadingErrors
+}
