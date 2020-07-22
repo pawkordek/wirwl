@@ -27,8 +27,8 @@ type App struct {
 	editEntryTypeDialog *widget.FormDialog
 }
 
-func NewApp(fyneApp fyne.App, config Config, dataProvider data.Provider) *App {
-	return &App{fyneApp: fyneApp, config: config, dataProvider: dataProvider, loadingErrors: make(map[string]string)}
+func NewApp(fyneApp fyne.App, config Config, dataProvider data.Provider, loadingErrors map[string]string) *App {
+	return &App{fyneApp: fyneApp, config: config, dataProvider: dataProvider, loadingErrors: loadingErrors}
 }
 
 func (app *App) LoadAndDisplay() error {

@@ -23,7 +23,7 @@ func main() {
 		cleanup := configurator.SetupLoggerIn(config.AppDataDirPath)
 		defer cleanup()
 		dataProvider := configurator.LoadDataProvider(filepath.Join(config.AppDataDirPath, "data.db"))
-		wirwlApp := wirwl.NewApp(app.New(), config, dataProvider)
+		wirwlApp := wirwl.NewApp(app.New(), config, dataProvider, configurator.LoadingErrors())
 		err = wirwlApp.LoadAndDisplay()
 		if err != nil {
 			err = errors.Wrap(err, "An error occurred when loading the application preventing it from continuing")

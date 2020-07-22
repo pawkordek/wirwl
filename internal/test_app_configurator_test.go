@@ -15,9 +15,10 @@ testing setups while also allowing to make small changes to such, if needed.
 */
 
 type TestAppConfigurator struct {
-	config       Config
-	dataProvider data.Provider
-	app          *App
+	config        Config
+	dataProvider  data.Provider
+	loadingErrors map[string]string
+	app           *App
 }
 
 func NewTestAppConfigurator() TestAppConfigurator {
@@ -74,8 +75,18 @@ func (configurator *TestAppConfigurator) createDefaultDataProvider() *TestAppCon
 	return configurator
 }
 
+func (configurator *TestAppConfigurator) createEmptyLoadingErrors() *TestAppConfigurator {
+	configurator.loadingErrors = make(map[string]string)
+	return configurator
+}
+
+func (configurator *TestAppConfigurator) setLoadingErrors(newErrors map[string]string) *TestAppConfigurator {
+	configurator.loadingErrors = newErrors
+	return configurator
+}
+
 func (configurator *TestAppConfigurator) createTestApplication() *TestAppConfigurator {
-	app := NewApp(fyneTest.NewApp(), configurator.config, configurator.dataProvider)
+	app := NewApp(fyneTest.NewApp(), configurator.config, configurator.dataProvider, configurator.loadingErrors)
 	configurator.app = app
 	return configurator
 }
@@ -86,7 +97,8 @@ func (configurator *TestAppConfigurator) prepareConfiguratorForTestingWithExisti
 		createTestDb().
 		createTestConfig().
 		createTestConfigFile().
-		createDefaultDataProvider()
+		createDefaultDataProvider().
+		createEmptyLoadingErrors()
 	return configurator
 }
 
@@ -99,6 +111,7 @@ func (configurator *TestAppConfigurator) createTestApplicationThatWillRunForFirs
 	configurator.
 		createTestDirectories().
 		createDefaultDataProvider().
+		createEmptyLoadingErrors().
 		createTestApplication()
 	return configurator
 }

@@ -27,6 +27,22 @@ func TestThatLoadingErrorsMsgDialogDoesNotDisplayIfThereAreNoErrors(t *testing.T
 	assert.True(t, app.msgDialog.Hidden)
 }
 
+func TestThatErrorsPassedInOnAppCreationDisplayAfterItRuns(t *testing.T) {
+	configurator := NewTestAppConfigurator()
+	loadingErrors := make(map[string]string)
+	loadingErrors["some error"] = "Some error occurred"
+	loadingErrors["some other error"] = "Some other error occurred"
+	app, cleanup := configurator.prepareConfiguratorForTestingWithExistingData().
+		setLoadingErrors(loadingErrors).
+		createTestApplication().
+		getRunningTestApplication()
+	defer cleanup()
+	assert.True(t, app.msgDialog.Visible())
+	assert.Equal(t, "WARNING", app.msgDialog.Title())
+	assert.Contains(t, app.msgDialog.Msg(), "Some error occurred")
+	assert.Contains(t, app.msgDialog.Msg(), "Some other error occurred")
+}
+
 func TestThatDbFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
 	dbFilePath := testAppDataDirPath + "data.db"
 	configurator := NewTestAppConfigurator()
@@ -227,7 +243,7 @@ func TestThatSavingChangesWorks(t *testing.T) {
 	app.simulateSavingChanges()
 	config := getTestConfigWithConfigPathIn("/tmp/")
 	config.AppDataDirPath = testAppDataDirPath
-	app = NewApp(fyneTest.NewApp(), config, app.dataProvider)
+	app = NewApp(fyneTest.NewApp(), config, app.dataProvider, make(map[string]string))
 	app.LoadAndDisplay()
 	assert.Equal(t, 4, len(app.entriesTypesTabs.Items()))
 	assert.Equal(t, "comics", app.getCurrentTabText())
@@ -291,7 +307,7 @@ func TestThatEditingEntryTypePersistsAfterReopeningTheApplication(t *testing.T) 
 	defer cleanup()
 	app.simulateEditionOfCurrentEntryTypeTo("2")
 	app.simulateSavingChanges()
-	app2 := NewApp(fyneTest.NewApp(), app.config, app.dataProvider)
+	app2 := NewApp(fyneTest.NewApp(), app.config, app.dataProvider, make(map[string]string))
 	app2.LoadAndDisplay()
 	assert.Equal(t, "2comics", app2.entriesTypesTabs.CurrentTab().Text)
 }
@@ -303,7 +319,7 @@ func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T)
 	app.simulateDeletionOfCurrentEntryType()
 	app.simulateSavingChanges()
 	config := app.config
-	app2 := NewApp(fyneTest.NewApp(), config, app.dataProvider)
+	app2 := NewApp(fyneTest.NewApp(), config, app.dataProvider, make(map[string]string))
 	app2.LoadAndDisplay()
 	assert.Equal(t, "music", app2.entriesTypesTabs.CurrentTab().Text)
 }
