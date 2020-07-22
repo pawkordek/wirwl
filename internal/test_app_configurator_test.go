@@ -21,6 +21,8 @@ type TestAppConfigurator struct {
 	app           *App
 }
 
+const failingToLoadConfigFileContents = "qkrhqwroqwprhqr"
+
 func NewTestAppConfigurator() TestAppConfigurator {
 	return TestAppConfigurator{}
 }
@@ -61,7 +63,7 @@ func (configurator *TestAppConfigurator) createTestConfigFile() *TestAppConfigur
 
 func (configurator *TestAppConfigurator) createFailingToLoadConfigFile() *TestAppConfigurator {
 	testConfigFile := filepath.Join(testConfigDirPath + "wirwl.cfg")
-	nonsenseContents := []byte("qkrhqwroqwprhqr")
+	nonsenseContents := []byte(failingToLoadConfigFileContents)
 	//Having a config file with non-parsable contents will always cause an error when it gets loaded
 	err := ioutil.WriteFile(testConfigFile, nonsenseContents, 0644)
 	if err != nil {
