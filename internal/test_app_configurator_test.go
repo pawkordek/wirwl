@@ -79,6 +79,14 @@ func (configurator *TestAppConfigurator) createTestApplicationThatUsesExistingDa
 	return configurator
 }
 
+func (configurator *TestAppConfigurator) createTestApplicationThatWillRunForFirstTime() *TestAppConfigurator {
+	configurator.
+		createTestDirectories().
+		createDefaultDataProvider().
+		createTestApplication()
+	return configurator
+}
+
 func (configurator *TestAppConfigurator) getRunningTestApplication() (*App, func()) {
 	err := configurator.app.LoadAndDisplay()
 	if err != nil {
