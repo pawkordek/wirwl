@@ -119,10 +119,6 @@ func removeAllNonPersistentFilesInTestDataDir() {
 	}
 }
 
-func getTestConfigWithConfigPathIn(path string) Config {
-	return NewConfig(path)
-}
-
 func areFilesInPathsTheSame(filePath1 string, filePath2 string) bool {
 	file1, err := os.Open(filePath1)
 	if err != nil {
