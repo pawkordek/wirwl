@@ -119,9 +119,13 @@ func (configurator *TestAppConfigurator) createTestApplicationThatWillRunForFirs
 }
 
 func (configurator *TestAppConfigurator) getRunningTestApplication() (*App, func()) {
-	err := configurator.app.LoadAndDisplay()
-	if err != nil {
-		log.Fatal(err)
+	if configurator.app != nil {
+		err := configurator.app.LoadAndDisplay()
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		log.Fatal(errors.New("Application has not been yet created by the configurator! Please do so before trying to run it."))
 	}
 	return configurator.app, removeAllNonPersistentFilesInTestDataDir
 }
