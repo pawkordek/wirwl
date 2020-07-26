@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"testing"
 	"wirwl/internal/data"
 	"wirwl/internal/log"
 )
@@ -49,6 +50,13 @@ var testDbPath = filepath.FromSlash(persistentTestDataDirPath + "data.db")
 
 //Path used by tests to store a copy of test database file so that they don't affect the original file
 var testDbCopyPath = filepath.FromSlash(testAppDataDirPath + "data.db")
+
+func TestMain(m *testing.M) {
+	testSetup()
+	exitCode := m.Run()
+	testCleanup()
+	os.Exit(exitCode)
+}
 
 func testSetup() {
 	/*Cleanup is run in the case that a test crashed in the previous run and couldn't run it's cleanup functions, leaving

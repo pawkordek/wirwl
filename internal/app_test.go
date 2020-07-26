@@ -12,13 +12,6 @@ import (
 	"wirwl/internal/widget"
 )
 
-func TestMain(m *testing.M) {
-	testSetup()
-	exitCode := m.Run()
-	testCleanup()
-	os.Exit(exitCode)
-}
-
 func TestThatLoadingErrorsMsgDialogDoesNotDisplayIfThereAreNoErrors(t *testing.T) {
 	configurator := NewTestAppConfigurator()
 	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
