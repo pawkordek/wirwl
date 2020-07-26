@@ -18,6 +18,8 @@ Therefore all tests making use of the filesystem should run in the test director
 If they need a test db, they should make a copy of it.
 If they need to store data persisting between the tests they should use the persistent test data directory, otherwise they
 are free to do as they wish but for app config dir/data directory, the standard paths defined below should be used.
+After a test is run, after test cleanup function should be executed to ensure that test environment (mostly test directories)
+are restored back to the state before test run.
 */
 
 /*All path variables below should be treated as constants. They cannot be made const as they need to have slashes adapted
@@ -125,6 +127,10 @@ func cleanupTestEnvironment() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func cleanupAfterTestRun() {
+	removeAllNonPersistentFilesInTestDataDir()
 }
 
 func removeAllNonPersistentFilesInTestDataDir() {
