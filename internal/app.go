@@ -27,6 +27,8 @@ type App struct {
 	editEntryTypeDialog *widget.FormDialog
 }
 
+const configLoadError = "CONFIG_LOAD_ERROR"
+
 func NewApp(fyneApp fyne.App, config Config, dataProvider data.Provider, loadingErrors map[string]string) *App {
 	return &App{fyneApp: fyneApp, config: config, dataProvider: dataProvider, loadingErrors: loadingErrors}
 }
@@ -263,7 +265,7 @@ func (app *App) saveChangesToDb() error {
 }
 
 func (app *App) shutdown() {
-	if _, configLoadingErrorExists := app.loadingErrors["config"]; !configLoadingErrorExists {
+	if _, configLoadingErrorExists := app.loadingErrors[configLoadError]; !configLoadingErrorExists {
 		err := app.config.save()
 		if err != nil {
 			log.Error(err)

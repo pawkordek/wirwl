@@ -316,7 +316,7 @@ func TestThatDeletingEntryTypePersistsAfterReopeningTheApplication(t *testing.T)
 func TestThatConfigIsNotSavedIfItFailedToLoad(t *testing.T) {
 	configurator := NewTestAppConfigurator()
 	loadingErrors := make(map[string]string)
-	loadingErrors["config"] = "Config failed to load"
+	loadingErrors[configLoadError] = "Config failed to load"
 	_, cleanup := configurator.prepareConfiguratorForTestingWithExistingData().
 		setLoadingErrors(loadingErrors).
 		createFailingToLoadConfigFile().

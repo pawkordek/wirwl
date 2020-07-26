@@ -30,7 +30,7 @@ func TestThatDefaultConfigGetsReturnedIfConfigFileHasUnreadableDataAndConfigurat
 	}
 	assert.Equal(t, expectedConfig.ConfigDirPath, actualConfig.ConfigDirPath)
 	assert.Equal(t, expectedConfig.AppDataDirPath, actualConfig.AppDataDirPath)
-	assert.Equal(t, configurator.loadingErrors["config"], "An error occurred when loading the config file in "+testConfigDirPath+"wirwl.cfg. Default config has been loaded instead.")
+	assert.Equal(t, configurator.loadingErrors[configLoadError], "An error occurred when loading the config file in "+testConfigDirPath+"wirwl.cfg. Default config has been loaded instead.")
 }
 
 func TestThatProperDataProviderIsLoaded(t *testing.T) {
