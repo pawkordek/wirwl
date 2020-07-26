@@ -11,8 +11,16 @@ import (
 	"wirwl/internal/log"
 )
 
-/*File containing various functions allowing to setup/clean up the test environment
-All path variables below should be treated as constants. They cannot be made const as they need to have slashes adapted
+/*File containing various functions allowing to setup/clean up the test environment.
+TestMain is run before all tests which setups the test directory and test db.
+After all tests run it removes the test directory with all of it's data.
+Therefore all tests making use of the filesystem should run in the test directory.
+If they need a test db, they should make a copy of it.
+If they need to store data persisting between the tests they should use the persistent test data directory, otherwise they
+are free to do as they wish but for app config dir/data directory, the standard paths defined below should be used.
+*/
+
+/*All path variables below should be treated as constants. They cannot be made const as they need to have slashes adapted
 for cross platform compatibility.
 */
 
