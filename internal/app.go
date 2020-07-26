@@ -28,6 +28,7 @@ type App struct {
 }
 
 const configLoadError = "CONFIG_LOAD_ERROR"
+const entriesTypesLoadError = "ENTRIES_TYPES_LOAD_ERROR"
 
 func NewApp(fyneApp fyne.App, config Config, dataProvider data.Provider, loadingErrors map[string]string) *App {
 	return &App{fyneApp: fyneApp, config: config, dataProvider: dataProvider, loadingErrors: loadingErrors}
@@ -60,7 +61,10 @@ func (app *App) loadEntriesTypes() {
 	app.entriesTypes = make(map[string]data.EntryType)
 	entriesTypes, err := app.dataProvider.LoadEntriesTypesFromDb()
 	if err != nil {
-		log.Fatal(err)
+		msg := "Failed to load entries types. Application will now exit as it cannot continue."
+		err = errors.Wrap(err, msg)
+		log.Error(err)
+		app.loadingErrors[entriesTypesLoadError] = msg
 	}
 	for _, entryType := range entriesTypes {
 		app.entriesTypes[entryType.Name] = entryType
@@ -120,6 +124,11 @@ func (app *App) prepareMainWindowContent() {
 
 func (app *App) displayLoadingErrors() {
 	if len(app.loadingErrors) != 0 {
+		if app.loadingErrors[entriesTypesLoadError] != "" {
+			app.msgDialog.SetOneTimeOnHideCallback(func() {
+				app.fyneApp.Quit()
+			})
+		}
 		errorsList := ""
 		for _, err := range app.loadingErrors {
 			errorsList += fmt.Sprintln("- " + err)

@@ -1,6 +1,7 @@
 package wirwl
 
 import (
+	"errors"
 	"fyne.io/fyne"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
@@ -33,6 +34,22 @@ func TestThatErrorsPassedInOnAppCreationDisplayAfterItRuns(t *testing.T) {
 	assert.Equal(t, "WARNING", app.msgDialog.Title())
 	assert.Contains(t, app.msgDialog.Msg(), "Some error occurred")
 	assert.Contains(t, app.msgDialog.Msg(), "Some other error occurred")
+}
+
+func TestThatErrorDisplaysWhenEntriesTypesFailToLoad(t *testing.T) {
+	configurator := NewTestAppConfigurator()
+	dataProvider := data.NewAbstractProvider()
+	dataProvider.LoadEntriesTypesFromDbFunc = func() (types []data.EntryType, err error) {
+		return nil, errors.New("Entries types failed to load.")
+	}
+	app, cleanup := configurator.prepareConfiguratorForTestingWithExistingData().
+		setDataProvider(dataProvider).
+		createTestApplication().
+		getRunningTestApplication()
+	defer cleanup()
+	assert.True(t, app.msgDialog.Visible())
+	assert.Equal(t, "WARNING", app.msgDialog.Title())
+	assert.Contains(t, app.msgDialog.Msg(), "Failed to load entries types. Application will now exit as it cannot continue.")
 }
 
 func TestThatDbFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
