@@ -179,3 +179,46 @@ func (provider *AlwaysFailingProvider) SaveEntriesTypesToDb(entriesTypes []Entry
 func (provider *AlwaysFailingProvider) LoadEntriesTypesFromDb() ([]EntryType, error) {
 	return nil, AlwaysFailingProviderError
 }
+
+/*It is supposed to provide default functions that return empty values but every single one can be overwritten
+so that desired functionality when testing can be achieved
+*/
+type AbstractProvider struct {
+	SaveEntriesToDbFunc        func(string, []Entry) error
+	LoadEntriesFromDbFunc      func(string) ([]Entry, error)
+	SaveEntriesTypesToDbFunc   func([]EntryType) error
+	LoadEntriesTypesFromDbFunc func() ([]EntryType, error)
+}
+
+func NewAbstractProvider() *AbstractProvider {
+	return &AbstractProvider{
+		SaveEntriesToDbFunc: func(table string, entries []Entry) error {
+			return nil
+		},
+		LoadEntriesFromDbFunc: func(s string) (entries []Entry, err error) {
+			return []Entry{}, nil
+		},
+		SaveEntriesTypesToDbFunc: func(types []EntryType) error {
+			return nil
+		},
+		LoadEntriesTypesFromDbFunc: func() (types []EntryType, err error) {
+			return []EntryType{}, nil
+		},
+	}
+}
+
+func (provider *AbstractProvider) SaveEntriesToDb(table string, entries []Entry) error {
+	return provider.SaveEntriesToDbFunc(table, entries)
+}
+
+func (provider *AbstractProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
+	return provider.LoadEntriesFromDbFunc(table)
+}
+
+func (provider *AbstractProvider) SaveEntriesTypesToDb(entriesTypes []EntryType) error {
+	return provider.SaveEntriesTypesToDbFunc(entriesTypes)
+}
+
+func (provider *AbstractProvider) LoadEntriesTypesFromDb() ([]EntryType, error) {
+	return provider.LoadEntriesTypesFromDbFunc()
+}
