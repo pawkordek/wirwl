@@ -59,16 +59,16 @@ var testDbPath = filepath.FromSlash(persistentTestDataDirPath + "data.db")
 var testDbCopyPath = filepath.FromSlash(testAppDataDirPath + "data.db")
 
 func TestMain(m *testing.M) {
-	testSetup()
+	setupTestEnvironment()
 	exitCode := m.Run()
-	testCleanup()
+	cleanupTestEnvironment()
 	os.Exit(exitCode)
 }
 
-func testSetup() {
+func setupTestEnvironment() {
 	/*Cleanup is run in the case that a test crashed in the previous run and couldn't run it's cleanup functions, leaving
 	potentially unwanted files and directories*/
-	testCleanup()
+	cleanupTestEnvironment()
 	err := data.CreateDirIfNotExist(testDataDirPath)
 	if err != nil {
 		log.Fatal(err)
@@ -120,7 +120,7 @@ func saveTestMusic(provider data.Provider) {
 	}
 }
 
-func testCleanup() {
+func cleanupTestEnvironment() {
 	err := data.DeleteDirWithContents(testDataDirPath)
 	if err != nil {
 		log.Fatal(err)
