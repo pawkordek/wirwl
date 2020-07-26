@@ -9,7 +9,7 @@ import (
 )
 
 func TestThatDefaultConfigGetsReturnedIfConfigFileHasUnreadableDataAndConfiguratorHasProperLoadingError(t *testing.T) {
-	defer removeAllNonPersistentFilesInTestDataDir()
+	defer cleanupAfterTestRun()
 	err := data.CreateDirIfNotExist(testConfigDirPath)
 	if err != nil {
 		log.Fatal(err)
@@ -34,7 +34,7 @@ func TestThatDefaultConfigGetsReturnedIfConfigFileHasUnreadableDataAndConfigurat
 }
 
 func TestThatProperDataProviderIsLoaded(t *testing.T) {
-	defer removeAllNonPersistentFilesInTestDataDir()
+	defer cleanupAfterTestRun()
 	expectedDataProvider := data.NewBoltProvider(testDbCopyPath)
 	configurator := NewAppConfigurator(testConfigDirPath)
 	loadedDataProvider := configurator.LoadDataProvider(testDbCopyPath)
@@ -42,7 +42,7 @@ func TestThatProperDataProviderIsLoaded(t *testing.T) {
 }
 
 func TestThatNeededDirectoriesWereCreatedAfterPathsSetup(t *testing.T) {
-	defer removeAllNonPersistentFilesInTestDataDir()
+	defer cleanupAfterTestRun()
 	config := NewConfig(testConfigDirPath)
 	config.AppDataDirPath = testAppDataDirPath
 	configurator := NewAppConfigurator(testConfigDirPath)
@@ -54,7 +54,7 @@ func TestThatNeededDirectoriesWereCreatedAfterPathsSetup(t *testing.T) {
 }
 
 func TestThatProperErrorIsReturnedIfAnAttemptIsMadeToCreateDirectoriesWithConfigContainingWrongPaths(t *testing.T) {
-	defer removeAllNonPersistentFilesInTestDataDir()
+	defer cleanupAfterTestRun()
 	nonsensePath := "/nonsense path"
 	config := NewConfig(nonsensePath)
 	config.AppDataDirPath = nonsensePath
@@ -65,7 +65,7 @@ func TestThatProperErrorIsReturnedIfAnAttemptIsMadeToCreateDirectoriesWithConfig
 }
 
 func TestThatLogIsWrittenToFileAfterLoggerIsSetup(t *testing.T) {
-	defer removeAllNonPersistentFilesInTestDataDir()
+	defer cleanupAfterTestRun()
 	err := data.CreateDirIfNotExist(testAppDataDirPath)
 	if err != nil {
 		log.Fatal(err)

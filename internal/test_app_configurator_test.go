@@ -127,5 +127,5 @@ func (configurator *TestAppConfigurator) getRunningTestApplication() (*App, func
 	} else {
 		log.Fatal(errors.New("Application has not been yet created by the configurator! Please do so before trying to run it."))
 	}
-	return configurator.app, removeAllNonPersistentFilesInTestDataDir
+	return configurator.app, cleanupAfterTestRun
 }
