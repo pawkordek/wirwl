@@ -77,6 +77,11 @@ func (configurator *TestAppConfigurator) createDefaultDataProvider() *TestAppCon
 	return configurator
 }
 
+func (configurator *TestAppConfigurator) setDataProvider(provider data.Provider) *TestAppConfigurator {
+	configurator.dataProvider = provider
+	return configurator
+}
+
 func (configurator *TestAppConfigurator) createEmptyLoadingErrors() *TestAppConfigurator {
 	configurator.loadingErrors = make(map[string]string)
 	return configurator
