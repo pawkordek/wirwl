@@ -31,7 +31,7 @@ func TestThatErrorsPassedInOnAppCreationDisplayAfterItRuns(t *testing.T) {
 		getRunningTestApplication()
 	defer cleanup()
 	assert.True(t, app.msgDialog.Visible())
-	assert.Equal(t, "WARNING", app.msgDialog.Title())
+	assert.Equal(t, "ERROR", app.msgDialog.Title())
 	assert.Contains(t, app.msgDialog.Msg(), "Some error occurred")
 	assert.Contains(t, app.msgDialog.Msg(), "Some other error occurred")
 }
@@ -48,7 +48,7 @@ func TestThatErrorDisplaysWhenEntriesTypesFailToLoad(t *testing.T) {
 		getRunningTestApplication()
 	defer cleanup()
 	assert.True(t, app.msgDialog.Visible())
-	assert.Equal(t, "WARNING", app.msgDialog.Title())
+	assert.Equal(t, "ERROR", app.msgDialog.Title())
 	assert.Contains(t, app.msgDialog.Msg(), "Failed to load entries types. Application will now exit as it cannot continue.")
 }
 
@@ -70,7 +70,7 @@ func TestThatErrorDisplaysWhenEntriesFailToLoad(t *testing.T) {
 		getRunningTestApplication()
 	defer cleanup()
 	assert.True(t, app.msgDialog.Visible())
-	assert.Equal(t, "WARNING", app.msgDialog.Title())
+	assert.Equal(t, "ERROR", app.msgDialog.Title())
 	assert.Contains(t, app.msgDialog.Msg(), "Failed to load entries. Application will now exit as it cannot continue.")
 }
 

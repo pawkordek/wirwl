@@ -137,7 +137,7 @@ func (app *App) displayLoadingErrors() {
 		for _, err := range app.loadingErrors {
 			errorsList += fmt.Sprintln("- " + err)
 		}
-		app.msgDialog.Display(widget.WarningPopUp, errorsList)
+		app.msgDialog.Display(widget.ErrorPopUp, errorsList)
 	}
 }
 
