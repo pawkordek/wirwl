@@ -2,10 +2,21 @@ package data
 
 import (
 	"errors"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 	"wirwl/internal/log"
 )
 
 const TestDbPath = "../../testdata/testDb.db"
+
+func getTempDbPath() (string, func()) {
+	dir, err := ioutil.TempDir("", "")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return filepath.Join(dir, "test.db"), func() { _ = os.RemoveAll(dir) }
+}
 
 func GetEntriesTypes() []EntryType {
 	return []EntryType{

@@ -7,8 +7,10 @@ import (
 )
 
 func TestDbOperationsOnEntries(t *testing.T) {
+	testDbPath, cleanup := getTempDbPath()
+	defer cleanup()
 	entriesToSave := GetTestEntriesToSave()
-	dataProvider := NewBoltProvider(TestDbPath)
+	dataProvider := NewBoltProvider(testDbPath)
 	err := dataProvider.SaveEntriesToDb("test_table", entriesToSave)
 	if err != nil {
 		log.Fatal(err)
@@ -23,7 +25,9 @@ func TestDbOperationsOnEntries(t *testing.T) {
 }
 
 func TestThatTryingToLoadDataIntoNonExistingTableReturnsError(t *testing.T) {
-	dataProvider := NewBoltProvider(TestDbPath)
+	testDbPath, cleanup := getTempDbPath()
+	defer cleanup()
+	dataProvider := NewBoltProvider(testDbPath)
 	types, err := dataProvider.LoadEntriesFromDb("non existing table")
 	assert.Nil(t, types)
 	assert.Contains(t, err.Error(), "An error occurred when loading entries from table with name non existing table. No such table")
@@ -31,8 +35,10 @@ func TestThatTryingToLoadDataIntoNonExistingTableReturnsError(t *testing.T) {
 }
 
 func TestDbOperationsOnEntriesTypes(t *testing.T) {
+	testDbPath, cleanup := getTempDbPath()
+	defer cleanup()
 	entriesTypes := GetEntriesTypes()
-	dataProvider := NewBoltProvider(TestDbPath)
+	dataProvider := NewBoltProvider(testDbPath)
 	err := dataProvider.SaveEntriesTypesToDb(entriesTypes)
 	if err != nil {
 		log.Fatal(err)
@@ -48,7 +54,9 @@ func TestDbOperationsOnEntriesTypes(t *testing.T) {
 }
 
 func TestThatTryingToLoadEntriesFromEmptyDbReturnsEmptySlice(t *testing.T) {
-	dataProvider := NewBoltProvider(TestDbPath)
+	testDbPath, cleanup := getTempDbPath()
+	defer cleanup()
+	dataProvider := NewBoltProvider(testDbPath)
 	entriesToSave := GetTestEntriesToSave()
 	err := dataProvider.SaveEntriesToDb("entries", entriesToSave)
 	if err != nil {
@@ -61,7 +69,9 @@ func TestThatTryingToLoadEntriesFromEmptyDbReturnsEmptySlice(t *testing.T) {
 }
 
 func TestThatSavingEmptyEntriesSliceCreatesTable(t *testing.T) {
-	dataProvider := NewBoltProvider(TestDbPath)
+	testDbPath, cleanup := getTempDbPath()
+	defer cleanup()
+	dataProvider := NewBoltProvider(testDbPath)
 	err := dataProvider.SaveEntriesToDb("new table", []Entry{})
 	if err != nil {
 		log.Fatal(err)
@@ -72,7 +82,9 @@ func TestThatSavingEmptyEntriesSliceCreatesTable(t *testing.T) {
 }
 
 func TestThatWhenSavingEntriesPreviousDataInDbIsRemoved(t *testing.T) {
-	dataProvider := NewBoltProvider(TestDbPath)
+	testDbPath, cleanup := getTempDbPath()
+	defer cleanup()
+	dataProvider := NewBoltProvider(testDbPath)
 	entriesToSave := GetTestEntriesToSave()
 	err := dataProvider.SaveEntriesToDb("entries", entriesToSave)
 	if err != nil {
@@ -88,7 +100,9 @@ func TestThatWhenSavingEntriesPreviousDataInDbIsRemoved(t *testing.T) {
 }
 
 func TestThatWhenSavingEntriesTypesPreviousDataInDbIsRemoved(t *testing.T) {
-	dataProvider := NewBoltProvider(TestDbPath)
+	testDbPath, cleanup := getTempDbPath()
+	defer cleanup()
+	dataProvider := NewBoltProvider(testDbPath)
 	typesToSave := GetEntriesTypes()
 	err := dataProvider.SaveEntriesTypesToDb(typesToSave)
 	if err != nil {
