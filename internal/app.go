@@ -20,8 +20,7 @@ type App struct {
 	msgDialog           *widget.MsgDialog
 	confirmationDialog  *widget.ConfirmationDialog
 	entriesTypesTabs    *widget.TabContainer
-	entries             map[string][]data.Entry
-	entriesTypes        map[string]data.EntryType
+	entries             map[data.EntryType][]data.Entry
 	dataProvider        data.Provider
 	lastKeyPress        fyne.KeyName
 	editEntryTypeDialog *widget.FormDialog
@@ -59,7 +58,7 @@ func (app *App) setupBasicSettings() {
 }
 
 func (app *App) loadEntriesTypes() {
-	app.entriesTypes = make(map[string]data.EntryType)
+	app.entries = make(map[data.EntryType][]data.Entry)
 	entriesTypes, err := app.dataProvider.LoadEntriesTypesFromDb()
 	if err != nil {
 		msg := "Failed to load entries types. Application will now exit as it cannot continue."
@@ -68,21 +67,20 @@ func (app *App) loadEntriesTypes() {
 		app.loadingErrors[entriesTypesLoadError] = msg
 	}
 	for _, entryType := range entriesTypes {
-		app.entriesTypes[entryType.Name] = entryType
+		app.entries[entryType] = []data.Entry{}
 	}
 }
 
 func (app *App) loadEntries() {
-	app.entries = make(map[string][]data.Entry)
-	for typeName := range app.entriesTypes {
-		entries, err := app.dataProvider.LoadEntriesFromDb(typeName)
+	for entryType, _ := range app.entries {
+		entries, err := app.dataProvider.LoadEntriesFromDb(entryType.Name)
 		if err != nil {
 			msg := "Failed to load entries. Application will now exit as it cannot continue."
 			err = errors.Wrap(err, msg)
 			log.Error(err)
 			app.loadingErrors[entriesLoadError] = msg
 		}
-		app.entries[typeName] = entries
+		app.entries[entryType] = entries
 	}
 }
 
@@ -103,7 +101,7 @@ func (app *App) getEntriesNamesGroupedByTypeMap() map[string][]string {
 	entriesNames := make(map[string][]string)
 	for entryType, entries := range app.entries {
 		names := app.getEntriesNames(entries)
-		entriesNames[entryType] = names
+		entriesNames[entryType.Name] = names
 	}
 	return entriesNames
 }
@@ -152,11 +150,19 @@ func (app *App) prepareDialogs() {
 }
 
 func (app *App) deleteCurrentEntryType() {
-	currentTab := app.entriesTypesTabs.CurrentTab()
-	delete(app.entries, currentTab.Text)
-	delete(app.entriesTypes, currentTab.Text)
+	currentEntryType := app.getCurrentEntryType()
+	delete(app.entries, currentEntryType)
 	app.loadEntriesTypesTabs()
 	app.prepareMainWindowContent()
+}
+
+func (app *App) getCurrentEntryType() data.EntryType {
+	for entryType := range app.entries {
+		if entryType.Name == app.getCurrentTabText() {
+			return entryType
+		}
+	}
+	return data.EntryType{}
 }
 
 func (app *App) onEnterPressedInAddEntryTypeDialog() {
@@ -178,15 +184,12 @@ func (app *App) onEnterPressedInAddEntryTypeDialog() {
 }
 
 func (app *App) applyChangesToCurrentEntryType() {
-	currentEntryType := app.entriesTypes[app.getCurrentTabText()]
-	oldTypeName := currentEntryType.Name
+	currentEntryType := app.getCurrentEntryType()
+	oldType := currentEntryType
 	currentEntryType.Name = app.editEntryTypeDialog.ItemValue("Name")
 	currentEntryType.ImageQuery = app.editEntryTypeDialog.ItemValue("Image query")
-	newTypeName := currentEntryType.Name
-	app.entries[newTypeName] = app.entries[oldTypeName]
-	app.entriesTypes[newTypeName] = currentEntryType
-	delete(app.entriesTypes, oldTypeName)
-	delete(app.entries, oldTypeName)
+	app.entries[currentEntryType] = app.entries[oldType]
+	delete(app.entries, oldType)
 	currentTabIndex := app.entriesTypesTabs.CurrentTabIndex()
 	app.loadEntriesTypesTabs()
 	app.prepareMainWindowContent()
@@ -231,8 +234,9 @@ func (app *App) displayDialogForAddingNewEntryType() {
 }
 
 func (app *App) editCurrentEntryType() {
-	app.editEntryTypeDialog.SetItemValue("Name", app.getCurrentTabText())
-	app.editEntryTypeDialog.SetItemValue("Image query", app.entriesTypes[app.getCurrentTabText()].ImageQuery)
+	currentEntryType := app.getCurrentEntryType()
+	app.editEntryTypeDialog.SetItemValue("Name", currentEntryType.Name)
+	app.editEntryTypeDialog.SetItemValue("Image query", currentEntryType.ImageQuery)
 	app.editEntryTypeDialog.Display()
 }
 
@@ -250,13 +254,12 @@ func (app *App) addNewEntryType() error {
 	if newEntryTypeName == "" {
 		return errors.New("You cannot add entry type with empty name")
 	}
-	if _, exists := app.entriesTypes[newEntryTypeName]; !exists {
-		app.entries[newEntryTypeName] = nil
-		imageQuery := app.addEntryTypeDialog.ItemValue("Image query")
-		app.entriesTypes[newEntryTypeName] = data.EntryType{
+	if app.noEntryTypeWithNameExists(newEntryTypeName) {
+		newEntryType := data.EntryType{
 			Name:       newEntryTypeName,
-			ImageQuery: imageQuery,
+			ImageQuery: app.addEntryTypeDialog.ItemValue("Image query"),
 		}
+		app.entries[newEntryType] = []data.Entry{}
 		app.loadEntriesTypesTabs()
 		app.prepareMainWindowContent()
 		return nil
@@ -265,14 +268,23 @@ func (app *App) addNewEntryType() error {
 	}
 }
 
+func (app *App) noEntryTypeWithNameExists(name string) bool {
+	for entryType := range app.entries {
+		if entryType.Name == name {
+			return false
+		}
+	}
+	return true
+}
+
 func (app *App) saveChangesToDb() error {
 	var types []data.EntryType
-	for _, entryType := range app.entriesTypes {
+	for entryType, _ := range app.entries {
 		types = append(types, entryType)
 	}
 	err := app.dataProvider.SaveEntriesTypesToDb(types)
-	for entryType, entry := range app.entries {
-		err = app.dataProvider.SaveEntriesToDb(entryType, entry)
+	for entryType, entries := range app.entries {
+		err = app.dataProvider.SaveEntriesToDb(entryType.Name, entries)
 	}
 	return err
 }
