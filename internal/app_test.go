@@ -52,6 +52,28 @@ func TestThatErrorDisplaysWhenEntriesTypesFailToLoad(t *testing.T) {
 	assert.Contains(t, app.msgDialog.Msg(), "Failed to load entries types. Application will now exit as it cannot continue.")
 }
 
+func TestThatErrorDisplaysWhenEntriesFailToLoad(t *testing.T) {
+	configurator := NewTestAppConfigurator()
+	dataProvider := data.NewAbstractProvider()
+	dataProvider.LoadEntriesTypesFromDbFunc = func() (types []data.EntryType, err error) {
+		return []data.EntryType{{
+			Name:       "",
+			ImageQuery: "",
+		}}, nil
+	}
+	dataProvider.LoadEntriesFromDbFunc = func(s string) (entries []data.Entry, err error) {
+		return nil, errors.New("Entries failed to load")
+	}
+	app, cleanup := configurator.prepareConfiguratorForTestingWithExistingData().
+		setDataProvider(dataProvider).
+		createTestApplication().
+		getRunningTestApplication()
+	defer cleanup()
+	assert.True(t, app.msgDialog.Visible())
+	assert.Equal(t, "WARNING", app.msgDialog.Title())
+	assert.Contains(t, app.msgDialog.Msg(), "Failed to load entries. Application will now exit as it cannot continue.")
+}
+
 func TestThatDbFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
 	dbFilePath := testAppDataDirPath + "data.db"
 	configurator := NewTestAppConfigurator()
