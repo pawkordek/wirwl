@@ -10,12 +10,35 @@ import (
 
 const TestDbPath = "../../testdata/testDb.db"
 
+var comicsEntryType = EntryType{
+	Name:       "comics",
+	ImageQuery: "comic cover",
+}
+
+var musicEntryType = EntryType{
+	Name:       "music",
+	ImageQuery: "album cover",
+}
+
+var videoEntryType = EntryType{
+	Name:       "videos",
+	ImageQuery: "video cover",
+}
+
 func getTempDbPath() (string, func()) {
 	dir, err := ioutil.TempDir("", "")
 	if err != nil {
 		log.Fatal(err)
 	}
 	return filepath.Join(dir, "test.db"), func() { _ = os.RemoveAll(dir) }
+}
+
+func GetTestEntries() map[EntryType][]Entry {
+	entries := make(map[EntryType][]Entry)
+	entries[comicsEntryType] = GetExampleComicEntries()
+	entries[musicEntryType] = GetExampleComicEntries()
+	entries[videoEntryType] = GetExampleComicEntries()
+	return entries
 }
 
 func GetEntriesTypes() []EntryType {
@@ -191,6 +214,10 @@ func (provider *AlwaysFailingProvider) LoadEntriesTypesFromDb() ([]EntryType, er
 	return nil, AlwaysFailingProviderError
 }
 
+func (provider *AlwaysFailingProvider) SaveEntries(map[EntryType][]Entry) error {
+	return AlwaysFailingProviderError
+}
+
 /*It is supposed to provide default functions that return empty values but every single one can be overwritten
 so that desired functionality when testing can be achieved
 */
@@ -199,6 +226,7 @@ type AbstractProvider struct {
 	LoadEntriesFromDbFunc      func(string) ([]Entry, error)
 	SaveEntriesTypesToDbFunc   func([]EntryType) error
 	LoadEntriesTypesFromDbFunc func() ([]EntryType, error)
+	SaveEntriesFunc            func(map[EntryType][]Entry) error
 }
 
 func NewAbstractProvider() *AbstractProvider {
@@ -214,6 +242,9 @@ func NewAbstractProvider() *AbstractProvider {
 		},
 		LoadEntriesTypesFromDbFunc: func() (types []EntryType, err error) {
 			return []EntryType{}, nil
+		},
+		SaveEntriesFunc: func(entries map[EntryType][]Entry) error {
+			return nil
 		},
 	}
 }
@@ -232,4 +263,8 @@ func (provider *AbstractProvider) SaveEntriesTypesToDb(entriesTypes []EntryType)
 
 func (provider *AbstractProvider) LoadEntriesTypesFromDb() ([]EntryType, error) {
 	return provider.LoadEntriesTypesFromDbFunc()
+}
+
+func (provider *AbstractProvider) SaveEntries(entries map[EntryType][]Entry) error {
+	return provider.SaveEntriesFunc(entries)
 }

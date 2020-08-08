@@ -19,6 +19,29 @@ func NewBoltProvider(dbPath string) Provider {
 	return &BoltProvider{dbPath: dbPath}
 }
 
+func (provider *BoltProvider) SaveEntries(entries map[EntryType][]Entry) error {
+	entriesTypes := provider.getEntriesTypesFromEntries(entries)
+	err := provider.SaveEntriesTypesToDb(entriesTypes)
+	if err != nil {
+		return err
+	}
+	for entryType, entries := range entries {
+		err = provider.SaveEntriesToDb(entryType.Name, entries)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (provider *BoltProvider) getEntriesTypesFromEntries(entries map[EntryType][]Entry) []EntryType {
+	var entriesTypes []EntryType
+	for entryType, _ := range entries {
+		entriesTypes = append(entriesTypes, entryType)
+	}
+	return entriesTypes
+}
+
 func (provider *BoltProvider) openDb() error {
 	db, err := bolt.Open(provider.dbPath, 0600, &bolt.Options{Timeout: 10 * time.Second})
 	provider.db = db

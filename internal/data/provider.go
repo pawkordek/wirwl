@@ -5,4 +5,5 @@ type Provider interface {
 	LoadEntriesFromDb(table string) ([]Entry, error)
 	SaveEntriesTypesToDb(entriesTypes []EntryType) error
 	LoadEntriesTypesFromDb() ([]EntryType, error)
+	SaveEntries(map[EntryType][]Entry) error
 }

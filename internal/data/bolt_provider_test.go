@@ -9,18 +9,18 @@ import (
 func TestDbOperationsOnEntries(t *testing.T) {
 	testDbPath, cleanup := getTempDbPath()
 	defer cleanup()
-	entriesToSave := GetTestEntriesToSave()
+	entriesToSave := GetTestEntries()
 	dataProvider := NewBoltProvider(testDbPath)
-	err := dataProvider.SaveEntriesToDb("test_table", entriesToSave)
+	err := dataProvider.SaveEntries(entriesToSave)
 	if err != nil {
 		log.Fatal(err)
 	}
-	entries, err := dataProvider.LoadEntriesFromDb("test_table")
+	loadedEntries, err := dataProvider.LoadEntriesFromDb(entriesTypesTableName)
 	if err != nil {
 		log.Fatal(err)
 	}
-	assert.Equal(t, entries[0], entriesToSave[0])
-	assert.Equal(t, entries[1], entriesToSave[1])
+	assert.Equal(t, loadedEntries[0], loadedEntries[0])
+	assert.Equal(t, loadedEntries[1], loadedEntries[1])
 	DeleteTestDb()
 }
 
