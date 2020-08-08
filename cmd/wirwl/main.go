@@ -38,7 +38,11 @@ func main() {
 }
 
 func readCommandLineFlags() map[string]string {
-	configDirPath := flag.String("c", "", "A path to a directory containing the application config file. If not provided it will default to [HOME]/.config/wirwl/")
+	configDirPath := flag.String("c", "",
+		"A path to a directory containing the application's config file. "+
+			"If not provided it will default to: \n"+
+			"On Unix: $XDG_CONFIG_HOME/wirwl/ and if this env variable is not set, then $HOME/.config/wirwl/\n"+
+			"On Windows %AppData%/wirwl/")
 	flag.Parse()
 	return map[string]string{
 		"configDirPath": *configDirPath,
