@@ -198,22 +198,6 @@ func NewAlwaysFailingProvider() Provider {
 	return &AlwaysFailingProvider{}
 }
 
-func (provider *AlwaysFailingProvider) SaveEntriesToDb(table string, entries []Entry) error {
-	return AlwaysFailingProviderError
-}
-
-func (provider *AlwaysFailingProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
-	return nil, AlwaysFailingProviderError
-}
-
-func (provider *AlwaysFailingProvider) SaveEntriesTypesToDb(entriesTypes []EntryType) error {
-	return AlwaysFailingProviderError
-}
-
-func (provider *AlwaysFailingProvider) LoadEntriesTypesFromDb() ([]EntryType, error) {
-	return nil, AlwaysFailingProviderError
-}
-
 func (provider *AlwaysFailingProvider) SaveEntries(map[EntryType][]Entry) error {
 	return AlwaysFailingProviderError
 }
@@ -236,18 +220,6 @@ type AbstractProvider struct {
 
 func NewAbstractProvider() *AbstractProvider {
 	return &AbstractProvider{
-		SaveEntriesToDbFunc: func(table string, entries []Entry) error {
-			return nil
-		},
-		LoadEntriesFromDbFunc: func(s string) (entries []Entry, err error) {
-			return []Entry{}, nil
-		},
-		SaveEntriesTypesToDbFunc: func(types []EntryType) error {
-			return nil
-		},
-		LoadEntriesTypesFromDbFunc: func() (types []EntryType, err error) {
-			return []EntryType{}, nil
-		},
 		SaveEntriesFunc: func(entries map[EntryType][]Entry) error {
 			return nil
 		},
@@ -255,22 +227,6 @@ func NewAbstractProvider() *AbstractProvider {
 			return make(map[EntryType][]Entry), nil
 		},
 	}
-}
-
-func (provider *AbstractProvider) SaveEntriesToDb(table string, entries []Entry) error {
-	return provider.SaveEntriesToDbFunc(table, entries)
-}
-
-func (provider *AbstractProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
-	return provider.LoadEntriesFromDbFunc(table)
-}
-
-func (provider *AbstractProvider) SaveEntriesTypesToDb(entriesTypes []EntryType) error {
-	return provider.SaveEntriesTypesToDbFunc(entriesTypes)
-}
-
-func (provider *AbstractProvider) LoadEntriesTypesFromDb() ([]EntryType, error) {
-	return provider.LoadEntriesTypesFromDbFunc()
 }
 
 func (provider *AbstractProvider) SaveEntries(entries map[EntryType][]Entry) error {

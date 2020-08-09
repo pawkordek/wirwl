@@ -21,12 +21,12 @@ func NewBoltProvider(dbPath string) Provider {
 
 func (provider *BoltProvider) SaveEntries(entries map[EntryType][]Entry) error {
 	entriesTypes := provider.getEntriesTypesFromEntries(entries)
-	err := provider.SaveEntriesTypesToDb(entriesTypes)
+	err := provider.saveEntriesTypesToDb(entriesTypes)
 	if err != nil {
 		return err
 	}
 	for entryType, entries := range entries {
-		err = provider.SaveEntriesToDb(entryType.Name, entries)
+		err = provider.saveEntriesToDb(entryType.Name, entries)
 		if err != nil {
 			return err
 		}
@@ -59,7 +59,7 @@ func (provider *BoltProvider) closeDb() error {
 	return nil
 }
 
-func (provider *BoltProvider) SaveEntriesToDb(table string, entries []Entry) error {
+func (provider *BoltProvider) saveEntriesToDb(table string, entries []Entry) error {
 	err := provider.openDb()
 	if err != nil {
 		return err
@@ -137,13 +137,13 @@ func (provider *BoltProvider) deleteTableIfExists(table string) error {
 }
 
 func (provider *BoltProvider) LoadEntries() (map[EntryType][]Entry, error) {
-	entriesTypes, err := provider.LoadEntriesTypesFromDb()
+	entriesTypes, err := provider.loadEntriesTypesFromDb()
 	if err != nil {
 		return nil, err
 	}
 	allEntries := make(map[EntryType][]Entry)
 	for _, entryType := range entriesTypes {
-		entriesForCurrentType, err := provider.LoadEntriesFromDb(entryType.Name)
+		entriesForCurrentType, err := provider.loadEntriesFromDb(entryType.Name)
 		if err != nil {
 			return nil, err
 		}
@@ -152,7 +152,7 @@ func (provider *BoltProvider) LoadEntries() (map[EntryType][]Entry, error) {
 	return allEntries, nil
 }
 
-func (provider *BoltProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
+func (provider *BoltProvider) loadEntriesFromDb(table string) ([]Entry, error) {
 	err := provider.openDb()
 	if err != nil {
 		return nil, err
@@ -189,7 +189,7 @@ func getEntriesDataFromTable(transaction *bolt.Tx, table string) ([]Entry, error
 	return entries, err
 }
 
-func (provider *BoltProvider) SaveEntriesTypesToDb(entriesTypes []EntryType) error {
+func (provider *BoltProvider) saveEntriesTypesToDb(entriesTypes []EntryType) error {
 	err := provider.openDb()
 	if err != nil {
 		return err
@@ -222,7 +222,7 @@ func (provider *BoltProvider) saveEntryTypeToTable(entryType EntryType) error {
 	return nil
 }
 
-func (provider *BoltProvider) LoadEntriesTypesFromDb() ([]EntryType, error) {
+func (provider *BoltProvider) loadEntriesTypesFromDb() ([]EntryType, error) {
 	err := provider.openDb()
 	if err != nil {
 		return nil, err
