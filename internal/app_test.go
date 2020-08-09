@@ -36,30 +36,11 @@ func TestThatErrorsPassedInOnAppCreationDisplayAfterItRuns(t *testing.T) {
 	assert.Contains(t, app.msgDialog.Msg(), "Some other error occurred")
 }
 
-func TestThatErrorDisplaysWhenEntriesTypesFailToLoad(t *testing.T) {
-	configurator := NewTestAppConfigurator()
-	dataProvider := data.NewAbstractProvider()
-	dataProvider.LoadEntriesTypesFromDbFunc = func() (types []data.EntryType, err error) {
-		return nil, errors.New("Entries types failed to load.")
-	}
-	app, cleanup := configurator.prepareConfiguratorForTestingWithExistingData().
-		setDataProvider(dataProvider).
-		createTestApplication().
-		getRunningTestApplication()
-	defer cleanup()
-	assert.True(t, app.msgDialog.Visible())
-	assert.Equal(t, "ERROR", app.msgDialog.Title())
-	assert.Contains(t, app.msgDialog.Msg(), "Failed to load entries types. Application will now exit as it cannot continue.")
-}
-
 func TestThatErrorDisplaysWhenEntriesFailToLoad(t *testing.T) {
 	configurator := NewTestAppConfigurator()
 	dataProvider := data.NewAbstractProvider()
-	dataProvider.LoadEntriesTypesFromDbFunc = func() (types []data.EntryType, err error) {
-		return []data.EntryType{{
-			Name:       "",
-			ImageQuery: "",
-		}}, nil
+	dataProvider.LoadEntriesFunc = func() (map[data.EntryType][]data.Entry, error) {
+		return nil, errors.New("An error occured when entries failed to load")
 	}
 	dataProvider.LoadEntriesFromDbFunc = func(s string) (entries []data.Entry, err error) {
 		return nil, errors.New("Entries failed to load")

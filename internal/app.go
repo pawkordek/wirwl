@@ -108,7 +108,7 @@ func (app *App) prepareMainWindowContent() {
 
 func (app *App) displayLoadingErrors() {
 	if len(app.loadingErrors) != 0 {
-		if app.loadingErrors[entriesTypesLoadError] != "" {
+		if app.loadingErrors[entriesLoadError] != "" {
 			app.msgDialog.SetOneTimeOnHideCallback(func() {
 				app.fyneApp.Quit()
 			})
