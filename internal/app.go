@@ -260,14 +260,7 @@ func (app *App) noEntryTypeWithNameExists(name string) bool {
 }
 
 func (app *App) saveChangesToDb() error {
-	var types []data.EntryType
-	for entryType, _ := range app.entries {
-		types = append(types, entryType)
-	}
-	err := app.dataProvider.SaveEntriesTypesToDb(types)
-	for entryType, entries := range app.entries {
-		err = app.dataProvider.SaveEntriesToDb(entryType.Name, entries)
-	}
+	err := app.dataProvider.SaveEntries(app.entries)
 	return err
 }
 
