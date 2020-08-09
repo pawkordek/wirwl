@@ -84,39 +84,7 @@ func createTestDb() {
 		log.Fatal(err)
 	}
 	dataProvider := data.NewBoltProvider(testDbPath)
-	saveTestEntriesTypes(dataProvider)
-	saveTestComics(dataProvider)
-	saveTestMusic(dataProvider)
-	saveTestVideos(dataProvider)
-}
-
-func saveTestEntriesTypes(provider data.Provider) {
-	entriesTypes := data.GetEntriesTypes()
-	err := provider.SaveEntriesTypesToDb(entriesTypes)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func saveTestVideos(provider data.Provider) {
-	videos := data.GetExampleVideoEntries()
-	err := provider.SaveEntriesToDb("videos", videos)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func saveTestComics(provider data.Provider) {
-	comics := data.GetExampleComicEntries()
-	err := provider.SaveEntriesToDb("comics", comics)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func saveTestMusic(provider data.Provider) {
-	music := data.GetExampleMusicEntries()
-	err := provider.SaveEntriesToDb("music", music)
+	err = dataProvider.SaveEntries(data.GetTestEntries())
 	if err != nil {
 		log.Fatal(err)
 	}
