@@ -42,9 +42,6 @@ func TestThatErrorDisplaysWhenEntriesFailToLoad(t *testing.T) {
 	dataProvider.LoadEntriesFunc = func() (map[data.EntryType][]data.Entry, error) {
 		return nil, errors.New("An error occured when entries failed to load")
 	}
-	dataProvider.LoadEntriesFromDbFunc = func(s string) (entries []data.Entry, err error) {
-		return nil, errors.New("Entries failed to load")
-	}
 	app, cleanup := configurator.prepareConfiguratorForTestingWithExistingData().
 		setDataProvider(dataProvider).
 		createTestApplication().
