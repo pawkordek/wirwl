@@ -36,8 +36,8 @@ func getTempDbPath() (string, func()) {
 func GetTestEntries() map[EntryType][]Entry {
 	entries := make(map[EntryType][]Entry)
 	entries[comicsEntryType] = GetExampleComicEntries()
-	entries[musicEntryType] = GetExampleComicEntries()
-	entries[videoEntryType] = GetExampleComicEntries()
+	entries[musicEntryType] = GetExampleMusicEntries()
+	entries[videoEntryType] = GetExampleVideoEntries()
 	return entries
 }
 
