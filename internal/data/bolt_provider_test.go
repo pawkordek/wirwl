@@ -15,12 +15,13 @@ func TestDbOperationsOnEntries(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	loadedEntries, err := dataProvider.LoadEntriesFromDb(entriesTypesTableName)
+	loadedEntries, err := dataProvider.LoadEntries()
 	if err != nil {
 		log.Fatal(err)
 	}
-	assert.Equal(t, loadedEntries[0], loadedEntries[0])
-	assert.Equal(t, loadedEntries[1], loadedEntries[1])
+	assert.Equal(t, entriesToSave[comicsEntryType], loadedEntries[comicsEntryType])
+	assert.Equal(t, entriesToSave[musicEntryType], loadedEntries[musicEntryType])
+	assert.Equal(t, entriesToSave[videoEntryType], loadedEntries[videoEntryType])
 	DeleteTestDb()
 }
 

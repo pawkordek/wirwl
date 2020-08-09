@@ -136,6 +136,22 @@ func (provider *BoltProvider) deleteTableIfExists(table string) error {
 	})
 }
 
+func (provider *BoltProvider) LoadEntries() (map[EntryType][]Entry, error) {
+	entriesTypes, err := provider.LoadEntriesTypesFromDb()
+	if err != nil {
+		return nil, err
+	}
+	allEntries := make(map[EntryType][]Entry)
+	for _, entryType := range entriesTypes {
+		entriesForCurrentType, err := provider.LoadEntriesFromDb(entryType.Name)
+		if err != nil {
+			return nil, err
+		}
+		allEntries[entryType] = entriesForCurrentType
+	}
+	return allEntries, nil
+}
+
 func (provider *BoltProvider) LoadEntriesFromDb(table string) ([]Entry, error) {
 	err := provider.openDb()
 	if err != nil {

@@ -218,6 +218,10 @@ func (provider *AlwaysFailingProvider) SaveEntries(map[EntryType][]Entry) error 
 	return AlwaysFailingProviderError
 }
 
+func (provider *AlwaysFailingProvider) LoadEntries() (map[EntryType][]Entry, error) {
+	return nil, AlwaysFailingProviderError
+}
+
 /*It is supposed to provide default functions that return empty values but every single one can be overwritten
 so that desired functionality when testing can be achieved
 */
@@ -227,6 +231,7 @@ type AbstractProvider struct {
 	SaveEntriesTypesToDbFunc   func([]EntryType) error
 	LoadEntriesTypesFromDbFunc func() ([]EntryType, error)
 	SaveEntriesFunc            func(map[EntryType][]Entry) error
+	LoadEntriesFunc            func() (map[EntryType][]Entry, error)
 }
 
 func NewAbstractProvider() *AbstractProvider {
@@ -245,6 +250,9 @@ func NewAbstractProvider() *AbstractProvider {
 		},
 		SaveEntriesFunc: func(entries map[EntryType][]Entry) error {
 			return nil
+		},
+		LoadEntriesFunc: func() (map[EntryType][]Entry, error) {
+			return make(map[EntryType][]Entry), nil
 		},
 	}
 }
@@ -267,4 +275,8 @@ func (provider *AbstractProvider) LoadEntriesTypesFromDb() ([]EntryType, error) 
 
 func (provider *AbstractProvider) SaveEntries(entries map[EntryType][]Entry) error {
 	return provider.SaveEntriesFunc(entries)
+}
+
+func (provider *AbstractProvider) LoadEntries() (map[EntryType][]Entry, error) {
+	return provider.LoadEntriesFunc()
 }
