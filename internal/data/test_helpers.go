@@ -41,23 +41,6 @@ func GetTestEntries() map[EntryType][]Entry {
 	return entries
 }
 
-func GetEntriesTypes() []EntryType {
-	return []EntryType{
-		{
-			Name:       "comics",
-			ImageQuery: "comic cover",
-		},
-		{
-			Name:       "music",
-			ImageQuery: "album cover",
-		},
-		{
-			Name:       "videos",
-			ImageQuery: "video cover",
-		},
-	}
-}
-
 func GetExampleVideoEntries() []Entry {
 	return []Entry{
 		{
@@ -146,37 +129,6 @@ func GetExampleMusicEntries() []Entry {
 			Description:                "some description2",
 			Comment:                    "some comment2",
 			MediaType:                  "music",
-			Tags:                       "some tags",
-		},
-	}
-}
-
-func GetTestEntriesToSave() []Entry {
-	return []Entry{
-		{
-			Id:                         0,
-			Status:                     "some status",
-			Title:                      "some title",
-			Completion:                 1,
-			AmountOfElementsToComplete: 2,
-			Score:                      3,
-			Link:                       "some link",
-			Description:                "some description",
-			Comment:                    "some comment",
-			MediaType:                  "some media type",
-			Tags:                       "some tags",
-		},
-		{
-			Id:                         1,
-			Status:                     "some status2",
-			Title:                      "some title2",
-			Completion:                 4,
-			AmountOfElementsToComplete: 5,
-			Score:                      6,
-			Link:                       "some link2",
-			Description:                "some description2",
-			Comment:                    "some comment2",
-			MediaType:                  "some media type2",
 			Tags:                       "some tags",
 		},
 	}
