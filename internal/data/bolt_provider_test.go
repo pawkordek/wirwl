@@ -22,7 +22,6 @@ func TestDbOperationsOnEntries(t *testing.T) {
 	assert.Equal(t, entriesToSave[comicsEntryType], loadedEntries[comicsEntryType])
 	assert.Equal(t, entriesToSave[musicEntryType], loadedEntries[musicEntryType])
 	assert.Equal(t, entriesToSave[videoEntryType], loadedEntries[videoEntryType])
-	DeleteTestDb()
 }
 
 func TestThatTryingToLoadEntriesFromEmptyDbReturnsEmptySlice(t *testing.T) {
@@ -32,7 +31,6 @@ func TestThatTryingToLoadEntriesFromEmptyDbReturnsEmptySlice(t *testing.T) {
 	entries, err := dataProvider.LoadEntries()
 	assert.Equal(t, 0, len(entries))
 	assert.Nil(t, err)
-	DeleteTestDb()
 }
 
 func TestThatSavingEmptyEntriesDoesNotThrowError(t *testing.T) {
@@ -45,7 +43,6 @@ func TestThatSavingEmptyEntriesDoesNotThrowError(t *testing.T) {
 	}
 	_, err = dataProvider.LoadEntries()
 	assert.Nil(t, err)
-	DeleteTestDb()
 }
 
 func TestThatWhenSavingEntriesPreviousDataInDbIsRemoved(t *testing.T) {
@@ -63,5 +60,4 @@ func TestThatWhenSavingEntriesPreviousDataInDbIsRemoved(t *testing.T) {
 	}
 	loadedEntries, err := dataProvider.LoadEntries()
 	assert.Empty(t, loadedEntries)
-	DeleteTestDb()
 }

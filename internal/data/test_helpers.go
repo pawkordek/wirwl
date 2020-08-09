@@ -151,13 +151,6 @@ func GetExampleMusicEntries() []Entry {
 	}
 }
 
-func DeleteTestDb() {
-	err := DeleteDirWithContents(TestDbPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func GetTestEntriesToSave() []Entry {
 	return []Entry{
 		{
