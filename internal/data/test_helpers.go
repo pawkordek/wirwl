@@ -210,10 +210,6 @@ func (provider *AlwaysFailingProvider) LoadEntries() (map[EntryType][]Entry, err
 so that desired functionality when testing can be achieved
 */
 type AbstractProvider struct {
-	SaveEntriesToDbFunc        func(string, []Entry) error
-	LoadEntriesFromDbFunc      func(string) ([]Entry, error)
-	SaveEntriesTypesToDbFunc   func([]EntryType) error
-	LoadEntriesTypesFromDbFunc func() ([]EntryType, error)
 	SaveEntriesFunc            func(map[EntryType][]Entry) error
 	LoadEntriesFunc            func() (map[EntryType][]Entry, error)
 }
