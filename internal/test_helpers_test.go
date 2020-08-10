@@ -146,18 +146,6 @@ func areFilesTheSame(file1 *os.File, file2 *os.File) bool {
 	return true
 }
 
-func createCorrectSavedWirwlConfigFileInPath(path string) {
-	err := data.CreateDirIfNotExist(path)
-	if err != nil {
-		log.Fatal(err)
-	}
-	config := Config{
-		AppDataDirPath: testAppDataDirPath,
-		ConfigDirPath:  testConfigDirPath,
-	}
-	config.saveConfigIn(path + "wirwl_correct.cfg")
-}
-
 func createCorrectWirwlConfigFileForLoadingInPath(path string) {
 	err := data.CreateDirIfNotExist(path)
 	if err != nil {

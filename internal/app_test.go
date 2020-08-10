@@ -63,10 +63,22 @@ func TestThatDbFileWithItsDirGetsCreatedInAppDataDirFromConfig(t *testing.T) {
 
 func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.T) {
 	configurator := NewTestAppConfigurator()
-	_, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
+	savedConfig := Config{
+		AppDataDirPath: testAppDataDirPath,
+		ConfigDirPath:  testConfigDirPath,
+		Keymap:         map[string]Action{},
+	}
+	_, cleanup := configurator.
+		prepareConfiguratorForTestingWithExistingData().setConfig(savedConfig).
+		createTestApplication().
+		getRunningTestApplication()
 	defer cleanup()
-	createCorrectSavedWirwlConfigFileInPath(testConfigDirPath)
-	assert.True(t, areFilesInPathsTheSame(testConfigDirPath+"wirwl.cfg", testConfigDirPath+"wirwl_correct.cfg"))
+	loadedConfig := NewConfig(testConfigDirPath)
+	err := loadedConfig.load()
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, savedConfig, loadedConfig)
 }
 
 func TestThatEntriesTabsWithContentDisplayInCorrectOrder(t *testing.T) {
