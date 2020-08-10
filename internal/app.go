@@ -24,6 +24,7 @@ type App struct {
 	dataProvider        data.Provider
 	lastKeyPress        fyne.KeyName
 	editEntryTypeDialog *widget.FormDialog
+	inputHandler        InputHandler
 }
 
 const configLoadError = "CONFIG_LOAD_ERROR"
@@ -43,6 +44,7 @@ func (app *App) LoadAndDisplay() error {
 
 func (app *App) prepare() {
 	app.setupBasicSettings()
+	app.setupInputHandler()
 	app.loadEntries()
 	app.loadEntriesTypesTabs()
 	app.prepareDialogs()
@@ -53,6 +55,10 @@ func (app *App) prepare() {
 func (app *App) setupBasicSettings() {
 	app.mainWindow = app.fyneApp.NewWindow("wirwl")
 	app.fyneApp.Settings().SetTheme(theme.LightTheme())
+}
+
+func (app *App) setupInputHandler() {
+	app.inputHandler = NewInputHandler(app.config.Keymap)
 }
 
 func (app *App) loadEntries() {
@@ -183,6 +189,7 @@ func (app *App) getCurrentTabText() string {
 }
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
+	app.inputHandler.handle(event.Name)
 	if event.Name == fyne.KeyL {
 		app.entriesTypesTabs.SelectNextTab()
 	} else if event.Name == fyne.KeyH {
