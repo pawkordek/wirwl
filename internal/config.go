@@ -17,10 +17,11 @@ const logFileName = appName + ".log"
 type Config struct {
 	AppDataDirPath string
 	ConfigDirPath  string
+	Keymap         map[string]Action
 }
 
 func NewConfig(configDirPath string) Config {
-	config := Config{ConfigDirPath: configDirPath}
+	config := Config{ConfigDirPath: configDirPath, Keymap: map[string]Action{}}
 	return config
 }
 

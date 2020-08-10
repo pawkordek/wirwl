@@ -75,3 +75,12 @@ func TestThatConfigFilePathGetterReturnsCorrectPath(t *testing.T) {
 	expectedPath := filepath.Join(config.ConfigDirPath, appName+".cfg")
 	assert.Equal(t, expectedPath, actualPath)
 }
+
+func TestThatDefaultConfigHasCorrectKeymap(t *testing.T) {
+	config := NewConfig(testConfigDirPath)
+	err := config.loadDefaults()
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.NotNil(t, config.Keymap)
+}
