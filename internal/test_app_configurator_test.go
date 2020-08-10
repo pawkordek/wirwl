@@ -72,6 +72,11 @@ func (configurator *TestAppConfigurator) createFailingToLoadConfigFile() *TestAp
 	return configurator
 }
 
+func (configurator *TestAppConfigurator) setConfig(config Config) *TestAppConfigurator {
+	configurator.config = config
+	return configurator
+}
+
 func (configurator *TestAppConfigurator) createDefaultDataProvider() *TestAppConfigurator {
 	configurator.dataProvider = data.NewBoltProvider(filepath.Join(testAppDataDirPath, "data.db"))
 	return configurator
