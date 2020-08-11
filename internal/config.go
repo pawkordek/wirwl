@@ -15,9 +15,12 @@ const appName = "wirwl"
 const logFileName = appName + ".log"
 
 const (
-	selectNextTabAction     Action = "SELECT_NEXT_TAB"
-	selectPreviousTabAction Action = "SELECT_PREVIOUS_TAB"
-	saveChangesAction       Action = "SAVE_CHANGES"
+	selectNextTabAction                     Action = "SELECT_NEXT_TAB"
+	selectPreviousTabAction                 Action = "SELECT_PREVIOUS_TAB"
+	saveChangesAction                       Action = "SAVE_CHANGES"
+	displayDialogForAddingNewEntryTypAction Action = "DISPLAY_DIALOG_FOR_ADDING_NEW_ENTRY_TYPE"
+	removeEntryTypeAction                   Action = "REMOVE_ENTRY_TYPE"
+	editCurrentEntryTypeAction              Action = "EDIT_CURRENT_ENTRY_TYPE"
 )
 
 type Config struct {
@@ -99,6 +102,9 @@ func (config *Config) loadDefaultKeymap() {
 	config.Keymap["L"] = selectNextTabAction
 	config.Keymap["H"] = selectPreviousTabAction
 	config.Keymap["S,Y"] = saveChangesAction
+	config.Keymap["T,I"] = displayDialogForAddingNewEntryTypAction
+	config.Keymap["T,D"] = removeEntryTypeAction
+	config.Keymap["T,E"] = editCurrentEntryTypeAction
 }
 
 func (config *Config) save() error {
