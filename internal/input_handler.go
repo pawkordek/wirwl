@@ -18,6 +18,7 @@ type KeyCombination struct {
 type InputHandler struct {
 	keymap  map[KeyCombination]Action
 	actions map[Action]func()
+	lastKey fyne.KeyName
 }
 
 func NewInputHandler(keymap map[string]Action) InputHandler {
@@ -53,9 +54,11 @@ func (handler *InputHandler) bindFunctionToAction(action Action, function func()
 
 func (handler *InputHandler) handle(keyName fyne.KeyName) {
 	for keyCombination, action := range handler.keymap {
-		if keyCombination.firstKey == keyName {
+		if (keyCombination.secondKey == keyName && keyCombination.firstKey == handler.lastKey) ||
+			(keyCombination.firstKey == keyName && keyCombination.secondKey == "") {
 			handler.actions[action]()
-			return
+			break
 		}
 	}
+	handler.lastKey = keyName
 }
