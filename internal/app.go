@@ -62,6 +62,9 @@ func (app *App) setupInputHandler() {
 	app.inputHandler.bindFunctionToAction(selectNextTabAction, func() { app.entriesTypesTabs.SelectNextTab() })
 	app.inputHandler.bindFunctionToAction(selectPreviousTabAction, func() { app.entriesTypesTabs.SelectPreviousTab() })
 	app.inputHandler.bindFunctionToAction(saveChangesAction, func() { app.trySavingChangesToDb() })
+	app.inputHandler.bindFunctionToAction(displayDialogForAddingNewEntryTypAction, func() { app.displayDialogForAddingNewEntryType() })
+	app.inputHandler.bindFunctionToAction(editCurrentEntryTypeAction, func() { app.editCurrentEntryType() })
+	app.inputHandler.bindFunctionToAction(removeEntryTypeAction, func() { app.tryDeletingCurrentEntryType() })
 }
 
 func (app *App) loadEntries() {
@@ -193,21 +196,7 @@ func (app *App) getCurrentTabText() string {
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 	app.inputHandler.handle(event.Name)
-	if app.lastKeyPress == fyne.KeyT {
-		app.handleTabRelatedKeyPress(event)
-	}
-
 	app.lastKeyPress = event.Name
-}
-
-func (app *App) handleTabRelatedKeyPress(event *fyne.KeyEvent) {
-	if event.Name == fyne.KeyI {
-		app.displayDialogForAddingNewEntryType()
-	} else if event.Name == fyne.KeyD {
-		app.tryDeletingCurrentEntryType()
-	} else if event.Name == fyne.KeyE {
-		app.editCurrentEntryType()
-	}
 }
 
 func (app *App) displayDialogForAddingNewEntryType() {
