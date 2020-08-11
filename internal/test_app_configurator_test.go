@@ -51,6 +51,7 @@ func (configurator *TestAppConfigurator) createTestDb() *TestAppConfigurator {
 func (configurator *TestAppConfigurator) createTestConfig() *TestAppConfigurator {
 	config := NewConfig(testConfigDirPath)
 	config.AppDataDirPath = testAppDataDirPath
+	config.loadDefaultKeymap()
 	configurator.config = config
 	return configurator
 }

@@ -68,6 +68,7 @@ func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.
 		ConfigDirPath:  testConfigDirPath,
 		Keymap:         map[string]Action{},
 	}
+	savedConfig.loadDefaultKeymap()
 	_, cleanup := configurator.
 		prepareConfiguratorForTestingWithExistingData().setConfig(savedConfig).
 		createTestApplication().
