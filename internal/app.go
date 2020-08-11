@@ -204,11 +204,7 @@ func (app *App) handleTabRelatedKeyPress(event *fyne.KeyEvent) {
 	if event.Name == fyne.KeyI {
 		app.displayDialogForAddingNewEntryType()
 	} else if event.Name == fyne.KeyD {
-		if len(app.entriesTypesTabs.Items()) > 1 {
-			app.confirmationDialog.Display("Are you sure you want to delete entry type '" + app.entriesTypesTabs.CurrentTab().Text + "'?")
-		} else {
-			app.msgDialog.Display(widget.WarningPopUp, "You cannot remove the only remaining entry type!")
-		}
+		app.tryDeletingCurrentEntryType()
 	} else if event.Name == fyne.KeyE {
 		app.editCurrentEntryType()
 	}
@@ -224,6 +220,14 @@ func (app *App) editCurrentEntryType() {
 	app.editEntryTypeDialog.SetItemValue("Name", currentEntryType.Name)
 	app.editEntryTypeDialog.SetItemValue("Image query", currentEntryType.ImageQuery)
 	app.editEntryTypeDialog.Display()
+}
+
+func (app *App) tryDeletingCurrentEntryType() {
+	if len(app.entriesTypesTabs.Items()) > 1 {
+		app.confirmationDialog.Display("Are you sure you want to delete entry type '" + app.entriesTypesTabs.CurrentTab().Text + "'?")
+	} else {
+		app.msgDialog.Display(widget.WarningPopUp, "You cannot remove the only remaining entry type!")
+	}
 }
 
 func (app *App) trySavingChangesToDb() {
