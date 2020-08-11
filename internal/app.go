@@ -22,7 +22,6 @@ type App struct {
 	entriesTypesTabs    *widget.TabContainer
 	entries             map[data.EntryType][]data.Entry
 	dataProvider        data.Provider
-	lastKeyPress        fyne.KeyName
 	editEntryTypeDialog *widget.FormDialog
 	inputHandler        InputHandler
 }
@@ -196,7 +195,6 @@ func (app *App) getCurrentTabText() string {
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 	app.inputHandler.handle(event.Name)
-	app.lastKeyPress = event.Name
 }
 
 func (app *App) displayDialogForAddingNewEntryType() {
