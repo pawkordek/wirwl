@@ -17,6 +17,7 @@ const logFileName = appName + ".log"
 const (
 	selectNextTabAction     Action = "SELECT_NEXT_TAB"
 	selectPreviousTabAction Action = "SELECT_PREVIOUS_TAB"
+	saveChangesAction       Action = "SAVE_CHANGES"
 )
 
 type Config struct {
@@ -97,6 +98,7 @@ func getCurrentUserHomeDir() (string, error) {
 func (config *Config) loadDefaultKeymap() {
 	config.Keymap["L"] = selectNextTabAction
 	config.Keymap["H"] = selectPreviousTabAction
+	config.Keymap["S,Y"] = saveChangesAction
 }
 
 func (config *Config) save() error {
