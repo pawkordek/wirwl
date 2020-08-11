@@ -14,6 +14,11 @@ import (
 const appName = "wirwl"
 const logFileName = appName + ".log"
 
+const (
+	selectNextTabAction     Action = "SELECT_NEXT_TAB"
+	selectPreviousTabAction Action = "SELECT_PREVIOUS_TAB"
+)
+
 type Config struct {
 	AppDataDirPath string
 	ConfigDirPath  string
@@ -56,6 +61,7 @@ func (config *Config) loadDefaults() error {
 		return errors.Wrap(err, "An error occurred when trying to load default app directory path in config")
 	}
 	config.AppDataDirPath = defaultAppDataDirPath
+	config.loadDefaultKeymap()
 	return nil
 }
 
@@ -86,6 +92,11 @@ func getCurrentUserHomeDir() (string, error) {
 		return "", errors.Wrap(err, "Failed to get the current user")
 	}
 	return currentUser.HomeDir, nil
+}
+
+func (config *Config) loadDefaultKeymap() {
+	config.Keymap["L"] = selectNextTabAction
+	config.Keymap["H"] = selectPreviousTabAction
 }
 
 func (config *Config) save() error {

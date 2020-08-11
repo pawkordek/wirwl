@@ -82,5 +82,6 @@ func TestThatDefaultConfigHasCorrectKeymap(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	assert.NotNil(t, config.Keymap)
+	assert.Equal(t, selectNextTabAction, config.Keymap["L"])
+	assert.Equal(t, selectPreviousTabAction, config.Keymap["H"])
 }
