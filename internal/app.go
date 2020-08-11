@@ -61,6 +61,7 @@ func (app *App) setupInputHandler() {
 	app.inputHandler = NewInputHandler(app.config.Keymap)
 	app.inputHandler.bindFunctionToAction(selectNextTabAction, func() { app.entriesTypesTabs.SelectNextTab() })
 	app.inputHandler.bindFunctionToAction(selectPreviousTabAction, func() { app.entriesTypesTabs.SelectPreviousTab() })
+	app.inputHandler.bindFunctionToAction(saveChangesAction, func() { app.trySavingChangesToDb() })
 }
 
 func (app *App) loadEntries() {
@@ -194,8 +195,6 @@ func (app *App) onKeyPressed(event *fyne.KeyEvent) {
 	app.inputHandler.handle(event.Name)
 	if app.lastKeyPress == fyne.KeyT {
 		app.handleTabRelatedKeyPress(event)
-	} else if app.lastKeyPress == fyne.KeyS && event.Name == fyne.KeyY {
-		app.trySavingChangesToDb()
 	}
 
 	app.lastKeyPress = event.Name
