@@ -59,12 +59,12 @@ func (app *App) setupBasicSettings() {
 
 func (app *App) setupInputHandler() {
 	app.inputHandler = input.NewInputHandler(app.config.Keymap)
-	app.inputHandler.BindFunctionToAction(selectNextTabAction, func() { app.entriesTypesTabs.SelectNextTab() })
-	app.inputHandler.BindFunctionToAction(selectPreviousTabAction, func() { app.entriesTypesTabs.SelectPreviousTab() })
-	app.inputHandler.BindFunctionToAction(saveChangesAction, func() { app.trySavingChangesToDb() })
-	app.inputHandler.BindFunctionToAction(displayDialogForAddingNewEntryTypAction, func() { app.displayDialogForAddingNewEntryType() })
-	app.inputHandler.BindFunctionToAction(editCurrentEntryTypeAction, func() { app.editCurrentEntryType() })
-	app.inputHandler.BindFunctionToAction(removeEntryTypeAction, func() { app.tryDeletingCurrentEntryType() })
+	app.inputHandler.BindFunctionToAction(appName, selectNextTabAction, func() { app.entriesTypesTabs.SelectNextTab() })
+	app.inputHandler.BindFunctionToAction(appName, selectPreviousTabAction, func() { app.entriesTypesTabs.SelectPreviousTab() })
+	app.inputHandler.BindFunctionToAction(appName, saveChangesAction, func() { app.trySavingChangesToDb() })
+	app.inputHandler.BindFunctionToAction(appName, displayDialogForAddingNewEntryTypAction, func() { app.displayDialogForAddingNewEntryType() })
+	app.inputHandler.BindFunctionToAction(appName, editCurrentEntryTypeAction, func() { app.editCurrentEntryType() })
+	app.inputHandler.BindFunctionToAction(appName, removeEntryTypeAction, func() { app.tryDeletingCurrentEntryType() })
 }
 
 func (app *App) loadEntries() {
@@ -195,7 +195,7 @@ func (app *App) getCurrentTabText() string {
 }
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
-	app.inputHandler.Handle(event.Name)
+	app.inputHandler.Handle(appName, event.Name)
 }
 
 func (app *App) displayDialogForAddingNewEntryType() {
