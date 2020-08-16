@@ -48,11 +48,11 @@ func getKeyCombinationFromStringKey(key string) KeyCombination {
 	}
 }
 
-func (handler *InputHandler) bindFunctionToAction(action Action, function func()) {
+func (handler *InputHandler) BindFunctionToAction(action Action, function func()) {
 	handler.actions[action] = function
 }
 
-func (handler *InputHandler) handle(keyName fyne.KeyName) {
+func (handler *InputHandler) Handle(keyName fyne.KeyName) {
 	for keyCombination, action := range handler.keymap {
 		if (keyCombination.secondKey == keyName && keyCombination.firstKey == handler.lastKey) ||
 			(keyCombination.firstKey == keyName && keyCombination.secondKey == "") {

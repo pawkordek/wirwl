@@ -14,8 +14,8 @@ func TestThatInputHandlerHandlesSingleKeyActions(t *testing.T) {
 	keymap := make(map[string]Action)
 	keymap["Q"] = testAction
 	inputHandler := NewInputHandler(keymap)
-	inputHandler.bindFunctionToAction(testAction, function)
-	inputHandler.handle(fyne.KeyQ)
+	inputHandler.BindFunctionToAction(testAction, function)
+	inputHandler.Handle(fyne.KeyQ)
 	assert.True(t, functionExecuted)
 }
 
@@ -25,9 +25,9 @@ func TestThatInputHandlerHandlesActionsInKeySequences(t *testing.T) {
 	keymap := make(map[string]Action)
 	keymap["Z,X"] = testAction
 	inputHandler := NewInputHandler(keymap)
-	inputHandler.bindFunctionToAction(testAction, function)
-	inputHandler.handle(fyne.KeyZ)
+	inputHandler.BindFunctionToAction(testAction, function)
+	inputHandler.Handle(fyne.KeyZ)
 	assert.False(t, functionExecuted)
-	inputHandler.handle(fyne.KeyX)
+	inputHandler.Handle(fyne.KeyX)
 	assert.True(t, functionExecuted)
 }
