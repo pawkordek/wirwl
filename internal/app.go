@@ -7,6 +7,7 @@ import (
 	fyneWidget "fyne.io/fyne/widget"
 	"github.com/pkg/errors"
 	"wirwl/internal/data"
+	"wirwl/internal/input"
 	"wirwl/internal/log"
 	"wirwl/internal/widget"
 )
@@ -23,7 +24,7 @@ type App struct {
 	entries             map[data.EntryType][]data.Entry
 	dataProvider        data.Provider
 	editEntryTypeDialog *widget.FormDialog
-	inputHandler        InputHandler
+	inputHandler        input.InputHandler
 }
 
 const configLoadError = "CONFIG_LOAD_ERROR"
@@ -57,7 +58,7 @@ func (app *App) setupBasicSettings() {
 }
 
 func (app *App) setupInputHandler() {
-	app.inputHandler = NewInputHandler(app.config.Keymap)
+	app.inputHandler = input.NewInputHandler(app.config.Keymap)
 	app.inputHandler.bindFunctionToAction(selectNextTabAction, func() { app.entriesTypesTabs.SelectNextTab() })
 	app.inputHandler.bindFunctionToAction(selectPreviousTabAction, func() { app.entriesTypesTabs.SelectPreviousTab() })
 	app.inputHandler.bindFunctionToAction(saveChangesAction, func() { app.trySavingChangesToDb() })

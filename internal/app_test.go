@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"testing"
 	"wirwl/internal/data"
+	"wirwl/internal/input"
 	"wirwl/internal/log"
 	"wirwl/internal/widget"
 )
@@ -66,7 +67,7 @@ func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.
 	savedConfig := Config{
 		AppDataDirPath: testAppDataDirPath,
 		ConfigDirPath:  testConfigDirPath,
-		Keymap:         map[string]Action{},
+		Keymap:         map[string]input.Action{},
 	}
 	savedConfig.loadDefaultKeymap()
 	_, cleanup := configurator.

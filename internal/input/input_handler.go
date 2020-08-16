@@ -1,4 +1,4 @@
-package wirwl
+package input
 
 import (
 	"fyne.io/fyne"

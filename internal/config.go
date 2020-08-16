@@ -9,28 +9,29 @@ import (
 	"os/user"
 	"path/filepath"
 	"wirwl/internal/data"
+	"wirwl/internal/input"
 )
 
 const appName = "wirwl"
 const logFileName = appName + ".log"
 
 const (
-	selectNextTabAction                     Action = "SELECT_NEXT_TAB"
-	selectPreviousTabAction                 Action = "SELECT_PREVIOUS_TAB"
-	saveChangesAction                       Action = "SAVE_CHANGES"
-	displayDialogForAddingNewEntryTypAction Action = "DISPLAY_DIALOG_FOR_ADDING_NEW_ENTRY_TYPE"
-	removeEntryTypeAction                   Action = "REMOVE_ENTRY_TYPE"
-	editCurrentEntryTypeAction              Action = "EDIT_CURRENT_ENTRY_TYPE"
+	selectNextTabAction                     input.Action = "SELECT_NEXT_TAB"
+	selectPreviousTabAction                 input.Action = "SELECT_PREVIOUS_TAB"
+	saveChangesAction                       input.Action = "SAVE_CHANGES"
+	displayDialogForAddingNewEntryTypAction input.Action = "DISPLAY_DIALOG_FOR_ADDING_NEW_ENTRY_TYPE"
+	removeEntryTypeAction                   input.Action = "REMOVE_ENTRY_TYPE"
+	editCurrentEntryTypeAction              input.Action = "EDIT_CURRENT_ENTRY_TYPE"
 )
 
 type Config struct {
 	AppDataDirPath string
 	ConfigDirPath  string
-	Keymap         map[string]Action
+	Keymap         map[string]input.Action
 }
 
 func NewConfig(configDirPath string) Config {
-	config := Config{ConfigDirPath: configDirPath, Keymap: map[string]Action{}}
+	config := Config{ConfigDirPath: configDirPath, Keymap: map[string]input.Action{}}
 	return config
 }
 
