@@ -48,3 +48,10 @@ func TestThatInputHandlerHandlesActionForTheCorrectCaller(t *testing.T) {
 	inputHandler.Handle("secondCaller", fyne.KeyT)
 	assert.True(t, secondCallerFunctionExecuted)
 }
+
+func TestThatTryingToHandleInputForActionWithoutBindFunctionDoesNotCauseErrors(t *testing.T) {
+	keymap := make(map[string]Action)
+	keymap["L"] = testAction
+	inputHandler := NewInputHandler(keymap)
+	inputHandler.Handle("", fyne.KeyL)
+}

@@ -73,7 +73,10 @@ func (handler *InputHandler) Handle(caller interface{}, keyName fyne.KeyName) {
 				caller: caller,
 				action: action,
 			}
-			handler.actions[callerActionPair]()
+			function := handler.actions[callerActionPair]
+			if function != nil {
+				function()
+			}
 			break
 		}
 	}
