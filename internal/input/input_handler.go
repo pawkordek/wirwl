@@ -66,19 +66,23 @@ func (handler *InputHandler) BindFunctionToAction(caller interface{}, action Act
 }
 
 func (handler *InputHandler) Handle(caller interface{}, keyName fyne.KeyName) {
+	callerActionPair := handler.getCallerActionPairForCurrentCallerAndKey(caller, keyName)
+	function := handler.actions[callerActionPair]
+	if function != nil {
+		function()
+	}
+	handler.lastKey = keyName
+}
+
+func (handler *InputHandler) getCallerActionPairForCurrentCallerAndKey(caller interface{}, keyName fyne.KeyName) CallerActionPair {
 	for keyCombination, action := range handler.keymap {
 		if (keyCombination.secondKey == keyName && keyCombination.firstKey == handler.lastKey) ||
 			(keyCombination.firstKey == keyName && keyCombination.secondKey == "") {
-			callerActionPair := CallerActionPair{
+			return CallerActionPair{
 				caller: caller,
 				action: action,
 			}
-			function := handler.actions[callerActionPair]
-			if function != nil {
-				function()
-			}
-			break
 		}
 	}
-	handler.lastKey = keyName
+	return CallerActionPair{}
 }
