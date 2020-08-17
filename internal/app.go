@@ -137,9 +137,9 @@ func (app *App) prepareDialogs() {
 	app.msgDialog = widget.NewMsgPopUp(app.mainWindow.Canvas())
 	app.confirmationDialog = widget.NewConfirmationDialog(app.mainWindow.Canvas())
 	app.confirmationDialog.OnConfirm = app.deleteCurrentEntryType
-	app.addEntryTypeDialog = widget.NewFormDialog(app.mainWindow.Canvas(), "Add new entry type", "Name", "Image query")
+	app.addEntryTypeDialog = widget.NewFormDialog(app.mainWindow.Canvas(), app.inputHandler, "Add new entry type", "Name", "Image query")
 	app.addEntryTypeDialog.OnEnterPressed = app.onEnterPressedInAddEntryTypeDialog
-	app.editEntryTypeDialog = widget.NewFormDialog(app.mainWindow.Canvas(), "Editing entry type: "+app.getCurrentTabText(), "Name", "Image query")
+	app.editEntryTypeDialog = widget.NewFormDialog(app.mainWindow.Canvas(), app.inputHandler, "Editing entry type: "+app.getCurrentTabText(), "Name", "Image query")
 	app.editEntryTypeDialog.OnEnterPressed = app.applyChangesToCurrentEntryType
 }
 

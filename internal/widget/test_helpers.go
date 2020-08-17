@@ -3,6 +3,7 @@ package widget
 import (
 	"fyne.io/fyne"
 	"fyne.io/fyne/widget"
+	"wirwl/internal/input"
 )
 
 /* When opening input in the running application, the last typed in character is still handled which normally means it
@@ -59,4 +60,15 @@ func GetLabelPositionInContent(content fyne.CanvasObject, labelText string) int 
 		}
 	}
 	return -1
+}
+
+func getInputHandlerForTesting() input.InputHandler {
+	keymap := make(map[string]input.Action)
+	//Default keys are the same as if they were set by default config
+	keymap["J"] = input.MoveDownAction
+	keymap["K"] = input.MoveUpAction
+	keymap["I"] = input.EnterInputModeAction
+	keymap["Return"] = input.ConfirmAction
+	keymap["Escape"] = input.CancelAction
+	return input.NewInputHandler(keymap)
 }

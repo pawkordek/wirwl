@@ -3,11 +3,13 @@ package widget
 import (
 	"fyne.io/fyne"
 	"fyne.io/fyne/widget"
+	"wirwl/internal/input"
 )
 
 /*
 Implementation of a dialog that contains a title and a form below it.
 Amount of form items depends on the argument passed when creating the dialog.
+All keys described here assume default keymap configuration.
 A user can switch between form items using J and K keys.
 Currently selected item will be highlighted by theme's focused color.
 Pressing I key starts the edition of the currently selected form item.
@@ -23,9 +25,10 @@ type FormDialog struct {
 	currentInputNum int
 	inputs          map[string]*Input
 	OnEnterPressed  func()
+	inputHandler    input.InputHandler
 }
 
-func NewFormDialog(canvas fyne.Canvas, title string, items ...string) *FormDialog {
+func NewFormDialog(canvas fyne.Canvas, inputHandler input.InputHandler, title string, items ...string) *FormDialog {
 	inputs := make(map[string]*Input)
 	form := widget.NewForm()
 	for _, item := range items {
@@ -47,7 +50,29 @@ func NewFormDialog(canvas fyne.Canvas, title string, items ...string) *FormDialo
 	dialog.title.SetText(title)
 	dialog.ExtendBaseWidget(dialog)
 	dialog.Hide()
+	dialog.inputHandler = inputHandler
+	dialog.setupInputHandler()
 	return dialog
+}
+
+func (dialog *FormDialog) setupInputHandler() {
+	dialog.inputHandler.BindFunctionToAction(dialog, input.MoveDownAction, func() {
+		dialog.setCurrentInputTo(dialog.currentInputNum + 1)
+	})
+	dialog.inputHandler.BindFunctionToAction(dialog, input.MoveUpAction, func() {
+		dialog.setCurrentInputTo(dialog.currentInputNum - 1)
+	})
+	dialog.inputHandler.BindFunctionToAction(dialog, input.EnterInputModeAction, func() {
+		dialog.currentInput().Unmark()
+		dialog.Canvas.Focus(dialog.currentInput())
+	})
+	dialog.inputHandler.BindFunctionToAction(dialog, input.ConfirmAction, func() {
+		dialog.handleEnterKey()
+	})
+	dialog.inputHandler.BindFunctionToAction(dialog, input.CancelAction, func() {
+		dialog.Canvas.Unfocus()
+		dialog.Hide()
+	})
 }
 
 func (dialog *FormDialog) TypedKeyInInput(key *fyne.KeyEvent) {
@@ -73,19 +98,7 @@ func (dialog *FormDialog) Display() {
 }
 
 func (dialog *FormDialog) TypedKey(key *fyne.KeyEvent) {
-	if key.Name == fyne.KeyJ {
-		dialog.setCurrentInputTo(dialog.currentInputNum + 1)
-	} else if key.Name == fyne.KeyK {
-		dialog.setCurrentInputTo(dialog.currentInputNum - 1)
-	} else if key.Name == fyne.KeyI {
-		dialog.currentInput().Unmark()
-		dialog.Canvas.Focus(dialog.currentInput())
-	} else if key.Name == fyne.KeyEnter || key.Name == fyne.KeyReturn {
-		dialog.handleEnterKey()
-	} else if key.Name == fyne.KeyEscape {
-		dialog.Canvas.Unfocus()
-		dialog.Hide()
-	}
+	dialog.inputHandler.Handle(dialog, key.Name)
 }
 
 func (dialog *FormDialog) setCurrentInputTo(number int) {
