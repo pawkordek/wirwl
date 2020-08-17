@@ -6,6 +6,7 @@ import (
 	"os/user"
 	"path/filepath"
 	"testing"
+	"wirwl/internal/input"
 	"wirwl/internal/log"
 )
 
@@ -82,10 +83,10 @@ func TestThatDefaultConfigHasCorrectKeymap(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	assert.Equal(t, selectNextTabAction, config.Keymap["L"])
-	assert.Equal(t, selectPreviousTabAction, config.Keymap["H"])
-	assert.Equal(t, saveChangesAction, config.Keymap["S,Y"])
-	assert.Equal(t, displayDialogForAddingNewEntryTypAction, config.Keymap["T,I"])
-	assert.Equal(t, removeEntryTypeAction, config.Keymap["T,D"])
-	assert.Equal(t, editCurrentEntryTypeAction, config.Keymap["T,E"])
+	assert.Equal(t, input.SelectNextTabAction, config.Keymap["L"])
+	assert.Equal(t, input.SelectPreviousTabAction, config.Keymap["H"])
+	assert.Equal(t, input.SaveChangesAction, config.Keymap["S,Y"])
+	assert.Equal(t, input.DisplayDialogForAddingNewEntryTypAction, config.Keymap["T,I"])
+	assert.Equal(t, input.RemoveEntryTypeAction, config.Keymap["T,D"])
+	assert.Equal(t, input.EditCurrentEntryTypeAction, config.Keymap["T,E"])
 }

@@ -15,15 +15,6 @@ import (
 const appName = "wirwl"
 const logFileName = appName + ".log"
 
-const (
-	selectNextTabAction                     input.Action = "SELECT_NEXT_TAB"
-	selectPreviousTabAction                 input.Action = "SELECT_PREVIOUS_TAB"
-	saveChangesAction                       input.Action = "SAVE_CHANGES"
-	displayDialogForAddingNewEntryTypAction input.Action = "DISPLAY_DIALOG_FOR_ADDING_NEW_ENTRY_TYPE"
-	removeEntryTypeAction                   input.Action = "REMOVE_ENTRY_TYPE"
-	editCurrentEntryTypeAction              input.Action = "EDIT_CURRENT_ENTRY_TYPE"
-)
-
 type Config struct {
 	AppDataDirPath string
 	ConfigDirPath  string
@@ -100,12 +91,12 @@ func getCurrentUserHomeDir() (string, error) {
 }
 
 func (config *Config) loadDefaultKeymap() {
-	config.Keymap["L"] = selectNextTabAction
-	config.Keymap["H"] = selectPreviousTabAction
-	config.Keymap["S,Y"] = saveChangesAction
-	config.Keymap["T,I"] = displayDialogForAddingNewEntryTypAction
-	config.Keymap["T,D"] = removeEntryTypeAction
-	config.Keymap["T,E"] = editCurrentEntryTypeAction
+	config.Keymap["L"] = input.SelectNextTabAction
+	config.Keymap["H"] = input.SelectPreviousTabAction
+	config.Keymap["S,Y"] = input.SaveChangesAction
+	config.Keymap["T,I"] = input.DisplayDialogForAddingNewEntryTypAction
+	config.Keymap["T,D"] = input.RemoveEntryTypeAction
+	config.Keymap["T,E"] = input.EditCurrentEntryTypeAction
 }
 
 func (config *Config) save() error {
