@@ -89,4 +89,10 @@ func TestThatDefaultConfigHasCorrectKeymap(t *testing.T) {
 	assert.Equal(t, input.DisplayDialogForAddingNewEntryTypAction, config.Keymap["T,I"])
 	assert.Equal(t, input.RemoveEntryTypeAction, config.Keymap["T,D"])
 	assert.Equal(t, input.EditCurrentEntryTypeAction, config.Keymap["T,E"])
+	assert.Equal(t, input.MoveDownAction, config.Keymap["J"])
+	assert.Equal(t, input.MoveUpAction, config.Keymap["K"])
+	assert.Equal(t, input.EnterInputModeAction, config.Keymap["I"])
+	assert.Equal(t, input.ConfirmAction, config.Keymap["Return"])
+	assert.Equal(t, input.CancelAction, config.Keymap["Escape"])
+
 }

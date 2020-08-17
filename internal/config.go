@@ -97,6 +97,11 @@ func (config *Config) loadDefaultKeymap() {
 	config.Keymap["T,I"] = input.DisplayDialogForAddingNewEntryTypAction
 	config.Keymap["T,D"] = input.RemoveEntryTypeAction
 	config.Keymap["T,E"] = input.EditCurrentEntryTypeAction
+	config.Keymap["J"] = input.MoveDownAction
+	config.Keymap["K"] = input.MoveUpAction
+	config.Keymap["I"] = input.EnterInputModeAction
+	config.Keymap["Return"] = input.ConfirmAction
+	config.Keymap["Escape"] = input.CancelAction
 }
 
 func (config *Config) save() error {
