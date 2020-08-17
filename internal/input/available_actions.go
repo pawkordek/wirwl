@@ -7,4 +7,9 @@ const (
 	DisplayDialogForAddingNewEntryTypAction Action = "DISPLAY_DIALOG_FOR_ADDING_NEW_ENTRY_TYPE"
 	RemoveEntryTypeAction                   Action = "REMOVE_ENTRY_TYPE"
 	EditCurrentEntryTypeAction              Action = "EDIT_CURRENT_ENTRY_TYPE"
+	MoveDownAction                          Action = "MOVE_DOWN"
+	MoveUpAction                            Action = "MOVE_UP"
+	EnterInputModeAction                    Action = "ENTER_INPUT_MODE"
+	ConfirmAction                           Action = "CONFIRM"
+	CancelAction                            Action = "CANCEL"
 )
