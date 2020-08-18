@@ -8,6 +8,7 @@ import (
 )
 
 const testAction Action = "TEST_ACTION"
+const emptyAction Action = "EMPTY_ACTION"
 
 func TestThatInputHandlerHandlesSingleKeyActions(t *testing.T) {
 	functionExecuted := false
@@ -32,8 +33,6 @@ func TestThatInputHandlerHandlesActionsInKeySequences(t *testing.T) {
 	inputHandler.Handle("", fyne.KeyX)
 	assert.True(t, functionExecuted)
 }
-
-
 
 func TestThatInputHandlerHandlesActionForTheCorrectCaller(t *testing.T) {
 	firstCallerFunctionExecuted := false
@@ -72,5 +71,21 @@ func TestThatKeySequenceDoesNotWorkIfCertainTimePasses(t *testing.T) {
 	assert.False(t, functionExecuted)
 	inputHandler.Handle("", fyne.KeyU)
 	inputHandler.Handle("", fyne.KeyF)
+	assert.True(t, functionExecuted)
+}
+
+func TestThatInputHandlerExecutesSingleKeyActionIfKeyCombinationWasPressedAndTimePassed(t *testing.T) {
+	functionExecuted := false
+	function := func() { functionExecuted = true }
+	keymap := make(map[string]Action)
+	keymap["T"] = testAction
+	keymap["Q,Y"] = emptyAction
+	inputHandler := NewInputHandler(keymap)
+	inputHandler.BindFunctionToAction("", testAction, function)
+	inputHandler.BindFunctionToAction("", emptyAction, func() {})
+	inputHandler.Handle("", fyne.KeyQ)
+	inputHandler.Handle("", fyne.KeyY)
+	time.Sleep(2 * time.Second)
+	inputHandler.Handle("", fyne.KeyT)
 	assert.True(t, functionExecuted)
 }

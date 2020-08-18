@@ -28,6 +28,7 @@ type CallerActionPair struct {
 type InputHandler struct {
 	keymap           map[KeyCombination]Action
 	actions          map[CallerActionPair]func()
+	//Last key will should be only empty on first key press and after action has been executed
 	lastKey          fyne.KeyName
 	lastKeyPressTime time.Time
 }
@@ -71,11 +72,13 @@ func (handler *InputHandler) Handle(caller interface{}, keyName fyne.KeyName) {
 	callerActionPair := handler.getCallerActionPairForCurrentCallerAndKey(caller, keyName)
 	timeNow := time.Now()
 	timeSinceLastKeyPress := timeNow.Sub(handler.lastKeyPressTime)
-	//LastKey will be only empty on very first key press in an input handler
 	if handler.lastKey == "" || timeSinceLastKeyPress < time.Second {
 		function := handler.actions[callerActionPair]
 		if function != nil {
 			function()
+			handler.lastKey = ""
+			handler.lastKeyPressTime = timeNow
+			return
 		}
 	}
 	handler.lastKey = keyName
