@@ -10,18 +10,15 @@ import (
 
 func TestThatFunctionGetsCalledOnEnterPressed(t *testing.T) {
 	functionExecuted := false
-	input := NewInput()
+	input := NewInput(getInputHandlerForTesting())
 	input.SetOnConfirm(func() { functionExecuted = true })
-	SimulateKeyPress(input, fyne.KeyEnter)
-	assert.Equal(t, true, functionExecuted)
-	functionExecuted = false
 	SimulateKeyPress(input, fyne.KeyReturn)
 	assert.Equal(t, true, functionExecuted)
 }
 
 func TestThatFunctionGetsCalledOnAnyKeyPress(t *testing.T) {
 	functionExecuted := false
-	input := NewInput()
+	input := NewInput(getInputHandlerForTesting())
 	input.SetOnTypedKey(func(key *fyne.KeyEvent) {
 		functionExecuted = true
 	})
@@ -33,7 +30,7 @@ func TestThatFunctionGetsCalledOnAnyKeyPress(t *testing.T) {
 }
 
 func TestThatTypingWorks(t *testing.T) {
-	input := NewInput()
+	input := NewInput(getInputHandlerForTesting())
 	input.FocusLost()
 	input.FocusGained()
 	input.Type("some value")
@@ -41,13 +38,13 @@ func TestThatTypingWorks(t *testing.T) {
 }
 
 func TestThatFunctionsAreNotNil(t *testing.T) {
-	input := NewInput()
+	input := NewInput(getInputHandlerForTesting())
 	assert.NotNil(t, input.OnConfirm)
 	assert.NotNil(t, input.OnTypedKey)
 }
 
 func TestMarkingAndUnmarking(t *testing.T) {
-	input := NewInput()
+	input := NewInput(getInputHandlerForTesting())
 	//Input needs to be placed into a test window, otherwise renderer doesn't work properly and marking sets background color again
 	test.NewApp().NewWindow("").SetContent(input)
 	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.BackgroundColor())

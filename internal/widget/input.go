@@ -5,11 +5,13 @@ import (
 	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
 	"image/color"
+	"wirwl/internal/input"
 )
 
 type Input struct {
 	widget.Entry
 	bgRenderer       *backgroundRenderer
+	inputHandler     input.InputHandler
 	OnConfirm        func()
 	OnTypedKey       func(key *fyne.KeyEvent)
 	firstRuneIgnored bool
@@ -35,16 +37,18 @@ func (input *Input) CreateRenderer() fyne.WidgetRenderer {
 	return bgRenderer
 }
 
-func NewInput() *Input {
-	input := &Input{
+func NewInput(handler input.InputHandler) *Input {
+	newInput := &Input{
 		Entry:            widget.Entry{},
 		bgRenderer:       &backgroundRenderer{},
+		inputHandler:     handler,
 		OnConfirm:        func() {},
 		OnTypedKey:       func(key *fyne.KeyEvent) {},
 		firstRuneIgnored: false,
 	}
-	input.ExtendBaseWidget(input)
-	return input
+	newInput.ExtendBaseWidget(newInput)
+	newInput.inputHandler.BindFunctionToAction(newInput, input.ConfirmAction, func() { newInput.OnConfirm() })
+	return newInput
 }
 
 func (input *Input) SetOnConfirm(function func()) {
@@ -63,9 +67,7 @@ func (input *Input) TypedKey(key *fyne.KeyEvent) {
 	if input.firstRuneIgnored {
 		input.Entry.TypedKey(key)
 	}
-	if key.Name == fyne.KeyReturn || key.Name == fyne.KeyEnter {
-		input.OnConfirm()
-	}
+	input.inputHandler.Handle(input, key.Name)
 	input.OnTypedKey(key)
 }
 

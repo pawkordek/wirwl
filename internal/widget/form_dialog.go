@@ -32,7 +32,7 @@ func NewFormDialog(canvas fyne.Canvas, inputHandler input.InputHandler, title st
 	inputs := make(map[string]*Input)
 	form := widget.NewForm()
 	for _, item := range items {
-		input := NewInput()
+		input := NewInput(inputHandler)
 		inputs[item] = input
 		formItem := widget.NewFormItem(item, input)
 		form.AppendItem(formItem)
