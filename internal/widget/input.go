@@ -10,7 +10,7 @@ import (
 type Input struct {
 	widget.Entry
 	bgRenderer       *backgroundRenderer
-	OnEnterPressed   func()
+	OnConfirm        func()
 	OnTypedKey       func(key *fyne.KeyEvent)
 	firstRuneIgnored bool
 }
@@ -39,7 +39,7 @@ func NewInput() *Input {
 	input := &Input{
 		Entry:            widget.Entry{},
 		bgRenderer:       &backgroundRenderer{},
-		OnEnterPressed:   func() {},
+		OnConfirm:        func() {},
 		OnTypedKey:       func(key *fyne.KeyEvent) {},
 		firstRuneIgnored: false,
 	}
@@ -47,8 +47,8 @@ func NewInput() *Input {
 	return input
 }
 
-func (input *Input) SetOnEnterPressed(function func()) {
-	input.OnEnterPressed = function
+func (input *Input) SetOnConfirm(function func()) {
+	input.OnConfirm = function
 }
 
 func (input *Input) SetOnTypedKey(function func(key *fyne.KeyEvent)) {
@@ -64,7 +64,7 @@ func (input *Input) TypedKey(key *fyne.KeyEvent) {
 		input.Entry.TypedKey(key)
 	}
 	if key.Name == fyne.KeyReturn || key.Name == fyne.KeyEnter {
-		input.OnEnterPressed()
+		input.OnConfirm()
 	}
 	input.OnTypedKey(key)
 }

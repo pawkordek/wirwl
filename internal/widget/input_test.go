@@ -11,7 +11,7 @@ import (
 func TestThatFunctionGetsCalledOnEnterPressed(t *testing.T) {
 	functionExecuted := false
 	input := NewInput()
-	input.SetOnEnterPressed(func() { functionExecuted = true })
+	input.SetOnConfirm(func() { functionExecuted = true })
 	SimulateKeyPress(input, fyne.KeyEnter)
 	assert.Equal(t, true, functionExecuted)
 	functionExecuted = false
@@ -42,7 +42,7 @@ func TestThatTypingWorks(t *testing.T) {
 
 func TestThatFunctionsAreNotNil(t *testing.T) {
 	input := NewInput()
-	assert.NotNil(t, input.OnEnterPressed)
+	assert.NotNil(t, input.OnConfirm)
 	assert.NotNil(t, input.OnTypedKey)
 }
 
