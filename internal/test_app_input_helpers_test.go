@@ -30,7 +30,7 @@ func (app *App) simulateAddingNewEntryTypeWithName(text string) {
 	app.simulateOpeningDialogForAddingEntryType()
 	app.simulateKeyPress(fyne.KeyI)
 	app.addEntryTypeDialog.Type(text)
-	app.simulateKeyPress(fyne.KeyEnter)
+	app.simulateKeyPress(fyne.KeyReturn)
 }
 
 func (app *App) simulateSavingChanges() {
@@ -53,5 +53,5 @@ func (app *App) simulateEditionOfCurrentEntryTypeTo(text string) {
 	app.simulateKeyPress(fyne.KeyE)
 	app.simulateKeyPress(fyne.KeyI)
 	app.editEntryTypeDialog.Type(text)
-	app.simulateKeyPress(fyne.KeyEnter)
+	app.simulateKeyPress(fyne.KeyReturn)
 }
