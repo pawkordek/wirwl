@@ -45,7 +45,6 @@ func NewFormDialog(canvas fyne.Canvas, inputHandler input.InputHandler, title st
 		OnEnterPressed:  func() {},
 	}
 	for _, input := range dialog.inputs {
-		input.SetOnTypedKey(dialog.TypedKeyInInput)
 		input.SetOnConfirm(dialog.handleEnterKey)
 		input.SetOnCancel(func() {
 			dialog.setCurrentInputTo(dialog.currentInputNum)
@@ -78,9 +77,6 @@ func (dialog *FormDialog) setupInputHandler() {
 		dialog.Canvas.Unfocus()
 		dialog.Hide()
 	})
-}
-
-func (dialog *FormDialog) TypedKeyInInput(key *fyne.KeyEvent) {
 }
 
 func (dialog *FormDialog) handleEnterKey() {

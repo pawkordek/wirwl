@@ -14,7 +14,6 @@ type Input struct {
 	inputHandler     input.InputHandler
 	OnConfirm        func()
 	OnCancel         func()
-	OnTypedKey       func(key *fyne.KeyEvent)
 	firstRuneIgnored bool
 }
 
@@ -45,7 +44,6 @@ func NewInput(handler input.InputHandler) *Input {
 		inputHandler:     handler,
 		OnConfirm:        func() {},
 		OnCancel:         func() {},
-		OnTypedKey:       func(key *fyne.KeyEvent) {},
 		firstRuneIgnored: false,
 	}
 	newInput.ExtendBaseWidget(newInput)
@@ -62,10 +60,6 @@ func (input *Input) SetOnCancel(function func()) {
 	input.OnCancel = function
 }
 
-func (input *Input) SetOnTypedKey(function func(key *fyne.KeyEvent)) {
-	input.OnTypedKey = function
-}
-
 func (input *Input) TypedKey(key *fyne.KeyEvent) {
 	/*If TypedRune function ignores the first key, TypedKey has to do so as well, otherwise input will think
 	there is one more character and crash the application on backspace press.
@@ -75,7 +69,6 @@ func (input *Input) TypedKey(key *fyne.KeyEvent) {
 		input.Entry.TypedKey(key)
 	}
 	input.inputHandler.Handle(input, key.Name)
-	input.OnTypedKey(key)
 }
 
 func (input *Input) TypedRune(r rune) {

@@ -24,19 +24,6 @@ func TestThatFunctionGetsCalledOnCancel(t *testing.T) {
 	assert.True(t, functionExecuted)
 }
 
-func TestThatFunctionGetsCalledOnAnyKeyPress(t *testing.T) {
-	functionExecuted := false
-	input := NewInput(getInputHandlerForTesting())
-	input.SetOnTypedKey(func(key *fyne.KeyEvent) {
-		functionExecuted = true
-	})
-	SimulateKeyPress(input, fyne.KeyEnter)
-	assert.Equal(t, true, functionExecuted)
-	functionExecuted = false
-	SimulateKeyPress(input, fyne.Key1)
-	assert.Equal(t, true, functionExecuted)
-}
-
 func TestThatTypingWorks(t *testing.T) {
 	input := NewInput(getInputHandlerForTesting())
 	input.FocusLost()
@@ -48,7 +35,6 @@ func TestThatTypingWorks(t *testing.T) {
 func TestThatFunctionsAreNotNil(t *testing.T) {
 	input := NewInput(getInputHandlerForTesting())
 	assert.NotNil(t, input.OnConfirm)
-	assert.NotNil(t, input.OnTypedKey)
 }
 
 func TestMarkingAndUnmarking(t *testing.T) {
