@@ -46,6 +46,7 @@ func NewFormDialog(canvas fyne.Canvas, inputHandler input.InputHandler, title st
 	}
 	for _, input := range dialog.inputs {
 		input.SetOnTypedKey(dialog.TypedKeyInInput)
+		input.SetOnConfirm(dialog.handleEnterKey)
 	}
 	dialog.title.SetText(title)
 	dialog.ExtendBaseWidget(dialog)
@@ -79,8 +80,6 @@ func (dialog *FormDialog) TypedKeyInInput(key *fyne.KeyEvent) {
 	if key.Name == fyne.KeyEscape {
 		dialog.setCurrentInputTo(dialog.currentInputNum)
 		dialog.Canvas.Focus(dialog)
-	} else if key.Name == fyne.KeyEnter || key.Name == fyne.KeyReturn {
-		dialog.handleEnterKey()
 	}
 }
 
