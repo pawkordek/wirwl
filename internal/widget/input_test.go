@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestThatFunctionGetsCalledOnEnterPressed(t *testing.T) {
+func TestThatFunctionGetsCalledOnConfirm(t *testing.T) {
 	functionExecuted := false
 	input := NewInput(getInputHandlerForTesting())
 	input.SetOnConfirm(func() { functionExecuted = true })
