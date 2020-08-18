@@ -13,6 +13,7 @@ type Input struct {
 	bgRenderer       *backgroundRenderer
 	inputHandler     input.InputHandler
 	OnConfirm        func()
+	OnCancel         func()
 	OnTypedKey       func(key *fyne.KeyEvent)
 	firstRuneIgnored bool
 }
@@ -43,16 +44,22 @@ func NewInput(handler input.InputHandler) *Input {
 		bgRenderer:       &backgroundRenderer{},
 		inputHandler:     handler,
 		OnConfirm:        func() {},
+		OnCancel:         func() {},
 		OnTypedKey:       func(key *fyne.KeyEvent) {},
 		firstRuneIgnored: false,
 	}
 	newInput.ExtendBaseWidget(newInput)
 	newInput.inputHandler.BindFunctionToAction(newInput, input.ConfirmAction, func() { newInput.OnConfirm() })
+	newInput.inputHandler.BindFunctionToAction(newInput, input.CancelAction, func() { newInput.OnCancel() })
 	return newInput
 }
 
 func (input *Input) SetOnConfirm(function func()) {
 	input.OnConfirm = function
+}
+
+func (input *Input) SetOnCancel(function func()) {
+	input.OnCancel = function
 }
 
 func (input *Input) SetOnTypedKey(function func(key *fyne.KeyEvent)) {
