@@ -3,6 +3,7 @@ package input
 import (
 	"fyne.io/fyne"
 	"strings"
+	"time"
 )
 
 //Represents an action that should be executed when certain keys are pressed
@@ -25,13 +26,14 @@ type CallerActionPair struct {
 //Stores key combinations mapped to actions. Every action that should be handled, should have a function bound to it
 //which will get executed when key combination for that action gets pressed
 type InputHandler struct {
-	keymap  map[KeyCombination]Action
-	actions map[CallerActionPair]func()
-	lastKey fyne.KeyName
+	keymap           map[KeyCombination]Action
+	actions          map[CallerActionPair]func()
+	lastKey          fyne.KeyName
+	lastKeyPressTime time.Time
 }
 
 func NewInputHandler(keymap map[string]Action) InputHandler {
-	handler := InputHandler{keymap: map[KeyCombination]Action{}, actions: map[CallerActionPair]func(){}}
+	handler := InputHandler{keymap: map[KeyCombination]Action{}, actions: map[CallerActionPair]func(){}, lastKeyPressTime: time.Now()}
 	handler.createActualKeymap(keymap)
 	return handler
 }
@@ -67,11 +69,17 @@ func (handler *InputHandler) BindFunctionToAction(caller interface{}, action Act
 
 func (handler *InputHandler) Handle(caller interface{}, keyName fyne.KeyName) {
 	callerActionPair := handler.getCallerActionPairForCurrentCallerAndKey(caller, keyName)
-	function := handler.actions[callerActionPair]
-	if function != nil {
-		function()
+	timeNow := time.Now()
+	timeSinceLastKeyPress := timeNow.Sub(handler.lastKeyPressTime)
+	//LastKey will be only empty on very first key press in an input handler
+	if handler.lastKey == "" || timeSinceLastKeyPress < time.Second {
+		function := handler.actions[callerActionPair]
+		if function != nil {
+			function()
+		}
 	}
 	handler.lastKey = keyName
+	handler.lastKeyPressTime = timeNow
 }
 
 func (handler *InputHandler) getCallerActionPairForCurrentCallerAndKey(caller interface{}, keyName fyne.KeyName) CallerActionPair {

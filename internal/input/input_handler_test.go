@@ -4,6 +4,7 @@ import (
 	"fyne.io/fyne"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 const testAction Action = "TEST_ACTION"
@@ -32,6 +33,8 @@ func TestThatInputHandlerHandlesActionsInKeySequences(t *testing.T) {
 	assert.True(t, functionExecuted)
 }
 
+
+
 func TestThatInputHandlerHandlesActionForTheCorrectCaller(t *testing.T) {
 	firstCallerFunctionExecuted := false
 	secondCallerFunctionExecuted := false
@@ -54,4 +57,20 @@ func TestThatTryingToHandleInputForActionWithoutBindFunctionDoesNotCauseErrors(t
 	keymap["L"] = testAction
 	inputHandler := NewInputHandler(keymap)
 	inputHandler.Handle("", fyne.KeyL)
+}
+
+func TestThatKeySequenceDoesNotWorkIfCertainTimePasses(t *testing.T) {
+	functionExecuted := false
+	function := func() { functionExecuted = true }
+	keymap := make(map[string]Action)
+	keymap["U,F"] = testAction
+	inputHandler := NewInputHandler(keymap)
+	inputHandler.BindFunctionToAction("", testAction, function)
+	inputHandler.Handle("", fyne.KeyU)
+	time.Sleep(1 * time.Second)
+	inputHandler.Handle("", fyne.KeyF)
+	assert.False(t, functionExecuted)
+	inputHandler.Handle("", fyne.KeyU)
+	inputHandler.Handle("", fyne.KeyF)
+	assert.True(t, functionExecuted)
 }
