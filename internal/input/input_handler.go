@@ -86,14 +86,20 @@ func (handler *InputHandler) Handle(caller interface{}, keyName fyne.KeyName) {
 }
 
 func (handler *InputHandler) getCallerActionPairForCurrentCallerAndKey(caller interface{}, keyName fyne.KeyName) CallerActionPair {
+	foundAction := Action("")
 	for keyCombination, action := range handler.keymap {
-		if (keyCombination.secondKey == keyName && keyCombination.firstKey == handler.lastKey) ||
-			(keyCombination.firstKey == keyName && keyCombination.secondKey == "") {
+		if keyCombination.firstKey == keyName && keyCombination.secondKey == "" {
+			foundAction = action
+		}
+		if keyCombination.secondKey == keyName && keyCombination.firstKey == handler.lastKey {
 			return CallerActionPair{
 				caller: caller,
 				action: action,
 			}
 		}
 	}
-	return CallerActionPair{}
+	return CallerActionPair{
+		caller: caller,
+		action: foundAction,
+	}
 }

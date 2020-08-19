@@ -8,6 +8,7 @@ import (
 )
 
 const testAction Action = "TEST_ACTION"
+const testAction2 Action = "TEST_ACION2"
 const emptyAction Action = "EMPTY_ACTION"
 
 func TestThatInputHandlerHandlesSingleKeyActions(t *testing.T) {
@@ -88,4 +89,21 @@ func TestThatInputHandlerExecutesSingleKeyActionIfKeyCombinationWasPressedAndTim
 	time.Sleep(2 * time.Second)
 	inputHandler.Handle("", fyne.KeyT)
 	assert.True(t, functionExecuted)
+}
+
+func TestThatCombinationActionGetsExecutedInsteadOfSingleKeyActionIfBothCouldHappen(t *testing.T) {
+	combinationActionExecuted := false
+	singleKeyActionExecuted := false
+	combinationFunc := func() { combinationActionExecuted = true }
+	singleKeyFunc := func() { singleKeyActionExecuted = true }
+	keymap := make(map[string]Action)
+	keymap["Q"] = testAction
+	keymap["J,Q"] = testAction2
+	inputHandler := NewInputHandler(keymap)
+	inputHandler.BindFunctionToAction("", testAction, singleKeyFunc)
+	inputHandler.BindFunctionToAction("", testAction2, combinationFunc)
+	inputHandler.Handle("", fyne.KeyJ)
+	inputHandler.Handle("", fyne.KeyQ)
+	assert.True(t, combinationActionExecuted)
+	assert.False(t, singleKeyActionExecuted)
 }
