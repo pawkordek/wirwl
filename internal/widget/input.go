@@ -10,6 +10,7 @@ import (
 
 type Input struct {
 	widget.Entry
+	canvas           fyne.Canvas
 	bgRenderer       *backgroundRenderer
 	inputHandler     input.Handler
 	OnConfirm        func()
@@ -37,9 +38,10 @@ func (input *Input) CreateRenderer() fyne.WidgetRenderer {
 	return bgRenderer
 }
 
-func NewInput(handler input.Handler) *Input {
+func NewInput(canvas fyne.Canvas, handler input.Handler) *Input {
 	newInput := &Input{
 		Entry:            widget.Entry{},
+		canvas:           canvas,
 		bgRenderer:       &backgroundRenderer{},
 		inputHandler:     handler,
 		OnConfirm:        func() {},
@@ -96,4 +98,9 @@ func (input *Input) Mark() {
 
 func (input *Input) Unmark() {
 	input.setBgColor(theme.BackgroundColor())
+}
+
+func (input *Input) EnterInputMode() {
+	input.Unmark()
+	input.canvas.Focus(input)
 }
