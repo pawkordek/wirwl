@@ -67,8 +67,7 @@ func (dialog *FormDialog) setupInputHandler() {
 		dialog.setCurrentInputTo(dialog.currentInputNum - 1)
 	})
 	dialog.inputHandler.BindFunctionToAction(dialog, input.EnterInputModeAction, func() {
-		dialog.currentInput().Unmark()
-		dialog.Canvas.Focus(dialog.currentInput())
+		dialog.currentInput().EnterInputMode()
 	})
 	dialog.inputHandler.BindFunctionToAction(dialog, input.ConfirmAction, func() {
 		dialog.handleEnterKey()
