@@ -9,12 +9,12 @@ import (
 //Represents an action that should be executed when certain keys are pressed
 type Action string
 
-type KeyCombination struct {
+type keyCombination struct {
 	firstKey  fyne.KeyName
 	secondKey fyne.KeyName
 }
 
-func (keyCombination *KeyCombination) press(key fyne.KeyName) {
+func (keyCombination *keyCombination) press(key fyne.KeyName) {
 	if keyCombination.firstKey == "" {
 		keyCombination.firstKey = key
 	} else if keyCombination.secondKey == "" {
@@ -25,15 +25,15 @@ func (keyCombination *KeyCombination) press(key fyne.KeyName) {
 	}
 }
 
-func (keyCombination *KeyCombination) oneKeyPressed() bool {
+func (keyCombination *keyCombination) oneKeyPressed() bool {
 	return keyCombination.firstKey != "" && keyCombination.secondKey == ""
 }
 
-func (keyCombination *KeyCombination) bothKeysPressed() bool {
+func (keyCombination *keyCombination) bothKeysPressed() bool {
 	return keyCombination.firstKey != "" && keyCombination.secondKey != ""
 }
 
-func (keyCombination *KeyCombination) releaseKeys() {
+func (keyCombination *keyCombination) releaseKeys() {
 	keyCombination.firstKey = ""
 	keyCombination.secondKey = ""
 }
@@ -50,14 +50,14 @@ type CallerActionPair struct {
 //Stores key combinations mapped to actions. Every action that should be handled, should have a function bound to it
 //which will get executed when key combination for that action gets pressed
 type InputHandler struct {
-	keymap                map[KeyCombination]Action
+	keymap                map[keyCombination]Action
 	actions               map[CallerActionPair]func()
-	currentKeyCombination KeyCombination
+	currentKeyCombination keyCombination
 	lastKeyPressTime      time.Time
 }
 
 func NewInputHandler(keymap map[string]Action) InputHandler {
-	handler := InputHandler{keymap: map[KeyCombination]Action{}, actions: map[CallerActionPair]func(){}, lastKeyPressTime: time.Now()}
+	handler := InputHandler{keymap: map[keyCombination]Action{}, actions: map[CallerActionPair]func(){}, lastKeyPressTime: time.Now()}
 	handler.createActualKeymap(keymap)
 	return handler
 }
@@ -69,15 +69,15 @@ func (handler *InputHandler) createActualKeymap(keymap map[string]Action) {
 	}
 }
 
-func getKeyCombinationFromStringKey(key string) KeyCombination {
+func getKeyCombinationFromStringKey(key string) keyCombination {
 	if strings.Contains(key, ",") {
 		keys := strings.Split(key, ",")
-		return KeyCombination{
+		return keyCombination{
 			firstKey:  fyne.KeyName(keys[0]),
 			secondKey: fyne.KeyName(keys[1]),
 		}
 	}
-	return KeyCombination{
+	return keyCombination{
 		firstKey:  fyne.KeyName(key),
 		secondKey: "",
 	}
