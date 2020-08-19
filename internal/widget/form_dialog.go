@@ -25,10 +25,10 @@ type FormDialog struct {
 	currentInputNum int
 	inputs          map[string]*Input
 	OnEnterPressed  func()
-	inputHandler    input.InputHandler
+	inputHandler    input.Handler
 }
 
-func NewFormDialog(canvas fyne.Canvas, inputHandler input.InputHandler, title string, items ...string) *FormDialog {
+func NewFormDialog(canvas fyne.Canvas, inputHandler input.Handler, title string, items ...string) *FormDialog {
 	inputs := make(map[string]*Input)
 	form := widget.NewForm()
 	for _, item := range items {

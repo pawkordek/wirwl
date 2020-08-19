@@ -24,7 +24,7 @@ type App struct {
 	entries             map[data.EntryType][]data.Entry
 	dataProvider        data.Provider
 	editEntryTypeDialog *widget.FormDialog
-	inputHandler        input.InputHandler
+	inputHandler        input.Handler
 }
 
 const configLoadError = "CONFIG_LOAD_ERROR"

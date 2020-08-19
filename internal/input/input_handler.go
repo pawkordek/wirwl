@@ -49,20 +49,20 @@ type CallerActionPair struct {
 
 //Stores key combinations mapped to actions. Every action that should be handled, should have a function bound to it
 //which will get executed when key combination for that action gets pressed
-type InputHandler struct {
+type Handler struct {
 	keymap                map[keyCombination]Action
 	actions               map[CallerActionPair]func()
 	currentKeyCombination keyCombination
 	lastKeyPressTime      time.Time
 }
 
-func NewInputHandler(keymap map[string]Action) InputHandler {
-	handler := InputHandler{keymap: map[keyCombination]Action{}, actions: map[CallerActionPair]func(){}, lastKeyPressTime: time.Now()}
+func NewInputHandler(keymap map[string]Action) Handler {
+	handler := Handler{keymap: map[keyCombination]Action{}, actions: map[CallerActionPair]func(){}, lastKeyPressTime: time.Now()}
 	handler.createActualKeymap(keymap)
 	return handler
 }
 
-func (handler *InputHandler) createActualKeymap(keymap map[string]Action) {
+func (handler *Handler) createActualKeymap(keymap map[string]Action) {
 	for key, action := range keymap {
 		keyCombination := getKeyCombinationFromStringKey(key)
 		handler.keymap[keyCombination] = action
@@ -83,7 +83,7 @@ func getKeyCombinationFromStringKey(key string) keyCombination {
 	}
 }
 
-func (handler *InputHandler) BindFunctionToAction(caller interface{}, action Action, function func()) {
+func (handler *Handler) BindFunctionToAction(caller interface{}, action Action, function func()) {
 	callerActionPair := CallerActionPair{
 		caller: caller,
 		action: action,
@@ -91,7 +91,7 @@ func (handler *InputHandler) BindFunctionToAction(caller interface{}, action Act
 	handler.actions[callerActionPair] = function
 }
 
-func (handler *InputHandler) Handle(caller interface{}, keyName fyne.KeyName) {
+func (handler *Handler) Handle(caller interface{}, keyName fyne.KeyName) {
 	handler.currentKeyCombination.press(keyName)
 	actionToExecute := handler.keymap[handler.currentKeyCombination]
 	timeNow := time.Now()

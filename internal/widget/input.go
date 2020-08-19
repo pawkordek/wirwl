@@ -11,7 +11,7 @@ import (
 type Input struct {
 	widget.Entry
 	bgRenderer       *backgroundRenderer
-	inputHandler     input.InputHandler
+	inputHandler     input.Handler
 	OnConfirm        func()
 	OnCancel         func()
 	firstRuneIgnored bool
@@ -37,7 +37,7 @@ func (input *Input) CreateRenderer() fyne.WidgetRenderer {
 	return bgRenderer
 }
 
-func NewInput(handler input.InputHandler) *Input {
+func NewInput(handler input.Handler) *Input {
 	newInput := &Input{
 		Entry:            widget.Entry{},
 		bgRenderer:       &backgroundRenderer{},
