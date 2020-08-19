@@ -70,6 +70,18 @@ func TestThatKeySequenceDoesNotWorkIfCertainTimePasses(t *testing.T) {
 	time.Sleep(1 * time.Second)
 	inputHandler.Handle("", fyne.KeyF)
 	assert.False(t, functionExecuted)
+}
+
+func TestThatKeySequenceWorksAfterPressingKeyPausingAndPressingNextKey(t *testing.T) {
+	functionExecuted := false
+	function := func() { functionExecuted = true }
+	keymap := make(map[string]Action)
+	keymap["U,F"] = testAction
+	inputHandler := NewInputHandler(keymap)
+	inputHandler.BindFunctionToAction("", testAction, function)
+	inputHandler.Handle("", fyne.KeyU)
+	time.Sleep(1 * time.Second)
+	inputHandler.Handle("", fyne.KeyF)
 	inputHandler.Handle("", fyne.KeyU)
 	inputHandler.Handle("", fyne.KeyF)
 	assert.True(t, functionExecuted)
