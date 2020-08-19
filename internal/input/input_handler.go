@@ -14,6 +14,30 @@ type KeyCombination struct {
 	secondKey fyne.KeyName
 }
 
+func (keyCombination *KeyCombination) press(key fyne.KeyName) {
+	if keyCombination.firstKey == "" {
+		keyCombination.firstKey = key
+	} else if keyCombination.secondKey == "" {
+		keyCombination.secondKey = key
+	} else {
+		keyCombination.firstKey = key
+		keyCombination.secondKey = ""
+	}
+}
+
+func (keyCombination *KeyCombination) oneKeyPressed() bool {
+	return keyCombination.firstKey != "" && keyCombination.secondKey == ""
+}
+
+func (keyCombination *KeyCombination) bothKeysPressed() bool {
+	return keyCombination.firstKey != "" && keyCombination.secondKey != ""
+}
+
+func (keyCombination *KeyCombination) releaseKeys() {
+	keyCombination.firstKey = ""
+	keyCombination.secondKey = ""
+}
+
 //Caller should be anything that allows to unambiguously find the correct action for that caller
 //That is, if there are various objects that use the same struct (e.g. many copies of certain widget), it's best
 //to pass the object itself as this guarantees unambiguity
@@ -26,11 +50,10 @@ type CallerActionPair struct {
 //Stores key combinations mapped to actions. Every action that should be handled, should have a function bound to it
 //which will get executed when key combination for that action gets pressed
 type InputHandler struct {
-	keymap           map[KeyCombination]Action
-	actions          map[CallerActionPair]func()
-	//Last key will should be only empty on first key press and after action has been executed
-	lastKey          fyne.KeyName
-	lastKeyPressTime time.Time
+	keymap                map[KeyCombination]Action
+	actions               map[CallerActionPair]func()
+	currentKeyCombination KeyCombination
+	lastKeyPressTime      time.Time
 }
 
 func NewInputHandler(keymap map[string]Action) InputHandler {
@@ -69,37 +92,22 @@ func (handler *InputHandler) BindFunctionToAction(caller interface{}, action Act
 }
 
 func (handler *InputHandler) Handle(caller interface{}, keyName fyne.KeyName) {
-	callerActionPair := handler.getCallerActionPairForCurrentCallerAndKey(caller, keyName)
+	handler.currentKeyCombination.press(keyName)
+	actionToExecute := handler.keymap[handler.currentKeyCombination]
 	timeNow := time.Now()
 	timeSinceLastKeyPress := timeNow.Sub(handler.lastKeyPressTime)
-	if handler.lastKey == "" || timeSinceLastKeyPress < time.Second {
+	if handler.currentKeyCombination.oneKeyPressed() ||
+		(handler.currentKeyCombination.bothKeysPressed() && timeSinceLastKeyPress < time.Second) {
+		callerActionPair := CallerActionPair{
+			caller: caller,
+			action: actionToExecute,
+		}
 		function := handler.actions[callerActionPair]
 		if function != nil {
 			function()
-			handler.lastKey = ""
-			handler.lastKeyPressTime = timeNow
+			handler.currentKeyCombination.releaseKeys()
 			return
 		}
 	}
-	handler.lastKey = keyName
 	handler.lastKeyPressTime = timeNow
-}
-
-func (handler *InputHandler) getCallerActionPairForCurrentCallerAndKey(caller interface{}, keyName fyne.KeyName) CallerActionPair {
-	foundAction := Action("")
-	for keyCombination, action := range handler.keymap {
-		if keyCombination.firstKey == keyName && keyCombination.secondKey == "" {
-			foundAction = action
-		}
-		if keyCombination.secondKey == keyName && keyCombination.firstKey == handler.lastKey {
-			return CallerActionPair{
-				caller: caller,
-				action: action,
-			}
-		}
-	}
-	return CallerActionPair{
-		caller: caller,
-		action: foundAction,
-	}
 }
