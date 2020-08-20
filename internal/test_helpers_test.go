@@ -163,7 +163,8 @@ func (config *Config) saveConfigIn(configFilePath string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = toml.NewEncoder(configFile).Encode(config)
+	//Can't pass the keymap as it is as toml can't encode maps that don't use strings as key so properly modified config has to be used
+	err = toml.NewEncoder(configFile).Encode(config.madeEncodable())
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -113,7 +113,8 @@ func (config *Config) save() error {
 	if err != nil {
 		return errors.Wrap(err, "Failed to save the config file because config file in "+config.ConfigFilePath()+" could not be opened")
 	}
-	err = toml.NewEncoder(configFile).Encode(config)
+	//Can't pass the keymap as it is as toml can't encode maps that don't use strings as key so properly modified config has to be used
+	err = toml.NewEncoder(configFile).Encode(config.madeEncodable())
 	if err != nil {
 		return errors.Wrap(err, "Failed to save the config file because encoding failed. Config data: "+config.String())
 	}
@@ -122,6 +123,24 @@ func (config *Config) save() error {
 		return errors.Wrap(err, "Failed to close the config file in "+config.ConfigFilePath()+" after saving")
 	}
 	return nil
+}
+
+func (config *Config) madeEncodable() struct {
+	AppDataDirPath string
+	ConfigDirPath  string
+	Keymap         map[string]string
+} {
+	encodableKeymap := make(map[string]string)
+	for action, key := range config.Keymap {
+		encodableKeymap[string(action)] = key
+	}
+	return struct {
+		AppDataDirPath string
+		ConfigDirPath  string
+		Keymap         map[string]string
+	}{
+		config.AppDataDirPath, config.ConfigDirPath, encodableKeymap,
+	}
 }
 
 func (config *Config) ConfigFilePath() string {
