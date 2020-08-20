@@ -2,7 +2,6 @@ package input
 
 import (
 	"fyne.io/fyne"
-	"strings"
 	"time"
 )
 
@@ -15,12 +14,26 @@ key, both are pressed. Pressing a third key releases both keys and third key sta
 Therefore user can press a key or two keys in succession (combination) which is what system can handle.
 The third key has to be therefore handled as a new press.
 */
-type keyCombination struct {
+type KeyCombination struct {
 	firstKey  fyne.KeyName
 	secondKey fyne.KeyName
 }
 
-func (keyCombination *keyCombination) press(key fyne.KeyName) {
+func SingleKeyCombination(key fyne.KeyName) KeyCombination {
+	return KeyCombination{
+		firstKey:  key,
+		secondKey: "",
+	}
+}
+
+func TwoKeyCombination(firstKey fyne.KeyName, secondKey fyne.KeyName) KeyCombination {
+	return KeyCombination{
+		firstKey:  firstKey,
+		secondKey: secondKey,
+	}
+}
+
+func (keyCombination *KeyCombination) press(key fyne.KeyName) {
 	if keyCombination.firstKey == "" {
 		keyCombination.firstKey = key
 	} else if keyCombination.secondKey == "" {
@@ -31,15 +44,15 @@ func (keyCombination *keyCombination) press(key fyne.KeyName) {
 	}
 }
 
-func (keyCombination *keyCombination) oneKeyPressed() bool {
+func (keyCombination *KeyCombination) oneKeyPressed() bool {
 	return keyCombination.firstKey != "" && keyCombination.secondKey == ""
 }
 
-func (keyCombination *keyCombination) bothKeysPressed() bool {
+func (keyCombination *KeyCombination) bothKeysPressed() bool {
 	return keyCombination.firstKey != "" && keyCombination.secondKey != ""
 }
 
-func (keyCombination *keyCombination) releaseKeys() {
+func (keyCombination *KeyCombination) releaseKeys() {
 	keyCombination.firstKey = ""
 	keyCombination.secondKey = ""
 }
@@ -56,44 +69,29 @@ type CallerActionPair struct {
 //Stores key combinations mapped to actions. Every action that should be handled, should have a function bound to it
 //which will get executed when key combination for that action gets pressed
 type Handler struct {
-	keymap                map[keyCombination][]Action
+	keymap                map[KeyCombination][]Action
 	actions               map[CallerActionPair]func()
-	currentKeyCombination keyCombination
+	currentKeyCombination KeyCombination
 	lastKeyPressTime      time.Time
 }
 
-func NewInputHandler(actionKeyMap map[Action]string) Handler {
+func NewInputHandler(actionKeyMap map[Action]KeyCombination) Handler {
 	keyActionMap := convertActionKeyKeymapToKeyCombinationActionKeymap(actionKeyMap)
 	handler := Handler{
 		keymap:                keyActionMap,
 		actions:               map[CallerActionPair]func(){},
-		currentKeyCombination: keyCombination{},
+		currentKeyCombination: KeyCombination{},
 		lastKeyPressTime:      time.Now(),
 	}
 	return handler
 }
 
-func convertActionKeyKeymapToKeyCombinationActionKeymap(actionKeyMap map[Action]string) map[keyCombination][]Action {
-	keyActionMap := make(map[keyCombination][]Action)
-	for action, key := range actionKeyMap {
-		keyCombination := getKeyCombinationFromStringKey(key)
+func convertActionKeyKeymapToKeyCombinationActionKeymap(actionKeyMap map[Action]KeyCombination) map[KeyCombination][]Action {
+	keyActionMap := make(map[KeyCombination][]Action)
+	for action, keyCombination := range actionKeyMap {
 		keyActionMap[keyCombination] = append(keyActionMap[keyCombination], action)
 	}
 	return keyActionMap
-}
-
-func getKeyCombinationFromStringKey(key string) keyCombination {
-	if strings.Contains(key, ",") {
-		keys := strings.Split(key, ",")
-		return keyCombination{
-			firstKey:  fyne.KeyName(keys[0]),
-			secondKey: fyne.KeyName(keys[1]),
-		}
-	}
-	return keyCombination{
-		firstKey:  fyne.KeyName(key),
-		secondKey: "",
-	}
 }
 
 func (handler *Handler) BindFunctionToAction(caller interface{}, action Action, function func()) {
