@@ -9,6 +9,12 @@ import (
 //Represents an action that should be executed when certain keys are pressed
 type Action string
 
+/*Represents pressed keys. Max two keys can be pressed at once.
+This is handled so that after pressing first key, it stays pressed, then after pressing second
+key, both are pressed. Pressing a third key releases both keys and third key stays pressed.
+Therefore user can press a key or two keys in succession (combination) which is what system can handle.
+The third key has to be therefore handled as a new press.
+*/
 type keyCombination struct {
 	firstKey  fyne.KeyName
 	secondKey fyne.KeyName
