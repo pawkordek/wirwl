@@ -2,6 +2,7 @@ package wirwl
 
 import (
 	"fmt"
+	"fyne.io/fyne"
 	"github.com/BurntSushi/toml"
 	"github.com/pkg/errors"
 	"io/ioutil"
@@ -18,11 +19,11 @@ const logFileName = appName + ".log"
 type Config struct {
 	AppDataDirPath string
 	ConfigDirPath  string
-	Keymap         map[input.Action]string
+	Keymap         map[input.Action]input.KeyCombination
 }
 
 func NewConfig(configDirPath string) Config {
-	config := Config{ConfigDirPath: configDirPath, Keymap: map[input.Action]string{}}
+	config := Config{ConfigDirPath: configDirPath, Keymap: map[input.Action]input.KeyCombination{}}
 	return config
 }
 
@@ -91,17 +92,17 @@ func getCurrentUserHomeDir() (string, error) {
 }
 
 func (config *Config) loadDefaultKeymap() {
-	config.Keymap[input.SelectNextTabAction] = "L"
-	config.Keymap[input.SelectPreviousTabAction] = "H"
-	config.Keymap[input.SaveChangesAction] = "S,Y"
-	config.Keymap[input.DisplayDialogForAddingNewEntryTypAction] = "T,I"
-	config.Keymap[input.RemoveEntryTypeAction] = "T,D"
-	config.Keymap[input.EditCurrentEntryTypeAction] = "T,E"
-	config.Keymap[input.MoveDownAction] = "J"
-	config.Keymap[input.MoveUpAction] = "K"
-	config.Keymap[input.EnterInputModeAction] = "I"
-	config.Keymap[input.ConfirmAction] = "Return"
-	config.Keymap[input.CancelAction] = "Escape"
+	config.Keymap[input.SelectNextTabAction] = input.SingleKeyCombination(fyne.KeyL)
+	config.Keymap[input.SelectPreviousTabAction] = input.SingleKeyCombination(fyne.KeyH)
+	config.Keymap[input.SaveChangesAction] = input.TwoKeyCombination(fyne.KeyS, fyne.KeyY)
+	config.Keymap[input.DisplayDialogForAddingNewEntryTypAction] = input.TwoKeyCombination(fyne.KeyT, fyne.KeyI)
+	config.Keymap[input.RemoveEntryTypeAction] = input.TwoKeyCombination(fyne.KeyT, fyne.KeyD)
+	config.Keymap[input.EditCurrentEntryTypeAction] = input.TwoKeyCombination(fyne.KeyT, fyne.KeyE)
+	config.Keymap[input.MoveDownAction] = input.SingleKeyCombination(fyne.KeyJ)
+	config.Keymap[input.MoveUpAction] = input.SingleKeyCombination(fyne.KeyK)
+	config.Keymap[input.EnterInputModeAction] = input.SingleKeyCombination(fyne.KeyI)
+	config.Keymap[input.ConfirmAction] = input.SingleKeyCombination(fyne.KeyReturn)
+	config.Keymap[input.CancelAction] = input.SingleKeyCombination(fyne.KeyEscape)
 }
 
 func (config *Config) save() error {
@@ -132,7 +133,7 @@ func (config *Config) madeEncodable() struct {
 } {
 	encodableKeymap := make(map[string]string)
 	for action, key := range config.Keymap {
-		encodableKeymap[string(action)] = key
+		encodableKeymap[string(action)] = key.String()
 	}
 	return struct {
 		AppDataDirPath string

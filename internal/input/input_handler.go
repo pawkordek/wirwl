@@ -57,6 +57,14 @@ func (keyCombination *KeyCombination) releaseKeys() {
 	keyCombination.secondKey = ""
 }
 
+func (keyCombination *KeyCombination) String() string {
+	if keyCombination.secondKey != "" {
+		return string(keyCombination.firstKey + "," + keyCombination.secondKey)
+	} else {
+		return string(keyCombination.firstKey)
+	}
+}
+
 //Caller should be anything that allows to unambiguously find the correct action for that caller
 //That is, if there are various objects that use the same struct (e.g. many copies of certain widget), it's best
 //to pass the object itself as this guarantees unambiguity
