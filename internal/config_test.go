@@ -1,6 +1,7 @@
 package wirwl
 
 import (
+	"fyne.io/fyne"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"os/user"
@@ -83,16 +84,16 @@ func TestThatDefaultConfigHasCorrectKeymap(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	assert.Equal(t, "L", config.Keymap[input.SelectNextTabAction])
-	assert.Equal(t, "H", config.Keymap[input.SelectPreviousTabAction])
-	assert.Equal(t, "S,Y", config.Keymap[input.SaveChangesAction])
-	assert.Equal(t, "T,I", config.Keymap[input.DisplayDialogForAddingNewEntryTypAction])
-	assert.Equal(t, "T,D", config.Keymap[input.RemoveEntryTypeAction])
-	assert.Equal(t, "T,E", config.Keymap[input.EditCurrentEntryTypeAction])
-	assert.Equal(t, "J", config.Keymap[input.MoveDownAction])
-	assert.Equal(t, "K", config.Keymap[input.MoveUpAction])
-	assert.Equal(t, "I", config.Keymap[input.EnterInputModeAction])
-	assert.Equal(t, "Return", config.Keymap[input.ConfirmAction])
-	assert.Equal(t, "Escape", config.Keymap[input.CancelAction])
+	assert.Equal(t, input.SingleKeyCombination(fyne.KeyL), config.Keymap[input.SelectNextTabAction])
+	assert.Equal(t, input.SingleKeyCombination(fyne.KeyH), config.Keymap[input.SelectPreviousTabAction])
+	assert.Equal(t, input.TwoKeyCombination(fyne.KeyS, fyne.KeyY), config.Keymap[input.SaveChangesAction])
+	assert.Equal(t, input.TwoKeyCombination(fyne.KeyT, fyne.KeyI), config.Keymap[input.DisplayDialogForAddingNewEntryTypAction])
+	assert.Equal(t, input.TwoKeyCombination(fyne.KeyT, fyne.KeyD), config.Keymap[input.RemoveEntryTypeAction])
+	assert.Equal(t, input.TwoKeyCombination(fyne.KeyT, fyne.KeyE), config.Keymap[input.EditCurrentEntryTypeAction])
+	assert.Equal(t, input.SingleKeyCombination(fyne.KeyJ), config.Keymap[input.MoveDownAction])
+	assert.Equal(t, input.SingleKeyCombination(fyne.KeyK), config.Keymap[input.MoveUpAction])
+	assert.Equal(t, input.SingleKeyCombination(fyne.KeyI), config.Keymap[input.EnterInputModeAction])
+	assert.Equal(t, input.SingleKeyCombination(fyne.KeyReturn), config.Keymap[input.ConfirmAction])
+	assert.Equal(t, input.SingleKeyCombination(fyne.KeyEscape), config.Keymap[input.CancelAction])
 
 }
