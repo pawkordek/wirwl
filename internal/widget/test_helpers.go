@@ -63,12 +63,12 @@ func GetLabelPositionInContent(content fyne.CanvasObject, labelText string) int 
 }
 
 func getInputHandlerForTesting() input.Handler {
-	keymap := make(map[string]input.Action)
+	keymap := make(map[input.Action]string)
 	//Default keys are the same as if they were set by default config
-	keymap["J"] = input.MoveDownAction
-	keymap["K"] = input.MoveUpAction
-	keymap["I"] = input.EnterInputModeAction
-	keymap["Return"] = input.ConfirmAction
-	keymap["Escape"] = input.CancelAction
+	keymap[input.MoveDownAction] = "J"
+	keymap[input.MoveUpAction] = "K"
+	keymap[input.EnterInputModeAction] = "I"
+	keymap[input.ConfirmAction] = "Return"
+	keymap[input.CancelAction] = "Escape"
 	return input.NewInputHandler(keymap)
 }

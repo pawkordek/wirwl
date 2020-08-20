@@ -18,11 +18,11 @@ const logFileName = appName + ".log"
 type Config struct {
 	AppDataDirPath string
 	ConfigDirPath  string
-	Keymap         map[string]input.Action
+	Keymap         map[input.Action]string
 }
 
 func NewConfig(configDirPath string) Config {
-	config := Config{ConfigDirPath: configDirPath, Keymap: map[string]input.Action{}}
+	config := Config{ConfigDirPath: configDirPath, Keymap: map[input.Action]string{}}
 	return config
 }
 
@@ -91,17 +91,17 @@ func getCurrentUserHomeDir() (string, error) {
 }
 
 func (config *Config) loadDefaultKeymap() {
-	config.Keymap["L"] = input.SelectNextTabAction
-	config.Keymap["H"] = input.SelectPreviousTabAction
-	config.Keymap["S,Y"] = input.SaveChangesAction
-	config.Keymap["T,I"] = input.DisplayDialogForAddingNewEntryTypAction
-	config.Keymap["T,D"] = input.RemoveEntryTypeAction
-	config.Keymap["T,E"] = input.EditCurrentEntryTypeAction
-	config.Keymap["J"] = input.MoveDownAction
-	config.Keymap["K"] = input.MoveUpAction
-	config.Keymap["I"] = input.EnterInputModeAction
-	config.Keymap["Return"] = input.ConfirmAction
-	config.Keymap["Escape"] = input.CancelAction
+	config.Keymap[input.SelectNextTabAction] = "L"
+	config.Keymap[input.SelectPreviousTabAction] = "H"
+	config.Keymap[input.SaveChangesAction] = "S,Y"
+	config.Keymap[input.DisplayDialogForAddingNewEntryTypAction] = "T,I"
+	config.Keymap[input.RemoveEntryTypeAction] = "T,D"
+	config.Keymap[input.EditCurrentEntryTypeAction] = "T,E"
+	config.Keymap[input.MoveDownAction] = "J"
+	config.Keymap[input.MoveUpAction] = "K"
+	config.Keymap[input.EnterInputModeAction] = "I"
+	config.Keymap[input.ConfirmAction] = "Return"
+	config.Keymap[input.CancelAction] = "Escape"
 }
 
 func (config *Config) save() error {

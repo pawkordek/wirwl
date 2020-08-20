@@ -83,16 +83,16 @@ func TestThatDefaultConfigHasCorrectKeymap(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	assert.Equal(t, input.SelectNextTabAction, config.Keymap["L"])
-	assert.Equal(t, input.SelectPreviousTabAction, config.Keymap["H"])
-	assert.Equal(t, input.SaveChangesAction, config.Keymap["S,Y"])
-	assert.Equal(t, input.DisplayDialogForAddingNewEntryTypAction, config.Keymap["T,I"])
-	assert.Equal(t, input.RemoveEntryTypeAction, config.Keymap["T,D"])
-	assert.Equal(t, input.EditCurrentEntryTypeAction, config.Keymap["T,E"])
-	assert.Equal(t, input.MoveDownAction, config.Keymap["J"])
-	assert.Equal(t, input.MoveUpAction, config.Keymap["K"])
-	assert.Equal(t, input.EnterInputModeAction, config.Keymap["I"])
-	assert.Equal(t, input.ConfirmAction, config.Keymap["Return"])
-	assert.Equal(t, input.CancelAction, config.Keymap["Escape"])
+	assert.Equal(t, "L", config.Keymap[input.SelectNextTabAction])
+	assert.Equal(t, "H", config.Keymap[input.SelectPreviousTabAction])
+	assert.Equal(t, "S,Y", config.Keymap[input.SaveChangesAction])
+	assert.Equal(t, "T,I", config.Keymap[input.DisplayDialogForAddingNewEntryTypAction])
+	assert.Equal(t, "T,D", config.Keymap[input.RemoveEntryTypeAction])
+	assert.Equal(t, "T,E", config.Keymap[input.EditCurrentEntryTypeAction])
+	assert.Equal(t, "J", config.Keymap[input.MoveDownAction])
+	assert.Equal(t, "K", config.Keymap[input.MoveUpAction])
+	assert.Equal(t, "I", config.Keymap[input.EnterInputModeAction])
+	assert.Equal(t, "Return", config.Keymap[input.ConfirmAction])
+	assert.Equal(t, "Escape", config.Keymap[input.CancelAction])
 
 }
