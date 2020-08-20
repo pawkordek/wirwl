@@ -2,6 +2,7 @@ package input
 
 import (
 	"fyne.io/fyne"
+	"strings"
 	"time"
 )
 
@@ -30,6 +31,24 @@ func TwoKeyCombination(firstKey fyne.KeyName, secondKey fyne.KeyName) KeyCombina
 	return KeyCombination{
 		firstKey:  firstKey,
 		secondKey: secondKey,
+	}
+}
+
+//Input string format should be either:
+//e.g. "J" for singular key
+//e.g. "J,Q" for two key combination
+func KeyCombinationFromString(keyCombination string) KeyCombination {
+	keys := strings.Split(keyCombination, ",")
+	if len(keys) > 1 {
+		return KeyCombination{
+			firstKey:  fyne.KeyName(keys[0]),
+			secondKey: fyne.KeyName(keys[1]),
+		}
+	} else{
+		return KeyCombination{
+			firstKey:  fyne.KeyName(keys[0]),
+			secondKey: "",
+		}
 	}
 }
 

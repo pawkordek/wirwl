@@ -22,6 +22,15 @@ type Config struct {
 	Keymap         map[input.Action]input.KeyCombination
 }
 
+/*As TOML can't encode/decode maps that contain something else than strings, a helper struct is needed to convert
+before encoding/decoding.
+*/
+type encodableDecodableConfig struct {
+	AppDataDirPath string
+	ConfigDirPath  string
+	Keymap         map[string]string
+}
+
 func NewConfig(configDirPath string) Config {
 	config := Config{ConfigDirPath: configDirPath, Keymap: map[input.Action]input.KeyCombination{}}
 	return config
@@ -40,11 +49,27 @@ func (config *Config) readConfigFromConfigFile() error {
 	if err != nil {
 		return errors.Wrap(err, "Failed to read the config file in path "+config.ConfigFilePath())
 	}
-	_, err = toml.Decode(string(fileData), &config)
+	decodedConfig := encodableDecodableConfig{}
+	_, err = toml.Decode(string(fileData), &decodedConfig)
 	if err != nil {
 		return errors.Wrap(err, "Failed to decode the config from the file in "+config.ConfigFilePath()+". File data: "+string(fileData))
 	}
+	config.readDataFromDecodedConfig(decodedConfig)
 	return nil
+}
+
+func (config *Config) readDataFromDecodedConfig(decodedConfig encodableDecodableConfig) {
+	config.AppDataDirPath = decodedConfig.AppDataDirPath
+	config.ConfigDirPath = decodedConfig.ConfigDirPath
+	config.Keymap = convertStringKeymapToFormatUsableByConfig(decodedConfig.Keymap)
+}
+
+func convertStringKeymapToFormatUsableByConfig(stringKeymap map[string]string) map[input.Action]input.KeyCombination {
+	properKeymap := make(map[input.Action]input.KeyCombination)
+	for action, keyCombination := range stringKeymap {
+		properKeymap[input.Action(action)] = input.KeyCombinationFromString(keyCombination)
+	}
+	return properKeymap
 }
 
 func (config *Config) loadDefaults() error {
