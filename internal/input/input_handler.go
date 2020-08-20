@@ -12,7 +12,7 @@ type Action string
 //That is, if there are various objects that use the same struct (e.g. many copies of certain widget), it's best
 //to pass the object itself as this guarantees unambiguity
 //If struct only ever has one instance, it might be fine to pass something else, e.g. a string (like in App's case)
-type CallerActionPair struct {
+type callerActionPair struct {
 	caller interface{}
 	action Action
 }
@@ -21,7 +21,7 @@ type CallerActionPair struct {
 //which will get executed when key combination for that action gets pressed
 type Handler struct {
 	keymap                map[KeyCombination][]Action
-	actions               map[CallerActionPair]func()
+	actions               map[callerActionPair]func()
 	currentKeyCombination KeyCombination
 	lastKeyPressTime      time.Time
 }
@@ -30,7 +30,7 @@ func NewInputHandler(actionKeyMap map[Action]KeyCombination) Handler {
 	keyActionMap := convertActionKeyKeymapToKeyCombinationActionKeymap(actionKeyMap)
 	handler := Handler{
 		keymap:                keyActionMap,
-		actions:               map[CallerActionPair]func(){},
+		actions:               map[callerActionPair]func(){},
 		currentKeyCombination: KeyCombination{},
 		lastKeyPressTime:      time.Now(),
 	}
@@ -46,7 +46,7 @@ func convertActionKeyKeymapToKeyCombinationActionKeymap(actionKeyMap map[Action]
 }
 
 func (handler *Handler) BindFunctionToAction(caller interface{}, action Action, function func()) {
-	callerActionPair := CallerActionPair{
+	callerActionPair := callerActionPair{
 		caller: caller,
 		action: action,
 	}
@@ -61,7 +61,7 @@ func (handler *Handler) Handle(caller interface{}, keyName fyne.KeyName) {
 	for _, action := range handler.keymap[handler.currentKeyCombination] {
 		if handler.currentKeyCombination.oneKeyPressed() ||
 			(handler.currentKeyCombination.bothKeysPressed() && timeSinceLastKeyPress < time.Second) {
-			callerActionPair := CallerActionPair{
+			callerActionPair := callerActionPair{
 				caller: caller,
 				action: action,
 			}
