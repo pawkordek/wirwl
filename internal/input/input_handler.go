@@ -56,23 +56,30 @@ type CallerActionPair struct {
 //Stores key combinations mapped to actions. Every action that should be handled, should have a function bound to it
 //which will get executed when key combination for that action gets pressed
 type Handler struct {
-	keymap                map[keyCombination]Action
+	keymap                map[keyCombination][]Action
 	actions               map[CallerActionPair]func()
 	currentKeyCombination keyCombination
 	lastKeyPressTime      time.Time
 }
 
-func NewInputHandler(keymap map[string]Action) Handler {
-	handler := Handler{keymap: map[keyCombination]Action{}, actions: map[CallerActionPair]func(){}, lastKeyPressTime: time.Now()}
-	handler.createActualKeymap(keymap)
+func NewInputHandler(actionKeyMap map[Action]string) Handler {
+	keyActionMap := convertActionKeyKeymapToKeyCombinationActionKeymap(actionKeyMap)
+	handler := Handler{
+		keymap:                keyActionMap,
+		actions:               map[CallerActionPair]func(){},
+		currentKeyCombination: keyCombination{},
+		lastKeyPressTime:      time.Now(),
+	}
 	return handler
 }
 
-func (handler *Handler) createActualKeymap(keymap map[string]Action) {
-	for key, action := range keymap {
+func convertActionKeyKeymapToKeyCombinationActionKeymap(actionKeyMap map[Action]string) map[keyCombination][]Action {
+	keyActionMap := make(map[keyCombination][]Action)
+	for action, key := range actionKeyMap {
 		keyCombination := getKeyCombinationFromStringKey(key)
-		handler.keymap[keyCombination] = action
+		keyActionMap[keyCombination] = append(keyActionMap[keyCombination], action)
 	}
+	return keyActionMap
 }
 
 func getKeyCombinationFromStringKey(key string) keyCombination {
@@ -98,22 +105,23 @@ func (handler *Handler) BindFunctionToAction(caller interface{}, action Action, 
 }
 
 func (handler *Handler) Handle(caller interface{}, keyName fyne.KeyName) {
-	handler.currentKeyCombination.press(keyName)
-	actionToExecute := handler.keymap[handler.currentKeyCombination]
 	timeNow := time.Now()
+	defer func() { handler.lastKeyPressTime = timeNow }()
 	timeSinceLastKeyPress := timeNow.Sub(handler.lastKeyPressTime)
-	if handler.currentKeyCombination.oneKeyPressed() ||
-		(handler.currentKeyCombination.bothKeysPressed() && timeSinceLastKeyPress < time.Second) {
-		callerActionPair := CallerActionPair{
-			caller: caller,
-			action: actionToExecute,
-		}
-		function := handler.actions[callerActionPair]
-		if function != nil {
-			function()
-			handler.currentKeyCombination.releaseKeys()
-			return
+	handler.currentKeyCombination.press(keyName)
+	for _, action := range handler.keymap[handler.currentKeyCombination] {
+		if handler.currentKeyCombination.oneKeyPressed() ||
+			(handler.currentKeyCombination.bothKeysPressed() && timeSinceLastKeyPress < time.Second) {
+			callerActionPair := CallerActionPair{
+				caller: caller,
+				action: action,
+			}
+			function := handler.actions[callerActionPair]
+			if function != nil {
+				function()
+				handler.currentKeyCombination.releaseKeys()
+				return
+			}
 		}
 	}
-	handler.lastKeyPressTime = timeNow
 }

@@ -10,6 +10,7 @@ const (
 	MoveDownAction                          Action = "MOVE_DOWN"
 	MoveUpAction                            Action = "MOVE_UP"
 	EnterInputModeAction                    Action = "ENTER_INPUT_MODE"
+	ExitInputModeAction                     Action = "EXIT_INPUT_MODE"
 	ConfirmAction                           Action = "CONFIRM"
 	CancelAction                            Action = "CANCEL"
 )
