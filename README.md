@@ -7,11 +7,11 @@ It is being made using Go and [fyne](https://github.com/fyne-io/fyne) for UI and
 - adding/modyfying/removing media types
 - data saving/loading
 - configuration loading/saving
+- ability to change key bindings
 
 ### Planned functionality:
 - adding/modyfying/removing entries for media
 - searching/filtering of entries
-- ability to change key bindings
 - importing of data in e.g. XML format
 - cover display mode (displaying e.g. movie posters/album covers along with name)
 - ability to download cover images
