@@ -23,7 +23,7 @@ type Handler struct {
 	lastKeyPressTime      time.Time
 }
 
-func NewInputHandler(actionKeyMap map[Action]KeyCombination) Handler {
+func NewHandler(actionKeyMap map[Action]KeyCombination) Handler {
 	keyActionMap := convertActionKeyKeymapToKeyCombinationActionKeymap(actionKeyMap)
 	handler := Handler{
 		keymap:                keyActionMap,

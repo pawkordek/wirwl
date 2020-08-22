@@ -58,7 +58,7 @@ func (app *App) setupBasicSettings() {
 }
 
 func (app *App) setupInputHandler() {
-	app.inputHandler = input.NewInputHandler(app.config.Keymap)
+	app.inputHandler = input.NewHandler(app.config.Keymap)
 	app.inputHandler.BindFunctionToAction(appName, input.SelectNextTabAction, func() { app.entriesTypesTabs.SelectNextTab() })
 	app.inputHandler.BindFunctionToAction(appName, input.SelectPreviousTabAction, func() { app.entriesTypesTabs.SelectPreviousTab() })
 	app.inputHandler.BindFunctionToAction(appName, input.SaveChangesAction, func() { app.trySavingChangesToDb() })

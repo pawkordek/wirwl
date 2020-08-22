@@ -16,7 +16,7 @@ func TestThatInputHandlerHandlesSingleKeyActions(t *testing.T) {
 	function := func() { functionExecuted = true }
 	keymap := make(map[Action]KeyCombination)
 	keymap[testAction] = SingleKeyCombination(fyne.KeyQ)
-	inputHandler := NewInputHandler(keymap)
+	inputHandler := NewHandler(keymap)
 	inputHandler.BindFunctionToAction("", testAction, function)
 	inputHandler.Handle("", fyne.KeyQ)
 	assert.True(t, functionExecuted)
@@ -27,7 +27,7 @@ func TestThatInputHandlerHandlesActionsInKeySequences(t *testing.T) {
 	function := func() { functionExecuted = true }
 	keymap := make(map[Action]KeyCombination)
 	keymap[testAction] = TwoKeyCombination(fyne.KeyZ, fyne.KeyX)
-	inputHandler := NewInputHandler(keymap)
+	inputHandler := NewHandler(keymap)
 	inputHandler.BindFunctionToAction("", testAction, function)
 	inputHandler.Handle("", fyne.KeyZ)
 	assert.False(t, functionExecuted)
@@ -42,7 +42,7 @@ func TestThatInputHandlerHandlesActionForTheCorrectCaller(t *testing.T) {
 	secondCallerFunction := func() { secondCallerFunctionExecuted = true }
 	keymap := make(map[Action]KeyCombination)
 	keymap[testAction] = SingleKeyCombination(fyne.KeyT)
-	inputHandler := NewInputHandler(keymap)
+	inputHandler := NewHandler(keymap)
 	inputHandler.BindFunctionToAction("firstCaller", testAction, firstCallerFunction)
 	inputHandler.BindFunctionToAction("secondCaller", testAction, secondCallerFunction)
 	inputHandler.Handle("firstCaller", fyne.KeyT)
@@ -55,7 +55,7 @@ func TestThatInputHandlerHandlesActionForTheCorrectCaller(t *testing.T) {
 func TestThatTryingToHandleInputForActionWithoutBindFunctionDoesNotCauseErrors(t *testing.T) {
 	keymap := make(map[Action]KeyCombination)
 	keymap[testAction] = SingleKeyCombination(fyne.KeyL)
-	inputHandler := NewInputHandler(keymap)
+	inputHandler := NewHandler(keymap)
 	inputHandler.Handle("", fyne.KeyL)
 }
 
@@ -64,7 +64,7 @@ func TestThatKeySequenceDoesNotWorkIfCertainTimePasses(t *testing.T) {
 	function := func() { functionExecuted = true }
 	keymap := make(map[Action]KeyCombination)
 	keymap[testAction] = TwoKeyCombination(fyne.KeyU, fyne.KeyF)
-	inputHandler := NewInputHandler(keymap)
+	inputHandler := NewHandler(keymap)
 	inputHandler.BindFunctionToAction("", testAction, function)
 	inputHandler.Handle("", fyne.KeyU)
 	time.Sleep(1 * time.Second)
@@ -77,7 +77,7 @@ func TestThatKeySequenceWorksAfterPressingKeyPausingAndPressingNextKey(t *testin
 	function := func() { functionExecuted = true }
 	keymap := make(map[Action]KeyCombination)
 	keymap[testAction] = TwoKeyCombination(fyne.KeyU, fyne.KeyF)
-	inputHandler := NewInputHandler(keymap)
+	inputHandler := NewHandler(keymap)
 	inputHandler.BindFunctionToAction("", testAction, function)
 	inputHandler.Handle("", fyne.KeyU)
 	time.Sleep(1 * time.Second)
@@ -93,7 +93,7 @@ func TestThatInputHandlerExecutesSingleKeyActionIfKeyCombinationWasPressedAndTim
 	keymap := make(map[Action]KeyCombination)
 	keymap[testAction] = SingleKeyCombination(fyne.KeyT)
 	keymap[emptyAction] = TwoKeyCombination(fyne.KeyQ, fyne.KeyY)
-	inputHandler := NewInputHandler(keymap)
+	inputHandler := NewHandler(keymap)
 	inputHandler.BindFunctionToAction("", testAction, function)
 	inputHandler.BindFunctionToAction("", emptyAction, func() {})
 	inputHandler.Handle("", fyne.KeyQ)
@@ -111,7 +111,7 @@ func TestThatCombinationActionGetsExecutedInsteadOfSingleKeyActionIfBothCouldHap
 	keymap := make(map[Action]KeyCombination)
 	keymap[testAction] = SingleKeyCombination(fyne.KeyQ)
 	keymap[testAction2] = TwoKeyCombination(fyne.KeyJ, fyne.KeyQ)
-	inputHandler := NewInputHandler(keymap)
+	inputHandler := NewHandler(keymap)
 	inputHandler.BindFunctionToAction("", testAction, singleKeyFunc)
 	inputHandler.BindFunctionToAction("", testAction2, combinationFunc)
 	inputHandler.Handle("", fyne.KeyJ)
@@ -128,7 +128,7 @@ func TestThatInputHandlerAllowsToUseTheSameKeyForTwoVariousActionsIfTheyAreForDi
 	keymap := make(map[Action]KeyCombination)
 	keymap[testAction] = SingleKeyCombination(fyne.KeyC)
 	keymap[testAction2] = SingleKeyCombination(fyne.KeyC)
-	inputHandler := NewInputHandler(keymap)
+	inputHandler := NewHandler(keymap)
 	inputHandler.BindFunctionToAction("first caller", testAction, testActionFunc)
 	inputHandler.BindFunctionToAction("second caller", testAction2, testAction2Func)
 	inputHandler.Handle("first caller", fyne.KeyC)
