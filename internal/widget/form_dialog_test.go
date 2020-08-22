@@ -12,28 +12,28 @@ func TestThatFormDisplays(t *testing.T) {
 	dialog.Display()
 	assert.True(t, dialog.Visible())
 	assert.Equal(t, "form dialog", dialog.Title())
-	assert.NotNil(t, dialog.inputs["first"])
-	assert.NotNil(t, dialog.inputs["second"])
+	assert.NotNil(t, dialog.inputFields["first"])
+	assert.NotNil(t, dialog.inputFields["second"])
 }
 
 func TestThatFirstInputIsTheCurrentWhenDialogDisplays(t *testing.T) {
 	dialog := NewFormDialog(test.Canvas(), getInputHandlerForTesting(), "", "first", "second")
 	dialog.Display()
-	assert.Equal(t, dialog.currentInput(), dialog.inputs["first"])
+	assert.Equal(t, dialog.currentInput(), dialog.inputFields["first"])
 }
 
 func TestThatPressingJAndKSwitchesCurrentInput(t *testing.T) {
 	dialog := NewFormDialog(test.Canvas(), getInputHandlerForTesting(), "", "first", "second", "third")
 	dialog.Display()
-	assert.Equal(t, dialog.currentInput(), dialog.inputs["first"])
+	assert.Equal(t, dialog.currentInput(), dialog.inputFields["first"])
 	SimulateKeyPress(dialog, fyne.KeyJ)
-	assert.Equal(t, dialog.currentInput(), dialog.inputs["second"])
+	assert.Equal(t, dialog.currentInput(), dialog.inputFields["second"])
 	SimulateKeyPress(dialog, fyne.KeyJ)
-	assert.Equal(t, dialog.currentInput(), dialog.inputs["third"])
+	assert.Equal(t, dialog.currentInput(), dialog.inputFields["third"])
 	SimulateKeyPress(dialog, fyne.KeyK)
-	assert.Equal(t, dialog.currentInput(), dialog.inputs["second"])
+	assert.Equal(t, dialog.currentInput(), dialog.inputFields["second"])
 	SimulateKeyPress(dialog, fyne.KeyK)
-	assert.Equal(t, dialog.currentInput(), dialog.inputs["first"])
+	assert.Equal(t, dialog.currentInput(), dialog.inputFields["first"])
 }
 
 func TestThatPressingIFocusesCurrentInput(t *testing.T) {
@@ -69,7 +69,7 @@ func TestThatFirstInputIsSelectedOnDialogReopening(t *testing.T) {
 	SimulateKeyPress(dialog, fyne.KeyJ)
 	SimulateKeyPress(dialog, fyne.KeyEnter)
 	dialog.Display()
-	assert.Equal(t, dialog.inputs["first"], dialog.currentInput())
+	assert.Equal(t, dialog.inputFields["first"], dialog.currentInput())
 }
 
 func TestThatPressingEscapeWhenNotInEditionModeClosesDialog(t *testing.T) {
@@ -98,8 +98,8 @@ func TestThatCleaningItemValuesWorks(t *testing.T) {
 	dialog.SetItemValue("first", "val1")
 	dialog.SetItemValue("second", "val2")
 	dialog.CleanItemValues()
-	assert.Empty(t, dialog.inputs["first"].Text)
-	assert.Empty(t, dialog.inputs["second"].Text)
+	assert.Empty(t, dialog.inputFields["first"].Text)
+	assert.Empty(t, dialog.inputFields["second"].Text)
 }
 
 func TestThatFormDialogHidesBeforeItCallsOnEnterPressed(t *testing.T) {

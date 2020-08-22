@@ -8,7 +8,7 @@ import (
 	"wirwl/internal/input"
 )
 
-type Input struct {
+type InputField struct {
 	widget.Entry
 	canvas           fyne.Canvas
 	bgRenderer       *backgroundRenderer
@@ -31,15 +31,15 @@ func (renderer *backgroundRenderer) SetColor(color color.Color) {
 	renderer.color = color
 }
 
-func (input *Input) CreateRenderer() fyne.WidgetRenderer {
-	renderer := input.Entry.CreateRenderer()
+func (inputField *InputField) CreateRenderer() fyne.WidgetRenderer {
+	renderer := inputField.Entry.CreateRenderer()
 	bgRenderer := &backgroundRenderer{renderer, theme.BackgroundColor()}
-	input.bgRenderer = bgRenderer
+	inputField.bgRenderer = bgRenderer
 	return bgRenderer
 }
 
-func NewInput(canvas fyne.Canvas, handler input.Handler) *Input {
-	newInput := &Input{
+func NewInputField(canvas fyne.Canvas, handler input.Handler) *InputField {
+	newInput := &InputField{
 		Entry:            widget.Entry{},
 		canvas:           canvas,
 		bgRenderer:       &backgroundRenderer{},
@@ -54,53 +54,53 @@ func NewInput(canvas fyne.Canvas, handler input.Handler) *Input {
 	return newInput
 }
 
-func (input *Input) SetOnConfirm(function func()) {
-	input.OnConfirm = function
+func (inputField *InputField) SetOnConfirm(function func()) {
+	inputField.OnConfirm = function
 }
 
-func (input *Input) SetOnExitInputModeFunction(function func()) {
-	input.OnExitInputMode = function
+func (inputField *InputField) SetOnExitInputModeFunction(function func()) {
+	inputField.OnExitInputMode = function
 }
 
-func (input *Input) TypedKey(key *fyne.KeyEvent) {
-	/*If TypedRune function ignores the first key, TypedKey has to do so as well, otherwise input will think
+func (inputField *InputField) TypedKey(key *fyne.KeyEvent) {
+	/*If TypedRune function ignores the first key, TypedKey has to do so as well, otherwise inputField will think
 	there is one more character and crash the application on backspace press.
 	This cannot be tested automatically as this doesn't happen there.
 	*/
-	if input.firstRuneIgnored {
-		input.Entry.TypedKey(key)
+	if inputField.firstRuneIgnored {
+		inputField.Entry.TypedKey(key)
 	}
-	input.inputHandler.Handle(input, key.Name)
+	inputField.inputHandler.Handle(inputField, key.Name)
 }
 
-func (input *Input) TypedRune(r rune) {
-	//Prevents the last key pressed to display the hidden input from being typed into it
-	if input.firstRuneIgnored {
-		input.Entry.TypedRune(r)
+func (inputField *InputField) TypedRune(r rune) {
+	//Prevents the last key pressed to display the hidden inputField from being typed into it
+	if inputField.firstRuneIgnored {
+		inputField.Entry.TypedRune(r)
 	} else {
-		input.firstRuneIgnored = true
+		inputField.firstRuneIgnored = true
 	}
 }
 
-func (input *Input) FocusGained() {
-	input.firstRuneIgnored = false
-	input.Entry.FocusGained()
+func (inputField *InputField) FocusGained() {
+	inputField.firstRuneIgnored = false
+	inputField.Entry.FocusGained()
 }
 
-func (input *Input) setBgColor(color color.Color) {
-	input.bgRenderer.SetColor(color)
-	input.Refresh()
+func (inputField *InputField) setBgColor(color color.Color) {
+	inputField.bgRenderer.SetColor(color)
+	inputField.Refresh()
 }
 
-func (input *Input) Mark() {
-	input.setBgColor(theme.FocusColor())
+func (inputField *InputField) Mark() {
+	inputField.setBgColor(theme.FocusColor())
 }
 
-func (input *Input) Unmark() {
-	input.setBgColor(theme.BackgroundColor())
+func (inputField *InputField) Unmark() {
+	inputField.setBgColor(theme.BackgroundColor())
 }
 
-func (input *Input) EnterInputMode() {
-	input.Unmark()
-	input.canvas.Focus(input)
+func (inputField *InputField) EnterInputMode() {
+	inputField.Unmark()
+	inputField.canvas.Focus(inputField)
 }

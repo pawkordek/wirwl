@@ -10,10 +10,10 @@ import (
 gets typed into the input. There is code that prevents this but as this situation doesn't happen when running the
 test code any string typed into the input needs an additional character at the beginning as if the bug happened.
 */
-func (input *Input) Type(chars string) {
+func (inputField *InputField) Type(chars string) {
 	fixedChars := " " + chars
 	for _, char := range fixedChars {
-		input.TypedRune(char)
+		inputField.TypedRune(char)
 	}
 }
 

@@ -56,7 +56,7 @@ func TestThatAfterOnlyFirstHidingCallbackFunctionIsCalled(t *testing.T) {
 }
 
 func TestThatFocusIsNotLostIfItWasSetInHidingCallbackFunctionWhenHidingOnKeyPress(t *testing.T) {
-	input := NewInput(test.Canvas(), getInputHandlerForTesting())
+	input := NewInputField(test.Canvas(), getInputHandlerForTesting())
 	dialog := NewFocusableDialog(test.Canvas(), input)
 	dialog.SetOneTimeOnHideCallback(func() {
 		test.Canvas().Focus(input)

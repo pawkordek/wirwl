@@ -23,30 +23,30 @@ type FormDialog struct {
 	FocusableDialog
 	items           []string
 	currentInputNum int
-	inputs          map[string]*Input
+	inputFields     map[string]*InputField
 	OnEnterPressed  func()
 	inputHandler    input.Handler
 }
 
 func NewFormDialog(canvas fyne.Canvas, inputHandler input.Handler, title string, items ...string) *FormDialog {
-	inputs := make(map[string]*Input)
+	inputFields := make(map[string]*InputField)
 	form := widget.NewForm()
 	for _, item := range items {
-		input := NewInput(canvas, inputHandler)
-		inputs[item] = input
-		formItem := widget.NewFormItem(item, input)
+		inputField := NewInputField(canvas, inputHandler)
+		inputFields[item] = inputField
+		formItem := widget.NewFormItem(item, inputField)
 		form.AppendItem(formItem)
 	}
 	dialog := &FormDialog{
 		FocusableDialog: *NewFocusableDialog(canvas, form),
 		items:           items,
 		currentInputNum: 0,
-		inputs:          inputs,
+		inputFields:     inputFields,
 		OnEnterPressed:  func() {},
 	}
-	for _, input := range dialog.inputs {
-		input.SetOnConfirm(dialog.handleEnterKey)
-		input.SetOnExitInputModeFunction(func() {
+	for _, inputField := range dialog.inputFields {
+		inputField.SetOnConfirm(dialog.handleEnterKey)
+		inputField.SetOnExitInputModeFunction(func() {
 			dialog.setCurrentInputTo(dialog.currentInputNum)
 			dialog.Canvas.Focus(dialog)
 		})
@@ -96,32 +96,32 @@ func (dialog *FormDialog) TypedKey(key *fyne.KeyEvent) {
 }
 
 func (dialog *FormDialog) setCurrentInputTo(number int) {
-	if number < len(dialog.inputs) && number >= 0 {
+	if number < len(dialog.inputFields) && number >= 0 {
 		dialog.currentInput().Unmark()
 		dialog.currentInputNum = number
 		dialog.currentInput().Mark()
 	}
 }
 
-func (dialog *FormDialog) currentInput() *Input {
-	return dialog.inputs[dialog.items[dialog.currentInputNum]]
+func (dialog *FormDialog) currentInput() *InputField {
+	return dialog.inputFields[dialog.items[dialog.currentInputNum]]
 }
 
 func (dialog *FormDialog) SetItemValue(itemName string, value string) {
-	if dialog.inputs[itemName] != nil {
-		dialog.inputs[itemName].SetText(value)
+	if dialog.inputFields[itemName] != nil {
+		dialog.inputFields[itemName].SetText(value)
 	}
 }
 
 func (dialog *FormDialog) ItemValue(itemName string) string {
-	if dialog.inputs[itemName] != nil {
-		return dialog.inputs[itemName].Text
+	if dialog.inputFields[itemName] != nil {
+		return dialog.inputFields[itemName].Text
 	}
 	return ""
 }
 
 func (dialog *FormDialog) CleanItemValues() {
-	for _, input := range dialog.inputs {
-		input.SetText("")
+	for _, inputField := range dialog.inputFields {
+		inputField.SetText("")
 	}
 }
