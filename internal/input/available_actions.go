@@ -1,5 +1,8 @@
 package input
 
+//Represents an action that should be executed when certain keys are pressed
+type Action string
+
 const (
 	SelectNextTabAction                     Action = "SELECT_NEXT_TAB"
 	SelectPreviousTabAction                 Action = "SELECT_PREVIOUS_TAB"

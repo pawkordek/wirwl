@@ -5,9 +5,6 @@ import (
 	"time"
 )
 
-//Represents an action that should be executed when certain keys are pressed
-type Action string
-
 //Caller should be anything that allows to unambiguously find the correct action for that caller
 //That is, if there are various objects that use the same struct (e.g. many copies of certain widget), it's best
 //to pass the object itself as this guarantees unambiguity
