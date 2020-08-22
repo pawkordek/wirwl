@@ -14,7 +14,7 @@ type Input struct {
 	bgRenderer       *backgroundRenderer
 	inputHandler     input.Handler
 	OnConfirm        func()
-	OnCancel         func()
+	OnExitInputMode  func()
 	firstRuneIgnored bool
 }
 
@@ -45,12 +45,12 @@ func NewInput(canvas fyne.Canvas, handler input.Handler) *Input {
 		bgRenderer:       &backgroundRenderer{},
 		inputHandler:     handler,
 		OnConfirm:        func() {},
-		OnCancel:         func() {},
+		OnExitInputMode:  func() {},
 		firstRuneIgnored: false,
 	}
 	newInput.ExtendBaseWidget(newInput)
 	newInput.inputHandler.BindFunctionToAction(newInput, input.ConfirmAction, func() { newInput.OnConfirm() })
-	newInput.inputHandler.BindFunctionToAction(newInput, input.CancelAction, func() { newInput.OnCancel() })
+	newInput.inputHandler.BindFunctionToAction(newInput, input.ExitInputModeAction, func() { newInput.OnExitInputMode() })
 	return newInput
 }
 
@@ -58,8 +58,8 @@ func (input *Input) SetOnConfirm(function func()) {
 	input.OnConfirm = function
 }
 
-func (input *Input) SetOnCancel(function func()) {
-	input.OnCancel = function
+func (input *Input) SetOnExitInputModeFunction(function func()) {
+	input.OnExitInputMode = function
 }
 
 func (input *Input) TypedKey(key *fyne.KeyEvent) {

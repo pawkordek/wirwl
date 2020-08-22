@@ -46,7 +46,7 @@ func NewFormDialog(canvas fyne.Canvas, inputHandler input.Handler, title string,
 	}
 	for _, input := range dialog.inputs {
 		input.SetOnConfirm(dialog.handleEnterKey)
-		input.SetOnCancel(func() {
+		input.SetOnExitInputModeFunction(func() {
 			dialog.setCurrentInputTo(dialog.currentInputNum)
 			dialog.Canvas.Focus(dialog)
 		})

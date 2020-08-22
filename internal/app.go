@@ -261,10 +261,10 @@ func (app *App) saveChangesToDb() error {
 }
 
 func (app *App) shutdown() {
-	if _, configLoadingErrorExists := app.loadingErrors[configLoadError]; !configLoadingErrorExists {
+	//if _, configLoadingErrorExists := app.loadingErrors[configLoadError]; !configLoadingErrorExists {
 		err := app.config.save()
 		if err != nil {
 			log.Error(err)
 		}
-	}
+	//}
 }
