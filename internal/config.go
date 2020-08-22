@@ -126,6 +126,7 @@ func (config *Config) loadDefaultKeymap() {
 	config.Keymap[input.MoveDownAction] = input.SingleKeyCombination(fyne.KeyJ)
 	config.Keymap[input.MoveUpAction] = input.SingleKeyCombination(fyne.KeyK)
 	config.Keymap[input.EnterInputModeAction] = input.SingleKeyCombination(fyne.KeyI)
+	config.Keymap[input.ExitInputModeAction] = input.SingleKeyCombination(fyne.KeyEscape)
 	config.Keymap[input.ConfirmAction] = input.SingleKeyCombination(fyne.KeyReturn)
 	config.Keymap[input.CancelAction] = input.SingleKeyCombination(fyne.KeyEscape)
 }

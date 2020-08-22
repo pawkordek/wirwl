@@ -93,6 +93,7 @@ func TestThatDefaultConfigHasCorrectKeymap(t *testing.T) {
 	assert.Equal(t, input.SingleKeyCombination(fyne.KeyJ), config.Keymap[input.MoveDownAction])
 	assert.Equal(t, input.SingleKeyCombination(fyne.KeyK), config.Keymap[input.MoveUpAction])
 	assert.Equal(t, input.SingleKeyCombination(fyne.KeyI), config.Keymap[input.EnterInputModeAction])
+	assert.Equal(t, input.SingleKeyCombination(fyne.KeyEscape), config.Keymap[input.ExitInputModeAction])
 	assert.Equal(t, input.SingleKeyCombination(fyne.KeyReturn), config.Keymap[input.ConfirmAction])
 	assert.Equal(t, input.SingleKeyCombination(fyne.KeyEscape), config.Keymap[input.CancelAction])
 
