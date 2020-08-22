@@ -151,21 +151,15 @@ func (config *Config) save() error {
 	return nil
 }
 
-func (config *Config) madeEncodable() struct {
-	AppDataDirPath string
-	ConfigDirPath  string
-	Keymap         map[string]string
-} {
+func (config *Config) madeEncodable() encodableDecodableConfig {
 	encodableKeymap := make(map[string]string)
 	for action, key := range config.Keymap {
 		encodableKeymap[string(action)] = key.String()
 	}
-	return struct {
-		AppDataDirPath string
-		ConfigDirPath  string
-		Keymap         map[string]string
-	}{
-		config.AppDataDirPath, config.ConfigDirPath, encodableKeymap,
+	return encodableDecodableConfig{
+		AppDataDirPath: config.AppDataDirPath,
+		ConfigDirPath:  config.ConfigDirPath,
+		Keymap:         encodableKeymap,
 	}
 }
 
