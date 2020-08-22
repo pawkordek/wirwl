@@ -3,6 +3,7 @@ package wirwl
 import (
 	"fmt"
 	"fyne.io/fyne"
+	"fyne.io/fyne/layout"
 	"fyne.io/fyne/theme"
 	fyneWidget "fyne.io/fyne/widget"
 	"github.com/pkg/errors"
@@ -115,7 +116,8 @@ func (app *App) getNoEntriesTab() map[string][]string {
 }
 
 func (app *App) prepareMainWindowContent() {
-	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTypesTabs))
+	//label := fyneWidget.NewLabel("FF")
+	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTypesTabs, layout.NewSpacer(), fyneWidget.NewLabel("Current input")))
 }
 
 func (app *App) displayLoadingErrors() {
@@ -261,10 +263,10 @@ func (app *App) saveChangesToDb() error {
 }
 
 func (app *App) shutdown() {
-	//if _, configLoadingErrorExists := app.loadingErrors[configLoadError]; !configLoadingErrorExists {
+	if _, configLoadingErrorExists := app.loadingErrors[configLoadError]; !configLoadingErrorExists {
 		err := app.config.save()
 		if err != nil {
 			log.Error(err)
 		}
-	//}
+	}
 }
