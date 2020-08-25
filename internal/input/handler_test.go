@@ -11,6 +11,12 @@ const testAction Action = "TEST_ACTION"
 const testAction2 Action = "TEST_ACION2"
 const emptyAction Action = "EMPTY_ACTION"
 
+func TestThatInputHandlerDoesNotPanickWhenCallbackFunctionIsNotSet(t *testing.T) {
+	keymap := make(map[Action]KeyCombination)
+	handler := NewHandler(keymap)
+	handler.Handle("", fyne.KeyU)
+}
+
 func TestThatInputHandlerHandlesSingleKeyActions(t *testing.T) {
 	functionExecuted := false
 	function := func() { functionExecuted = true }

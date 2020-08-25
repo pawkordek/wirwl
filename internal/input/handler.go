@@ -31,6 +31,8 @@ func NewHandler(actionKeyMap map[Action]KeyCombination) Handler {
 		actions:               map[callerActionPair]func(){},
 		currentKeyCombination: KeyCombination{},
 		lastKeyPressTime:      time.Now(),
+		onKeyPressedCallback: func(combination KeyCombination) {
+		},
 	}
 	return handler
 }
