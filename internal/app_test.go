@@ -360,3 +360,18 @@ func TestThatConfigIsNotSavedIfItFailedToLoad(t *testing.T) {
 	}
 	assert.Equal(t, failingToLoadConfigFileContents, string(configFileContents))
 }
+
+func TestThatRecentlyPressedKeysLabelDisplaysTheCorrectInformation(t *testing.T) {
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
+	defer cleanup()
+	//The first single key has to not have any action in default bindings, otherwise the action is gonna get executed
+	//instead of the key making a combination with the second key which will fail the test
+	assert.Equal(t, "Recently pressed keys: ", app.recentlyPressedKeysLabel.Text)
+	app.simulateKeyPress(fyne.KeyQ)
+	assert.Equal(t, "Recently pressed keys: Q", app.recentlyPressedKeysLabel.Text)
+	app.simulateKeyPress(fyne.KeyG)
+	assert.Equal(t, "Recently pressed keys: Q,G", app.recentlyPressedKeysLabel.Text)
+	app.simulateKeyPress(fyne.KeyEscape)
+	assert.Equal(t, "Recently pressed keys: Escape", app.recentlyPressedKeysLabel.Text)
+}

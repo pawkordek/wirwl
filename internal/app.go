@@ -14,18 +14,19 @@ import (
 )
 
 type App struct {
-	fyneApp             fyne.App
-	mainWindow          fyne.Window
-	config              Config
-	loadingErrors       map[string]string
-	addEntryTypeDialog  *widget.FormDialog
-	msgDialog           *widget.MsgDialog
-	confirmationDialog  *widget.ConfirmationDialog
-	entriesTypesTabs    *widget.TabContainer
-	entries             map[data.EntryType][]data.Entry
-	dataProvider        data.Provider
-	editEntryTypeDialog *widget.FormDialog
-	inputHandler        input.Handler
+	fyneApp                  fyne.App
+	mainWindow               fyne.Window
+	config                   Config
+	loadingErrors            map[string]string
+	addEntryTypeDialog       *widget.FormDialog
+	msgDialog                *widget.MsgDialog
+	confirmationDialog       *widget.ConfirmationDialog
+	entriesTypesTabs         *widget.TabContainer
+	recentlyPressedKeysLabel *fyneWidget.Label
+	entries                  map[data.EntryType][]data.Entry
+	dataProvider             data.Provider
+	editEntryTypeDialog      *widget.FormDialog
+	inputHandler             input.Handler
 }
 
 const configLoadError = "CONFIG_LOAD_ERROR"
@@ -60,6 +61,9 @@ func (app *App) setupBasicSettings() {
 
 func (app *App) setupInputHandler() {
 	app.inputHandler = input.NewHandler(app.config.Keymap)
+	app.inputHandler.SetOnKeyPressedCallbackFunction(func(keyCombination input.KeyCombination) {
+		app.recentlyPressedKeysLabel.SetText("Recently pressed keys: " + keyCombination.String())
+	})
 	app.inputHandler.BindFunctionToAction(appName, input.SelectNextTabAction, func() { app.entriesTypesTabs.SelectNextTab() })
 	app.inputHandler.BindFunctionToAction(appName, input.SelectPreviousTabAction, func() { app.entriesTypesTabs.SelectPreviousTab() })
 	app.inputHandler.BindFunctionToAction(appName, input.SaveChangesAction, func() { app.trySavingChangesToDb() })
@@ -116,8 +120,8 @@ func (app *App) getNoEntriesTab() map[string][]string {
 }
 
 func (app *App) prepareMainWindowContent() {
-	//label := fyneWidget.NewLabel("FF")
-	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTypesTabs, layout.NewSpacer(), fyneWidget.NewLabel("Current input")))
+	app.recentlyPressedKeysLabel = fyneWidget.NewLabel("Recently pressed keys: ")
+	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTypesTabs, layout.NewSpacer(), app.recentlyPressedKeysLabel))
 }
 
 func (app *App) displayLoadingErrors() {
