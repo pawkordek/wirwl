@@ -137,3 +137,16 @@ func TestThatInputHandlerAllowsToUseTheSameKeyForTwoVariousActionsIfTheyAreForDi
 	inputHandler.Handle("second caller", fyne.KeyC)
 	assert.True(t, testAction2Executed)
 }
+
+func TestThatOnKeyPressedCallbackFunctionIsCalledWithProperArgumentsOnKeyPress(t *testing.T) {
+	pressedKeyCombination := KeyCombination{}
+	keymap := make(map[Action]KeyCombination)
+	handler := NewHandler(keymap)
+	handler.SetOnKeyPressedCallbackFunction(func(keyCombination KeyCombination) { pressedKeyCombination = keyCombination })
+	handler.Handle("", fyne.KeyR)
+	assert.Equal(t, fyne.KeyR, pressedKeyCombination.firstKey)
+	assert.Equal(t, fyne.KeyName(""), pressedKeyCombination.secondKey)
+	handler.Handle("", fyne.KeyY)
+	assert.Equal(t, fyne.KeyR, pressedKeyCombination.firstKey)
+	assert.Equal(t, fyne.KeyY, pressedKeyCombination.secondKey)
+}

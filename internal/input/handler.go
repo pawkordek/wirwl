@@ -21,6 +21,7 @@ type Handler struct {
 	actions               map[callerActionPair]func()
 	currentKeyCombination KeyCombination
 	lastKeyPressTime      time.Time
+	onKeyPressedCallback  func(KeyCombination)
 }
 
 func NewHandler(actionKeyMap map[Action]KeyCombination) Handler {
@@ -55,6 +56,7 @@ func (handler *Handler) Handle(caller interface{}, keyName fyne.KeyName) {
 	defer func() { handler.lastKeyPressTime = timeNow }()
 	timeSinceLastKeyPress := timeNow.Sub(handler.lastKeyPressTime)
 	handler.currentKeyCombination.press(keyName)
+	handler.onKeyPressedCallback(handler.currentKeyCombination)
 	for _, action := range handler.keymap[handler.currentKeyCombination] {
 		if handler.currentKeyCombination.oneKeyPressed() ||
 			(handler.currentKeyCombination.bothKeysPressed() && timeSinceLastKeyPress < time.Second) {
@@ -70,4 +72,8 @@ func (handler *Handler) Handle(caller interface{}, keyName fyne.KeyName) {
 			}
 		}
 	}
+}
+
+func (handler *Handler) SetOnKeyPressedCallbackFunction(function func(KeyCombination)) {
+	handler.onKeyPressedCallback = function
 }
