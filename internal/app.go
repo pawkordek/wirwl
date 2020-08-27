@@ -201,7 +201,7 @@ func (app *App) getCurrentTabText() string {
 }
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
-	app.inputHandler.Handle(appName, event.Name)
+	app.inputHandler.HandleInNormalMode(appName, event.Name)
 }
 
 func (app *App) displayDialogForAddingNewEntryType() {

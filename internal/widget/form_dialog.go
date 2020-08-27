@@ -92,7 +92,7 @@ func (dialog *FormDialog) Display() {
 }
 
 func (dialog *FormDialog) TypedKey(key *fyne.KeyEvent) {
-	dialog.inputHandler.Handle(dialog, key.Name)
+	dialog.inputHandler.HandleInNormalMode(dialog, key.Name)
 }
 
 func (dialog *FormDialog) setCurrentInputTo(number int) {

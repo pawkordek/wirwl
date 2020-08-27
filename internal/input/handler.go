@@ -53,7 +53,7 @@ func (handler *Handler) BindFunctionToAction(caller interface{}, action Action, 
 	handler.actions[callerActionPair] = function
 }
 
-func (handler *Handler) Handle(caller interface{}, keyName fyne.KeyName) {
+func (handler *Handler) HandleInNormalMode(caller interface{}, keyName fyne.KeyName) {
 	handler.currentKeyCombination.press(keyName)
 	handler.onKeyPressedCallback(handler.currentKeyCombination)
 	handler.tryExecutingFunctionForCallerAndKeyCombination(caller, handler.currentKeyCombination)
