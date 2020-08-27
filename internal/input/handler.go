@@ -15,7 +15,16 @@ type callerActionPair struct {
 }
 
 //Stores key combinations mapped to actions. Every action that should be handled, should have a function bound to it
-//which will get executed when key combination for that action gets pressed
+//which will get executed when key combination for that action gets pressed.
+//There are two modes in which handler operates:
+//First, normal mode where user has to either type a key or a combination of two keys for the action to be executed.
+//	Keys are stored as they are input e.g. pressing 'K' then 'G' will either execute action for 'K' if it matches first or action for 'KG' if 'K' doesn't match
+//	Pressing another key resets the combination e.g. Pressing 'L' after above combination will make the current combination 'L'
+//Second, input mode where on every key press, second key of current combination replaces it's first key and the input key becomes the second
+//	In practice this looks like this e.g. press 'Q', current combination is 'Q', then press 'H', combination is 'QH'
+//	Press another key, 'U'. Combination becomes 'HU'.
+//	Also, an action can be executed based on either key of current combination (single key actions) or the combination itself.
+//	That is, in 'HU' both actions for 'H', 'U' or 'HU' can execute but order of precedence is 'HU', 'H', 'U'.
 type Handler struct {
 	keymap                map[KeyCombination][]Action
 	actions               map[callerActionPair]func()
