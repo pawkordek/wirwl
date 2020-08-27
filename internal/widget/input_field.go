@@ -70,7 +70,7 @@ func (inputField *InputField) TypedKey(key *fyne.KeyEvent) {
 	if inputField.firstRuneIgnored {
 		inputField.Entry.TypedKey(key)
 	}
-	inputField.inputHandler.Handle(inputField, key.Name)
+	inputField.inputHandler.HandleInInputMode(inputField, key.Name)
 }
 
 func (inputField *InputField) TypedRune(r rune) {
