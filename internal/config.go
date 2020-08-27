@@ -52,7 +52,7 @@ func (config *Config) readConfigFromConfigFile() error {
 	decodedConfig := encodableDecodableConfig{}
 	_, err = toml.Decode(string(fileData), &decodedConfig)
 	if err != nil {
-		return errors.Wrap(err, "Failed to decode the config from the file in "+config.ConfigFilePath()+". File data: "+string(fileData))
+		return errors.Wrap(err, "Failed to decode the config from the file in "+config.ConfigFilePath()+". File data: \n"+string(fileData))
 	}
 	config.readDataFromDecodedConfig(decodedConfig)
 	return nil

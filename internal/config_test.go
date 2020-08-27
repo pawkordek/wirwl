@@ -3,10 +3,12 @@ package wirwl
 import (
 	"fyne.io/fyne"
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
 	"os"
 	"os/user"
 	"path/filepath"
 	"testing"
+	"wirwl/internal/data"
 	"wirwl/internal/input"
 	"wirwl/internal/log"
 )
@@ -97,4 +99,20 @@ func TestThatDefaultConfigHasCorrectKeymap(t *testing.T) {
 	assert.Equal(t, input.SingleKeyCombination(fyne.KeyReturn), config.Keymap[input.ConfirmAction])
 	assert.Equal(t, input.SingleKeyCombination(fyne.KeyEscape), config.Keymap[input.CancelAction])
 
+}
+
+func TestThatErrorGetsReturnedIfConfigFileIsUnparsable(t *testing.T) {
+	err := data.CreateDirIfNotExist(testConfigDirPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer data.DeleteAllInDir(testConfigDirPath)
+	err = ioutil.WriteFile(filepath.Join(testConfigDirPath, "wirwl.cfg"), []byte("unparsable data"), 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+	config := NewConfig(testConfigDirPath)
+	err = config.load()
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "Failed to decode the config from the file in "+testConfigDirPath+"wirwl.cfg. File data: \n")
 }
