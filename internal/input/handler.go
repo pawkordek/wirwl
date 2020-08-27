@@ -54,12 +54,26 @@ func (handler *Handler) BindFunctionToAction(caller interface{}, action Action, 
 }
 
 func (handler *Handler) Handle(caller interface{}, keyName fyne.KeyName) {
+	handler.currentKeyCombination.press(keyName)
+	handler.onKeyPressedCallback(handler.currentKeyCombination)
+	handler.tryExecutingFunctionForCallerAndKeyCombination(caller, handler.currentKeyCombination)
+}
+
+func (handler *Handler) HandleInInputMode(caller interface{}, keyName fyne.KeyName) {
+	if handler.currentKeyCombination.bothKeysPressed() {
+		handler.currentKeyCombination.press(handler.currentKeyCombination.secondKey)
+	}
+	handler.currentKeyCombination.press(keyName)
+	handler.onKeyPressedCallback(handler.currentKeyCombination)
+	handler.tryExecutingFunctionForCallerAndKeyCombination(caller, handler.currentKeyCombination)
+	handler.tryExecutingFunctionForCallerAndKeyCombination(caller, SingleKeyCombination(handler.currentKeyCombination.secondKey))
+}
+
+func (handler *Handler) tryExecutingFunctionForCallerAndKeyCombination(caller interface{}, keyCombination KeyCombination) {
 	timeNow := time.Now()
 	defer func() { handler.lastKeyPressTime = timeNow }()
 	timeSinceLastKeyPress := timeNow.Sub(handler.lastKeyPressTime)
-	handler.currentKeyCombination.press(keyName)
-	handler.onKeyPressedCallback(handler.currentKeyCombination)
-	for _, action := range handler.keymap[handler.currentKeyCombination] {
+	for _, action := range handler.keymap[keyCombination] {
 		if handler.currentKeyCombination.oneKeyPressed() ||
 			(handler.currentKeyCombination.bothKeysPressed() && timeSinceLastKeyPress < time.Second) {
 			callerActionPair := callerActionPair{
