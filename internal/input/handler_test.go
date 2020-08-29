@@ -318,3 +318,15 @@ func TestThatSingleKeyActionWorksIfThePressedKeyMatchesSecondKeyOfCurrentCombina
 	handler.HandleInInputMode("", fyne.KeyEscape)
 	assert.True(t, testActionExecuted)
 }
+
+func TestThatWhenActionGetsHandledInInputModeTrueValueGetsReturnedAndFalseOtherwise(t *testing.T) {
+	testActionFunc := func() {}
+	keymap := make(map[Action]KeyCombination)
+	keymap[testAction] = SingleKeyCombination(fyne.KeyY)
+	handler := NewHandler(keymap)
+	handler.BindFunctionToAction("", testAction, testActionFunc)
+	handled := handler.HandleInInputMode("", fyne.KeyL)
+	assert.False(t, handled)
+	handled = handler.HandleInInputMode("", fyne.KeyY)
+	assert.True(t, handled)
+}

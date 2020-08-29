@@ -68,17 +68,21 @@ func (handler *Handler) HandleInNormalMode(caller interface{}, keyName fyne.KeyN
 	handler.tryExecutingFunctionForCallerAndKeyCombination(caller, handler.currentKeyCombination)
 }
 
-func (handler *Handler) HandleInInputMode(caller interface{}, keyName fyne.KeyName) {
+func (handler *Handler) HandleInInputMode(caller interface{}, keyName fyne.KeyName) bool {
 	if handler.currentKeyCombination.bothKeysPressed() {
 		handler.currentKeyCombination.press(handler.currentKeyCombination.secondKey)
 	}
 	handler.currentKeyCombination.press(keyName)
 	handler.onKeyPressedCallback(handler.currentKeyCombination)
-	handler.tryExecutingFunctionForCallerAndKeyCombination(caller, handler.currentKeyCombination)
-	handler.tryExecutingFunctionForCallerAndKeyCombination(caller, SingleKeyCombination(handler.currentKeyCombination.secondKey))
+	functionExecuted := handler.tryExecutingFunctionForCallerAndKeyCombination(caller, handler.currentKeyCombination)
+	if functionExecuted {
+		return true
+	} else {
+		return handler.tryExecutingFunctionForCallerAndKeyCombination(caller, SingleKeyCombination(handler.currentKeyCombination.secondKey))
+	}
 }
 
-func (handler *Handler) tryExecutingFunctionForCallerAndKeyCombination(caller interface{}, keyCombination KeyCombination) {
+func (handler *Handler) tryExecutingFunctionForCallerAndKeyCombination(caller interface{}, keyCombination KeyCombination) bool {
 	timeNow := time.Now()
 	defer func() { handler.lastKeyPressTime = timeNow }()
 	timeSinceLastKeyPress := timeNow.Sub(handler.lastKeyPressTime)
@@ -93,10 +97,11 @@ func (handler *Handler) tryExecutingFunctionForCallerAndKeyCombination(caller in
 			if function != nil {
 				function()
 				handler.currentKeyCombination.releaseKeys()
-				return
+				return true
 			}
 		}
 	}
+	return false
 }
 
 func (handler *Handler) SetOnKeyPressedCallbackFunction(function func(KeyCombination)) {
