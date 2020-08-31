@@ -11,18 +11,21 @@ import (
 const TestDbPath = "../../testdata/testDb.db"
 
 var comicsEntryType = EntryType{
-	Name:       "comics",
-	ImageQuery: "comic cover",
+	Name:                  "comics",
+	CompletionElementName: "chapter",
+	ImageQuery:            "comic cover",
 }
 
 var musicEntryType = EntryType{
-	Name:       "music",
-	ImageQuery: "album cover",
+	Name:                  "music",
+	CompletionElementName: "album",
+	ImageQuery:            "album cover",
 }
 
 var videoEntryType = EntryType{
-	Name:       "videos",
-	ImageQuery: "video cover",
+	Name:                  "videos",
+	CompletionElementName: "episode",
+	ImageQuery:            "video cover",
 }
 
 func getTempDbPath() (string, func()) {

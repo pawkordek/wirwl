@@ -33,8 +33,9 @@ func (entry Entry) String() string {
 }
 
 type EntryType struct {
-	Name       string
-	ImageQuery string
+	Name                  string
+	CompletionElementName string
+	ImageQuery            string
 }
 
 func (entryType EntryType) String() string {
