@@ -12,7 +12,6 @@ type Entry struct {
 	Link                            string
 	Description                     string
 	Comment                         string
-	MediaType                       string
 	Tags                            string
 	ImageQuery                      string
 }
