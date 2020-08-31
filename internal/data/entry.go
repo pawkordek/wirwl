@@ -14,6 +14,7 @@ type Entry struct {
 	Comment                    string
 	MediaType                  string
 	Tags                       string
+	ImageQuery                 string
 }
 
 func (entry Entry) String() string {

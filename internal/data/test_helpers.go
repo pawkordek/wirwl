@@ -55,6 +55,7 @@ func GetExampleVideoEntries() []Entry {
 			Comment:                    "some comment",
 			MediaType:                  "video",
 			Tags:                       "some tags",
+			ImageQuery:                 "",
 		},
 		{
 			Id:                         1,
@@ -68,6 +69,7 @@ func GetExampleVideoEntries() []Entry {
 			Comment:                    "some comment2",
 			MediaType:                  "video",
 			Tags:                       "some tags",
+			ImageQuery:                 "",
 		},
 	}
 }
@@ -86,6 +88,7 @@ func GetExampleComicEntries() []Entry {
 			Comment:                    "some comment",
 			MediaType:                  "comic",
 			Tags:                       "some tags",
+			ImageQuery:                 "",
 		},
 		{
 			Id:                         1,
@@ -99,6 +102,7 @@ func GetExampleComicEntries() []Entry {
 			Comment:                    "some comment2",
 			MediaType:                  "comic",
 			Tags:                       "some tags",
+			ImageQuery:                 "",
 		},
 	}
 }
@@ -117,6 +121,7 @@ func GetExampleMusicEntries() []Entry {
 			Comment:                    "some comment",
 			MediaType:                  "music",
 			Tags:                       "some tags",
+			ImageQuery:                 "",
 		},
 		{
 			Id:                         1,
@@ -130,6 +135,7 @@ func GetExampleMusicEntries() []Entry {
 			Comment:                    "some comment2",
 			MediaType:                  "music",
 			Tags:                       "some tags",
+			ImageQuery:                 "",
 		},
 	}
 }
@@ -155,8 +161,8 @@ func (provider *AlwaysFailingProvider) LoadEntries() (map[EntryType][]Entry, err
 so that desired functionality when testing can be achieved
 */
 type AbstractProvider struct {
-	SaveEntriesFunc            func(map[EntryType][]Entry) error
-	LoadEntriesFunc            func() (map[EntryType][]Entry, error)
+	SaveEntriesFunc func(map[EntryType][]Entry) error
+	LoadEntriesFunc func() (map[EntryType][]Entry, error)
 }
 
 func NewAbstractProvider() *AbstractProvider {
