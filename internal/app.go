@@ -67,7 +67,7 @@ func (app *App) setupInputHandler() {
 	app.inputHandler.BindFunctionToAction(appName, input.SelectNextTabAction, func() { app.entriesTypesTabs.SelectNextTab() })
 	app.inputHandler.BindFunctionToAction(appName, input.SelectPreviousTabAction, func() { app.entriesTypesTabs.SelectPreviousTab() })
 	app.inputHandler.BindFunctionToAction(appName, input.SaveChangesAction, func() { app.trySavingChangesToDb() })
-	app.inputHandler.BindFunctionToAction(appName, input.DisplayDialogForAddingNewEntryTypAction, func() { app.displayDialogForAddingNewEntryType() })
+	app.inputHandler.BindFunctionToAction(appName, input.AddEntryTypeAction, func() { app.displayDialogForAddingNewEntryType() })
 	app.inputHandler.BindFunctionToAction(appName, input.EditCurrentEntryTypeAction, func() { app.editCurrentEntryType() })
 	app.inputHandler.BindFunctionToAction(appName, input.RemoveEntryTypeAction, func() { app.tryDeletingCurrentEntryType() })
 }

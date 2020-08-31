@@ -120,7 +120,7 @@ func (config *Config) loadDefaultKeymap() {
 	config.Keymap[input.SelectNextTabAction] = input.SingleKeyCombination(fyne.KeyL)
 	config.Keymap[input.SelectPreviousTabAction] = input.SingleKeyCombination(fyne.KeyH)
 	config.Keymap[input.SaveChangesAction] = input.TwoKeyCombination(fyne.KeyS, fyne.KeyY)
-	config.Keymap[input.DisplayDialogForAddingNewEntryTypAction] = input.TwoKeyCombination(fyne.KeyT, fyne.KeyI)
+	config.Keymap[input.AddEntryTypeAction] = input.TwoKeyCombination(fyne.KeyT, fyne.KeyI)
 	config.Keymap[input.RemoveEntryTypeAction] = input.TwoKeyCombination(fyne.KeyT, fyne.KeyD)
 	config.Keymap[input.EditCurrentEntryTypeAction] = input.TwoKeyCombination(fyne.KeyT, fyne.KeyE)
 	config.Keymap[input.MoveDownAction] = input.SingleKeyCombination(fyne.KeyJ)
