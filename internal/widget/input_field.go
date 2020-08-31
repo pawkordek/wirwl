@@ -50,7 +50,7 @@ func NewInputField(canvas fyne.Canvas, handler input.Handler) *InputField {
 	}
 	newInput.ExtendBaseWidget(newInput)
 	newInput.inputHandler.BindFunctionToAction(newInput, input.ConfirmAction, func() { newInput.OnConfirm() })
-	newInput.inputHandler.BindFunctionToAction(newInput, input.ExitInputModeAction, func() { newInput.OnExitInputMode() })
+	newInput.inputHandler.BindFunctionToAction(newInput, input.ExitInputModeAction, func() { newInput.ExitInputMode() })
 	return newInput
 }
 
@@ -70,7 +70,20 @@ func (inputField *InputField) TypedKey(key *fyne.KeyEvent) {
 	if inputField.firstRuneIgnored {
 		inputField.Entry.TypedKey(key)
 	}
-	inputField.inputHandler.HandleInInputMode(inputField, key.Name)
+	handled, handlingResult := inputField.inputHandler.HandleInInputMode(inputField, key.Name)
+	if handled && handlingResult.Action == input.ExitInputModeAction && handlingResult.KeyCombination.BothKeysPressed() {
+		//When two key combination for exiting input mode gets pressed, it's first character has already been typed so it has to be removed
+		//The second one doesn't have to be removed as it won't be typed in due to input field unfocusing when it exits
+		inputField.removeLastCharacterFromText()
+	}
+}
+
+func (inputField *InputField) removeLastCharacterFromText() {
+	textLength := len(inputField.Text)
+	if textLength > 0 {
+		inputField.Text = inputField.Text[0 : textLength-1]
+		inputField.Refresh()
+	}
 }
 
 func (inputField *InputField) TypedRune(r rune) {
@@ -103,4 +116,9 @@ func (inputField *InputField) Unmark() {
 func (inputField *InputField) EnterInputMode() {
 	inputField.Unmark()
 	inputField.canvas.Focus(inputField)
+}
+
+func (inputField *InputField) ExitInputMode() {
+	inputField.canvas.Unfocus()
+	inputField.OnExitInputMode()
 }

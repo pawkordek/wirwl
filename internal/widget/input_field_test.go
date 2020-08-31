@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/theme"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"wirwl/internal/input"
 )
 
 func TestThatFunctionGetsCalledOnConfirm(t *testing.T) {
@@ -56,4 +57,16 @@ func TestMarkingAndUnmarking(t *testing.T) {
 	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.FocusColor())
 	input.Unmark()
 	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.BackgroundColor())
+}
+
+func TestThatWhenExitingInputModeWithTwoKeyCombinationNeitherKeyOfCombinationGetsLeftInFieldsText(t *testing.T) {
+	keymap := make(map[input.Action]input.KeyCombination)
+	keymap[input.ExitInputModeAction] = input.TwoKeyCombination(fyne.KeyJ, fyne.KeyJ)
+	inputHandler := input.NewHandler(keymap)
+	inputField := NewInputField(test.Canvas(), inputHandler)
+	inputField.canvas.Focus(inputField)
+	inputField.Type("abc")
+	SimulateKeyPress(inputField, fyne.KeyJ)
+	SimulateKeyPress(inputField, fyne.KeyJ)
+	assert.Equal(t, "abc", inputField.Text)
 }
