@@ -22,11 +22,17 @@ func Error(err error) {
 }
 
 //Should only be used in tests to quickly fail and report an error.
-//In code all errors should be handled if possible, otherwise they should bubble up to the main function,
+//In application code all errors should be handled if possible, otherwise they should bubble up to the main function,
 //where application can exit.
 func Fatal(err error) {
 	printError("FATAL: ", err)
 	os.Exit(1)
+}
+
+//Should only be used in rare cases when it makes sense to panic on a programmer error so that the cause can be logged
+func Panic(err error) {
+	printError("PANIC: ", err)
+	panic(err)
 }
 
 func printError(textBefore string, err error) {
