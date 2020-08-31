@@ -11,52 +11,52 @@ import (
 
 func TestThatFunctionGetsCalledOnConfirm(t *testing.T) {
 	functionExecuted := false
-	input := NewInputField(test.Canvas(), getInputHandlerForTesting())
-	input.SetOnConfirm(func() { functionExecuted = true })
-	input.canvas.Focus(input)
-	SimulateKeyPress(input, fyne.KeyReturn)
+	inputField := NewInputField(test.Canvas(), getInputHandlerForTesting())
+	inputField.SetOnConfirm(func() { functionExecuted = true })
+	inputField.canvas.Focus(inputField)
+	SimulateKeyPress(inputField, fyne.KeyReturn)
 	assert.Equal(t, true, functionExecuted)
 }
 
 func TestThatFunctionGetsCalledOnCancel(t *testing.T) {
 	functionExecuted := false
-	input := NewInputField(test.Canvas(), getInputHandlerForTesting())
-	input.SetOnExitInputModeFunction(func() { functionExecuted = true })
-	input.canvas.Focus(input)
-	SimulateKeyPress(input, fyne.KeyEscape)
+	inputField := NewInputField(test.Canvas(), getInputHandlerForTesting())
+	inputField.SetOnExitInputModeFunction(func() { functionExecuted = true })
+	inputField.canvas.Focus(inputField)
+	SimulateKeyPress(inputField, fyne.KeyEscape)
 	assert.True(t, functionExecuted)
 }
 
 func TestThatTypingWorks(t *testing.T) {
-	input := NewInputField(test.Canvas(), getInputHandlerForTesting())
-	input.FocusLost()
-	input.FocusGained()
-	input.Type("some value")
-	assert.Equal(t, "some value", input.Text)
+	inputField := NewInputField(test.Canvas(), getInputHandlerForTesting())
+	inputField.FocusLost()
+	inputField.FocusGained()
+	inputField.Type("some value")
+	assert.Equal(t, "some value", inputField.Text)
 }
 
 func TestThatFunctionsAreNotNil(t *testing.T) {
-	input := NewInputField(test.Canvas(), getInputHandlerForTesting())
-	assert.NotNil(t, input.OnConfirm)
+	inputField := NewInputField(test.Canvas(), getInputHandlerForTesting())
+	assert.NotNil(t, inputField.OnConfirm)
 }
 
 func TestEnteringIntoInputMode(t *testing.T) {
-	input := NewInputField(test.Canvas(), getInputHandlerForTesting())
-	input.EnterInputMode()
-	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.BackgroundColor())
-	assert.True(t, input.Focused())
-	assert.Equal(t, input, input.canvas.Focused())
+	inputField := NewInputField(test.Canvas(), getInputHandlerForTesting())
+	inputField.EnterInputMode()
+	assert.Equal(t, inputField.bgRenderer.BackgroundColor(), theme.BackgroundColor())
+	assert.True(t, inputField.Focused())
+	assert.Equal(t, inputField, inputField.canvas.Focused())
 }
 
 func TestHighlightingAndUnhiglighting(t *testing.T) {
-	input := NewInputField(test.Canvas(), getInputHandlerForTesting())
+	inputField := NewInputField(test.Canvas(), getInputHandlerForTesting())
 	//InputField needs to be placed into a test window, otherwise renderer doesn't work properly and marking sets background color again
-	test.NewApp().NewWindow("").SetContent(input)
-	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.BackgroundColor())
-	input.Highlight()
-	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.FocusColor())
-	input.Unhighlight()
-	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.BackgroundColor())
+	test.NewApp().NewWindow("").SetContent(inputField)
+	assert.Equal(t, inputField.bgRenderer.BackgroundColor(), theme.BackgroundColor())
+	inputField.Highlight()
+	assert.Equal(t, inputField.bgRenderer.BackgroundColor(), theme.FocusColor())
+	inputField.Unhighlight()
+	assert.Equal(t, inputField.bgRenderer.BackgroundColor(), theme.BackgroundColor())
 }
 
 func TestThatWhenExitingInputModeWithTwoKeyCombinationNeitherKeyOfCombinationGetsLeftInFieldsText(t *testing.T) {
