@@ -27,3 +27,13 @@ func TestThatKeyCombinationGetsCreatedCorrectlyFromStringWithTwoKeys(t *testing.
 	assert.Equal(t, fyne.KeyH, keyCombination.firstKey)
 	assert.Equal(t, fyne.KeyO, keyCombination.secondKey)
 }
+
+func TestThatKeyCombinationCorrectlyKnowsWhetherItHasOneKeyPressed(t *testing.T) {
+	keyCombination := SingleKeyCombination(fyne.KeyR)
+	assert.True(t, keyCombination.OneKeyPressed())
+}
+
+func TestThatKeyCombinationCorrectlyKnowsWhetherItHasTwoKeysPressed(t *testing.T) {
+	keyCombination := TwoKeyCombination(fyne.KeyE, fyne.KeyN)
+	assert.True(t, keyCombination.BothKeysPressed())
+}
