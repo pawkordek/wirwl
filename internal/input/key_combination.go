@@ -59,11 +59,11 @@ func (keyCombination *KeyCombination) press(key fyne.KeyName) {
 	}
 }
 
-func (keyCombination *KeyCombination) oneKeyPressed() bool {
+func (keyCombination *KeyCombination) OneKeyPressed() bool {
 	return keyCombination.firstKey != "" && keyCombination.secondKey == ""
 }
 
-func (keyCombination *KeyCombination) bothKeysPressed() bool {
+func (keyCombination *KeyCombination) BothKeysPressed() bool {
 	return keyCombination.firstKey != "" && keyCombination.secondKey != ""
 }
 

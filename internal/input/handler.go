@@ -69,7 +69,7 @@ func (handler *Handler) HandleInNormalMode(caller interface{}, keyName fyne.KeyN
 }
 
 func (handler *Handler) HandleInInputMode(caller interface{}, keyName fyne.KeyName) bool {
-	if handler.currentKeyCombination.bothKeysPressed() {
+	if handler.currentKeyCombination.BothKeysPressed() {
 		handler.currentKeyCombination.press(handler.currentKeyCombination.secondKey)
 	}
 	handler.currentKeyCombination.press(keyName)
@@ -87,8 +87,8 @@ func (handler *Handler) tryExecutingFunctionForCallerAndKeyCombination(caller in
 	defer func() { handler.lastKeyPressTime = timeNow }()
 	timeSinceLastKeyPress := timeNow.Sub(handler.lastKeyPressTime)
 	for _, action := range handler.keymap[keyCombination] {
-		if handler.currentKeyCombination.oneKeyPressed() ||
-			(handler.currentKeyCombination.bothKeysPressed() && timeSinceLastKeyPress < time.Second) {
+		if handler.currentKeyCombination.OneKeyPressed() ||
+			(handler.currentKeyCombination.BothKeysPressed() && timeSinceLastKeyPress < time.Second) {
 			callerActionPair := callerActionPair{
 				caller: caller,
 				action: action,
