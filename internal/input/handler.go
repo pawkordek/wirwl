@@ -68,21 +68,26 @@ func (handler *Handler) HandleInNormalMode(caller interface{}, keyName fyne.KeyN
 	handler.tryExecutingFunctionForCallerAndKeyCombination(caller, handler.currentKeyCombination)
 }
 
-func (handler *Handler) HandleInInputMode(caller interface{}, keyName fyne.KeyName) bool {
+type HandlingResult struct {
+	KeyCombination KeyCombination
+	Action         Action
+}
+
+func (handler *Handler) HandleInInputMode(caller interface{}, keyName fyne.KeyName) (bool, HandlingResult) {
 	if handler.currentKeyCombination.BothKeysPressed() {
 		handler.currentKeyCombination.press(handler.currentKeyCombination.secondKey)
 	}
 	handler.currentKeyCombination.press(keyName)
 	handler.onKeyPressedCallback(handler.currentKeyCombination)
-	functionExecuted := handler.tryExecutingFunctionForCallerAndKeyCombination(caller, handler.currentKeyCombination)
+	functionExecuted, handlingResult := handler.tryExecutingFunctionForCallerAndKeyCombination(caller, handler.currentKeyCombination)
 	if functionExecuted {
-		return true
+		return true, handlingResult
 	} else {
 		return handler.tryExecutingFunctionForCallerAndKeyCombination(caller, SingleKeyCombination(handler.currentKeyCombination.secondKey))
 	}
 }
 
-func (handler *Handler) tryExecutingFunctionForCallerAndKeyCombination(caller interface{}, keyCombination KeyCombination) bool {
+func (handler *Handler) tryExecutingFunctionForCallerAndKeyCombination(caller interface{}, keyCombination KeyCombination) (bool, HandlingResult) {
 	timeNow := time.Now()
 	defer func() { handler.lastKeyPressTime = timeNow }()
 	timeSinceLastKeyPress := timeNow.Sub(handler.lastKeyPressTime)
@@ -97,11 +102,14 @@ func (handler *Handler) tryExecutingFunctionForCallerAndKeyCombination(caller in
 			if function != nil {
 				function()
 				handler.currentKeyCombination.releaseKeys()
-				return true
+				return true, HandlingResult{
+					KeyCombination: keyCombination,
+					Action:         action,
+				}
 			}
 		}
 	}
-	return false
+	return false, HandlingResult{}
 }
 
 func (handler *Handler) SetOnKeyPressedCallbackFunction(function func(KeyCombination)) {
