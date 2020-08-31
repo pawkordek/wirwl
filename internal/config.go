@@ -14,6 +14,7 @@ import (
 )
 
 const appName = "wirwl"
+const configFileName = appName + ".cfg"
 const logFileName = appName + ".log"
 
 type Config struct {
@@ -165,7 +166,7 @@ func (config *Config) madeEncodable() encodableDecodableConfig {
 }
 
 func (config *Config) ConfigFilePath() string {
-	return filepath.Join(config.ConfigDirPath, appName+".cfg")
+	return filepath.Join(config.ConfigDirPath, configFileName)
 }
 
 func (config Config) String() string {
