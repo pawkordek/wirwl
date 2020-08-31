@@ -61,6 +61,7 @@ func TestThatFocusIsNotLostIfItWasSetInHidingCallbackFunctionWhenHidingOnKeyPres
 	dialog.SetOneTimeOnHideCallback(func() {
 		test.Canvas().Focus(input)
 	})
+	dialog.Canvas.Focus(dialog)
 	assert.False(t, input.Focused())
 	SimulateKeyPress(dialog, fyne.KeyE)
 	assert.True(t, input.Focused())

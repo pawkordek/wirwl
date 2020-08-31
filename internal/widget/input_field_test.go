@@ -12,6 +12,7 @@ func TestThatFunctionGetsCalledOnConfirm(t *testing.T) {
 	functionExecuted := false
 	input := NewInputField(test.Canvas(), getInputHandlerForTesting())
 	input.SetOnConfirm(func() { functionExecuted = true })
+	input.canvas.Focus(input)
 	SimulateKeyPress(input, fyne.KeyReturn)
 	assert.Equal(t, true, functionExecuted)
 }
@@ -20,6 +21,7 @@ func TestThatFunctionGetsCalledOnCancel(t *testing.T) {
 	functionExecuted := false
 	input := NewInputField(test.Canvas(), getInputHandlerForTesting())
 	input.SetOnExitInputModeFunction(func() { functionExecuted = true })
+	input.canvas.Focus(input)
 	SimulateKeyPress(input, fyne.KeyEscape)
 	assert.True(t, functionExecuted)
 }
