@@ -45,7 +45,7 @@ func GetExampleVideoEntries() []Entry {
 	return []Entry{
 		{
 			Id:                              0,
-			Status:                          "some status",
+			Status:                          InProgressStatus,
 			Title:                           "some video1",
 			ElementsCompleted:               1,
 			TotalAmountOfElementsToComplete: 2,
@@ -58,7 +58,7 @@ func GetExampleVideoEntries() []Entry {
 		},
 		{
 			Id:                              1,
-			Status:                          "some status2",
+			Status:                          InProgressStatus,
 			Title:                           "some video2",
 			ElementsCompleted:               4,
 			TotalAmountOfElementsToComplete: 5,
@@ -76,7 +76,7 @@ func GetExampleComicEntries() []Entry {
 	return []Entry{
 		{
 			Id:                              0,
-			Status:                          "some status",
+			Status:                          InProgressStatus,
 			Title:                           "some comic1",
 			ElementsCompleted:               1,
 			TotalAmountOfElementsToComplete: 2,
@@ -89,7 +89,7 @@ func GetExampleComicEntries() []Entry {
 		},
 		{
 			Id:                              1,
-			Status:                          "some status2",
+			Status:                          InProgressStatus,
 			Title:                           "some comic2",
 			ElementsCompleted:               4,
 			TotalAmountOfElementsToComplete: 5,
@@ -107,7 +107,7 @@ func GetExampleMusicEntries() []Entry {
 	return []Entry{
 		{
 			Id:                              0,
-			Status:                          "some status",
+			Status:                          InProgressStatus,
 			Title:                           "some music1",
 			ElementsCompleted:               1,
 			TotalAmountOfElementsToComplete: 2,
@@ -120,7 +120,7 @@ func GetExampleMusicEntries() []Entry {
 		},
 		{
 			Id:                              1,
-			Status:                          "some status2",
+			Status:                          InProgressStatus,
 			Title:                           "some music2",
 			ElementsCompleted:               4,
 			TotalAmountOfElementsToComplete: 5,

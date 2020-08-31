@@ -2,9 +2,19 @@ package data
 
 import "fmt"
 
+type EntryStatus string
+
+const (
+	InProgressStatus EntryStatus = "In progress"
+	CompletedStatus  EntryStatus = "Completed"
+	OnHoldStatus     EntryStatus = "On hold"
+	DroppedStatus    EntryStatus = "Dropped"
+	PlannedStatus    EntryStatus = "Planned"
+)
+
 type Entry struct {
 	Id                              int
-	Status                          string
+	Status                          EntryStatus
 	Title                           string
 	ElementsCompleted               int
 	TotalAmountOfElementsToComplete int
