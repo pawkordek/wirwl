@@ -48,14 +48,14 @@ func TestEnteringIntoInputMode(t *testing.T) {
 	assert.Equal(t, input, input.canvas.Focused())
 }
 
-func TestMarkingAndUnmarking(t *testing.T) {
+func TestHighlightingAndUnhiglighting(t *testing.T) {
 	input := NewInputField(test.Canvas(), getInputHandlerForTesting())
 	//InputField needs to be placed into a test window, otherwise renderer doesn't work properly and marking sets background color again
 	test.NewApp().NewWindow("").SetContent(input)
 	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.BackgroundColor())
-	input.Mark()
+	input.Highlight()
 	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.FocusColor())
-	input.Unmark()
+	input.Unhighlight()
 	assert.Equal(t, input.bgRenderer.BackgroundColor(), theme.BackgroundColor())
 }
 

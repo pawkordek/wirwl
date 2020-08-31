@@ -86,7 +86,7 @@ func (dialog *FormDialog) handleEnterKey() {
 
 func (dialog *FormDialog) Display() {
 	dialog.currentInputNum = 0
-	dialog.currentInput().Mark()
+	dialog.currentInput().Highlight()
 	dialog.Canvas.Focus(dialog)
 	dialog.Show()
 }
@@ -97,9 +97,9 @@ func (dialog *FormDialog) TypedKey(key *fyne.KeyEvent) {
 
 func (dialog *FormDialog) setCurrentInputTo(number int) {
 	if number < len(dialog.inputFields) && number >= 0 {
-		dialog.currentInput().Unmark()
+		dialog.currentInput().Unhighlight()
 		dialog.currentInputNum = number
-		dialog.currentInput().Mark()
+		dialog.currentInput().Highlight()
 	}
 }
 

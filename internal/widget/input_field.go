@@ -105,16 +105,16 @@ func (inputField *InputField) setBgColor(color color.Color) {
 	inputField.Refresh()
 }
 
-func (inputField *InputField) Mark() {
+func (inputField *InputField) Highlight() {
 	inputField.setBgColor(theme.FocusColor())
 }
 
-func (inputField *InputField) Unmark() {
+func (inputField *InputField) Unhighlight() {
 	inputField.setBgColor(theme.BackgroundColor())
 }
 
 func (inputField *InputField) EnterInputMode() {
-	inputField.Unmark()
+	inputField.Unhighlight()
 	inputField.canvas.Focus(inputField)
 }
 
