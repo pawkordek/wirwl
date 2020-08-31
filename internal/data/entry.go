@@ -19,6 +19,8 @@ type Entry struct {
 	ElementsCompleted               int
 	TotalAmountOfElementsToComplete int
 	Score                           int
+	StartDate                       string
+	FinishDate                      string
 	Link                            string
 	Description                     string
 	Comment                         string
