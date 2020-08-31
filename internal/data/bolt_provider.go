@@ -9,6 +9,7 @@ import (
 )
 
 const entriesTypesTableName = "entries_types"
+const entriesTableSuffix = "_entries"
 
 type BoltProvider struct {
 	dbPath string
@@ -26,7 +27,7 @@ func (provider *BoltProvider) SaveEntries(entries map[EntryType][]Entry) error {
 		return err
 	}
 	for entryType, entries := range entries {
-		err = provider.saveEntriesToDb(entryType.Name, entries)
+		err = provider.saveEntriesToDb(entryType.Name+entriesTableSuffix, entries)
 		if err != nil {
 			return err
 		}
@@ -143,7 +144,7 @@ func (provider *BoltProvider) LoadEntries() (map[EntryType][]Entry, error) {
 	}
 	allEntries := make(map[EntryType][]Entry)
 	for _, entryType := range entriesTypes {
-		entriesForCurrentType, err := provider.loadEntriesFromDb(entryType.Name)
+		entriesForCurrentType, err := provider.loadEntriesFromDb(entryType.Name + entriesTableSuffix)
 		if err != nil {
 			return nil, err
 		}
