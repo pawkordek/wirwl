@@ -122,3 +122,7 @@ func (inputField *InputField) ExitInputMode() {
 	inputField.canvas.Unfocus()
 	inputField.OnExitInputMode()
 }
+
+func (inputField *InputField) GetText() string {
+	return inputField.Text
+}

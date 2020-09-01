@@ -10,15 +10,19 @@ import (
 gets typed into the input. There is code that prevents this but as this situation doesn't happen when running the
 test code any string typed into the input needs an additional character at the beginning as if the bug happened.
 */
-func (inputField *InputField) Type(chars string) {
+func TypeIntoFocusable(focusable fyne.Focusable, chars string) {
 	fixedChars := " " + chars
 	for _, char := range fixedChars {
-		inputField.TypedRune(char)
+		focusable.TypedRune(char)
 	}
 }
 
+func (inputField *InputField) Type(chars string) {
+	TypeIntoFocusable(inputField, chars)
+}
+
 func (dialog *FormDialog) Type(chars string) {
-	dialog.currentInput().Type(chars)
+	TypeIntoFocusable(dialog.currentWidget(), chars)
 }
 
 //Please make sure that tested focusable is focused if used on a standalone focusable, otherwise this won't work
@@ -80,4 +84,43 @@ func getInputHandlerForTesting() input.Handler {
 	keymap[input.ConfirmAction] = input.SingleKeyCombination(fyne.KeyReturn)
 	keymap[input.CancelAction] = input.SingleKeyCombination(fyne.KeyEscape)
 	return input.NewHandler(keymap)
+}
+
+func getOneInputFieldForDialogTesting() []FormDialogElement {
+	elements := []FormDialogElement{}
+	elements = append(elements, FormDialogElement{
+		LabelText:  "first",
+		WidgetType: InputFieldType,
+	})
+	return elements
+}
+
+func getTwoInputFieldsForFormDialogTesting() []FormDialogElement {
+	elements := []FormDialogElement{}
+	elements = append(elements, FormDialogElement{
+		LabelText:  "first",
+		WidgetType: InputFieldType,
+	})
+	elements = append(elements, FormDialogElement{
+		LabelText:  "second",
+		WidgetType: InputFieldType,
+	})
+	return elements
+}
+
+func getThreeInputFieldsForFormDialogTesting() []FormDialogElement {
+	elements := []FormDialogElement{}
+	elements = append(elements, FormDialogElement{
+		LabelText:  "first",
+		WidgetType: InputFieldType,
+	})
+	elements = append(elements, FormDialogElement{
+		LabelText:  "second",
+		WidgetType: InputFieldType,
+	})
+	elements = append(elements, FormDialogElement{
+		LabelText:  "third",
+		WidgetType: InputFieldType,
+	})
+	return elements
 }
