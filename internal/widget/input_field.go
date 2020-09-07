@@ -10,12 +10,13 @@ import (
 
 type InputField struct {
 	widget.Entry
-	canvas           fyne.Canvas
-	bgRenderer       *backgroundRenderer
-	inputHandler     input.Handler
-	OnConfirm        func()
-	OnExitInputMode  func()
-	firstRuneIgnored bool
+	canvas               fyne.Canvas
+	bgRenderer           *backgroundRenderer
+	inputHandler         input.Handler
+	OnConfirm            func()
+	OnExitInputMode      func()
+	runeAllowedToBeTyped func(r rune) bool
+	firstRuneIgnored     bool
 }
 
 type backgroundRenderer struct {
@@ -40,13 +41,14 @@ func (inputField *InputField) CreateRenderer() fyne.WidgetRenderer {
 
 func NewInputField(canvas fyne.Canvas, handler input.Handler) *InputField {
 	newInput := &InputField{
-		Entry:            widget.Entry{},
-		canvas:           canvas,
-		bgRenderer:       &backgroundRenderer{},
-		inputHandler:     handler,
-		OnConfirm:        func() {},
-		OnExitInputMode:  func() {},
-		firstRuneIgnored: false,
+		Entry:                widget.Entry{},
+		canvas:               canvas,
+		bgRenderer:           &backgroundRenderer{},
+		inputHandler:         handler,
+		OnConfirm:            func() {},
+		OnExitInputMode:      func() {},
+		runeAllowedToBeTyped: func(r rune) bool { return true },
+		firstRuneIgnored:     false,
 	}
 	newInput.ExtendBaseWidget(newInput)
 	newInput.inputHandler.BindFunctionToAction(newInput, input.ConfirmAction, func() { newInput.OnConfirm() })
@@ -60,6 +62,10 @@ func (inputField *InputField) SetOnConfirm(function func()) {
 
 func (inputField *InputField) SetOnExitInputModeFunction(function func()) {
 	inputField.OnExitInputMode = function
+}
+
+func (inputField *InputField) SetRuneFilteringFunction(function func(r rune) bool) {
+	inputField.runeAllowedToBeTyped = function
 }
 
 func (inputField *InputField) TypedKey(key *fyne.KeyEvent) {
@@ -88,7 +94,7 @@ func (inputField *InputField) removeLastCharacterFromText() {
 
 func (inputField *InputField) TypedRune(r rune) {
 	//Prevents the last key pressed to display the hidden inputField from being typed into it
-	if inputField.firstRuneIgnored {
+	if inputField.firstRuneIgnored && inputField.runeAllowedToBeTyped(r) {
 		inputField.Entry.TypedRune(r)
 	} else {
 		inputField.firstRuneIgnored = true

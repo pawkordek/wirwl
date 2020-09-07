@@ -70,3 +70,12 @@ func TestThatWhenExitingInputModeWithTwoKeyCombinationNeitherKeyOfCombinationGet
 	SimulateKeyPress(inputField, fyne.KeyJ)
 	assert.Equal(t, "abc", inputField.Text)
 }
+
+func TestThatInputFieldDoesNotInputIfFilterFunctionIsSet(t *testing.T) {
+	inputField := NewInputField(test.Canvas(), getInputHandlerForTesting())
+	inputField.SetRuneFilteringFunction(func(r rune) bool {
+		return r == 'a'
+	})
+	TypeIntoFocusable(inputField, "a5pi25a1!'';.Aa")
+	assert.Equal(t, "aaa", inputField.Text)
+}
