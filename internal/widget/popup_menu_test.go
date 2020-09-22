@@ -11,10 +11,12 @@ func TestThatPopUpMenuIsFocusedAndVisibleWhenItGetsShown(t *testing.T) {
 	menu := NewPopUpMenu(test.Canvas(), getInputHandlerForTesting(), "")
 	menu.Show()
 	assert.True(t, menu.focused)
+	assert.True(t, menu.Visible())
 	assert.Equal(t, menu, test.Canvas().Focused())
 	menu = NewPopUpMenu(test.Canvas(), getInputHandlerForTesting(), "")
 	menu.ShowAtPosition(fyne.Position{})
 	assert.True(t, menu.focused)
+	assert.True(t, menu.Visible())
 	assert.Equal(t, menu, test.Canvas().Focused())
 }
 
@@ -23,6 +25,7 @@ func TestThatPopUpMenuHidesAndUnfocusesWhenChoiceGetsSelected(t *testing.T) {
 	menu.Show()
 	SimulateKeyPress(menu, fyne.KeyReturn)
 	assert.False(t, menu.focused)
+	assert.False(t, menu.Visible())
 	assert.NotEqual(t, menu, test.Canvas().Focused())
 }
 

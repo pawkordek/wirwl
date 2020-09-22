@@ -118,5 +118,6 @@ func (menu *PopUpMenu) ShowAtPosition(position fyne.Position) {
 
 func (menu *PopUpMenu) onChoiceSelected() {
 	menu.Canvas.Unfocus()
+	menu.Hide()
 	menu.OnChoiceSelectedCallback(menu.currentChoice().Text)
 }
