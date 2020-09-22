@@ -51,6 +51,7 @@ func NewSelect(canvas fyne.Canvas, handler input.Handler, choices ...string) *Se
 	selectWidget.Options = choices
 	menu.OnChoiceSelectedCallback = func(s string) {
 		selectWidget.SetSelected(s)
+		selectWidget.onExitInputMode()
 	}
 	selectWidget.ExtendBaseWidget(selectWidget)
 	selectWidget.inputHandler.BindFunctionToAction(selectWidget, input.ExitInputModeAction, func() {
