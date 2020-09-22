@@ -63,6 +63,7 @@ func NewSelect(canvas fyne.Canvas, handler input.Handler, choices ...string) *Se
 
 func (selectWidget *Select) EnterInputMode() {
 	selectWidget.menu.ShowAtPosition(fyne.CurrentApp().Driver().AbsolutePositionForObject(selectWidget))
+	selectWidget.menu.Resize(fyne.NewSize(selectWidget.Size().Width, selectWidget.menu.MinSize().Height))
 }
 
 func (selectWidget *Select) FocusGained() {
