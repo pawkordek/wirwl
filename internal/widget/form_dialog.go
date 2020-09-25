@@ -3,9 +3,7 @@ package widget
 import (
 	"fyne.io/fyne"
 	"fyne.io/fyne/widget"
-	"github.com/pkg/errors"
 	"wirwl/internal/input"
-	"wirwl/internal/log"
 )
 
 /*
@@ -30,19 +28,23 @@ type FormDialog struct {
 	inputHandler    input.Handler
 }
 
-type FormDialogElement struct {
-	LabelText  string
-	WidgetType Type
+type FormDialogFormItem struct {
+	widget.FormItem
 }
 
-//Passed in elements will be displayed in the order they are in the array.
-func NewFormDialog(canvas fyne.Canvas, inputHandler input.Handler, title string, elements []FormDialogElement) *FormDialog {
-	embeddedWidgets := make(map[string]FormDialogEmbeddableWidget, len(elements))
+func newFormDialogFormItem(labelText string, embeddableWidget FormDialogEmbeddableWidget) *FormDialogFormItem {
+	return &FormDialogFormItem{
+		FormItem: *widget.NewFormItem(labelText, embeddableWidget),
+	}
+}
+
+//Form items will be displayed in the order they are passed in
+func NewFormDialog(canvas fyne.Canvas, inputHandler input.Handler, title string, formItems ...*FormDialogFormItem) *FormDialog {
+	embeddedWidgets := make(map[string]FormDialogEmbeddableWidget, len(formItems))
 	form := widget.NewForm()
-	for _, element := range elements {
-		embeddedWidget := widgetFromType(element.WidgetType, canvas, inputHandler)
-		form.Append(element.LabelText, embeddedWidget)
-		embeddedWidgets[element.LabelText] = embeddedWidget
+	for _, formItem := range formItems {
+		form.AppendItem(&formItem.FormItem)
+		embeddedWidgets[formItem.Text] = formItem.Widget.(FormDialogEmbeddableWidget)
 	}
 	dialog := &FormDialog{
 		FocusableDialog: *NewFocusableDialog(canvas, form),
@@ -64,16 +66,6 @@ func NewFormDialog(canvas fyne.Canvas, inputHandler input.Handler, title string,
 	dialog.inputHandler = inputHandler
 	dialog.setupInputHandler()
 	return dialog
-}
-
-func widgetFromType(widgetType Type, canvas fyne.Canvas, inputHandler input.Handler) FormDialogEmbeddableWidget {
-	switch widgetType {
-	case InputFieldType:
-		return NewInputField(canvas, inputHandler)
-	}
-	err := errors.New("A widget type called '" + string(widgetType) + "'that cannot be instantiated has been passed to Form Dialog. This is a coding error and should be fixed!")
-	log.Panic(err)
-	return nil
 }
 
 func (dialog *FormDialog) setupInputHandler() {

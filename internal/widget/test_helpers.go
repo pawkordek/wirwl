@@ -2,6 +2,7 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	"fyne.io/fyne/test"
 	"fyne.io/fyne/widget"
 	"wirwl/internal/input"
 )
@@ -86,41 +87,23 @@ func getInputHandlerForTesting() input.Handler {
 	return input.NewHandler(keymap)
 }
 
-func getOneInputFieldForDialogTesting() []FormDialogElement {
-	elements := []FormDialogElement{}
-	elements = append(elements, FormDialogElement{
-		LabelText:  "first",
-		WidgetType: InputFieldType,
-	})
+func getOneInputFieldForDialogTesting() []*FormDialogFormItem {
+	elements := []*FormDialogFormItem{}
+	elements = append(elements, newFormDialogFormItem("first", NewInputField(test.Canvas(), getInputHandlerForTesting())))
 	return elements
 }
 
-func getTwoInputFieldsForFormDialogTesting() []FormDialogElement {
-	elements := []FormDialogElement{}
-	elements = append(elements, FormDialogElement{
-		LabelText:  "first",
-		WidgetType: InputFieldType,
-	})
-	elements = append(elements, FormDialogElement{
-		LabelText:  "second",
-		WidgetType: InputFieldType,
-	})
+func getTwoInputFieldsForFormDialogTesting() []*FormDialogFormItem {
+	elements := []*FormDialogFormItem{}
+	elements = append(elements, newFormDialogFormItem("first", NewInputField(test.Canvas(), getInputHandlerForTesting())))
+	elements = append(elements, newFormDialogFormItem("second", NewInputField(test.Canvas(), getInputHandlerForTesting())))
 	return elements
 }
 
-func getThreeInputFieldsForFormDialogTesting() []FormDialogElement {
-	elements := []FormDialogElement{}
-	elements = append(elements, FormDialogElement{
-		LabelText:  "first",
-		WidgetType: InputFieldType,
-	})
-	elements = append(elements, FormDialogElement{
-		LabelText:  "second",
-		WidgetType: InputFieldType,
-	})
-	elements = append(elements, FormDialogElement{
-		LabelText:  "third",
-		WidgetType: InputFieldType,
-	})
+func getThreeInputFieldsForFormDialogTesting() []*FormDialogFormItem {
+	elements := []*FormDialogFormItem{}
+	elements = append(elements, newFormDialogFormItem("first", NewInputField(test.Canvas(), getInputHandlerForTesting())))
+	elements = append(elements, newFormDialogFormItem("second", NewInputField(test.Canvas(), getInputHandlerForTesting())))
+	elements = append(elements, newFormDialogFormItem("third", NewInputField(test.Canvas(), getInputHandlerForTesting())))
 	return elements
 }
