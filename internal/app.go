@@ -143,14 +143,18 @@ func (app *App) prepareDialogs() {
 	app.msgDialog = widget.NewMsgPopUp(app.mainWindow.Canvas())
 	app.confirmationDialog = widget.NewConfirmationDialog(app.mainWindow.Canvas())
 	app.confirmationDialog.OnConfirm = app.deleteCurrentEntryType
+	app.addEntryTypeDialog = widget.NewFormDialog(app.mainWindow.Canvas(), app.inputHandler, "Add new entry type", app.createEntryTypeRelatedDialogElements()...)
+	app.addEntryTypeDialog.OnEnterPressed = app.onEnterPressedInAddEntryTypeDialog
+	app.editEntryTypeDialog = widget.NewFormDialog(app.mainWindow.Canvas(), app.inputHandler, "Editing entry type: "+app.getCurrentTabText(), app.createEntryTypeRelatedDialogElements()...)
+	app.editEntryTypeDialog.OnEnterPressed = app.applyChangesToCurrentEntryType
+}
+
+func (app *App) createEntryTypeRelatedDialogElements() []*widget.FormDialogFormItem {
 	formItemFactory := widget.NewFormDialogFormItemFactory(app.mainWindow.Canvas(), app.inputHandler)
 	entryTypeRelatedDialogElements := []*widget.FormDialogFormItem{}
 	entryTypeRelatedDialogElements = append(entryTypeRelatedDialogElements, formItemFactory.FormItemWithInputField("Name"))
 	entryTypeRelatedDialogElements = append(entryTypeRelatedDialogElements, formItemFactory.FormItemWithInputField("Image query"))
-	app.addEntryTypeDialog = widget.NewFormDialog(app.mainWindow.Canvas(), app.inputHandler, "Add new entry type", entryTypeRelatedDialogElements...)
-	app.addEntryTypeDialog.OnEnterPressed = app.onEnterPressedInAddEntryTypeDialog
-	app.editEntryTypeDialog = widget.NewFormDialog(app.mainWindow.Canvas(), app.inputHandler, "Editing entry type: "+app.getCurrentTabText(), entryTypeRelatedDialogElements...)
-	app.editEntryTypeDialog.OnEnterPressed = app.applyChangesToCurrentEntryType
+	return entryTypeRelatedDialogElements
 }
 
 func (app *App) deleteCurrentEntryType() {
