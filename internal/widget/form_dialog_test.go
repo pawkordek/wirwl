@@ -113,3 +113,21 @@ func TestThatFormDialogHidesBeforeItCallsOnEnterPressed(t *testing.T) {
 	}
 	SimulateKeyPress(dialog, fyne.KeyEnter)
 }
+
+func TestThatFormDialogItemFactoryCreatesCorrectInputField(t *testing.T) {
+	createdFormItem := NewFormDialogFormItemFactory(test.Canvas(), getInputHandlerForTesting()).
+		FormItemWithInputField("This is input field")
+	assert.Equal(t, "This is input field", createdFormItem.Text)
+	assert.NotPanics(t, func() {
+		_ = createdFormItem.Widget.(*InputField)
+	})
+}
+
+func TestThatFormDialogItemFactoryCreatesCorrectSelect(t *testing.T) {
+	createdFormItem := NewFormDialogFormItemFactory(test.Canvas(), getInputHandlerForTesting()).
+		FormItemWithSelect("This is select", "1", "2")
+	assert.Equal(t, "This is select", createdFormItem.Text)
+	assert.NotPanics(t, func() {
+		_ = createdFormItem.Widget.(*Select)
+	})
+}

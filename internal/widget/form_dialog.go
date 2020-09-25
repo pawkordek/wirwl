@@ -38,6 +38,26 @@ func newFormDialogFormItem(labelText string, embeddableWidget FormDialogEmbeddab
 	}
 }
 
+type FormDialogFormItemFactory struct {
+	canvas       fyne.Canvas
+	inputHandler input.Handler
+}
+
+func NewFormDialogFormItemFactory(canvas fyne.Canvas, inputHandler input.Handler) *FormDialogFormItemFactory {
+	return &FormDialogFormItemFactory{
+		canvas:       canvas,
+		inputHandler: inputHandler,
+	}
+}
+
+func (factory *FormDialogFormItemFactory) FormItemWithInputField(labelText string) *FormDialogFormItem {
+	return newFormDialogFormItem(labelText, NewInputField(factory.canvas, factory.inputHandler))
+}
+
+func (factory *FormDialogFormItemFactory) FormItemWithSelect(labelText string, selectChoices ...string) *FormDialogFormItem {
+	return newFormDialogFormItem(labelText, NewSelect(factory.canvas, factory.inputHandler, selectChoices...))
+}
+
 //Form items will be displayed in the order they are passed in
 func NewFormDialog(canvas fyne.Canvas, inputHandler input.Handler, title string, formItems ...*FormDialogFormItem) *FormDialog {
 	embeddedWidgets := make(map[string]FormDialogEmbeddableWidget, len(formItems))
