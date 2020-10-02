@@ -18,15 +18,21 @@ const (
 )
 
 func NewMsgPopUp(canvas fyne.Canvas) *MsgDialog {
+	dialog := newMsgDialog(canvas)
+	dialog.ExtendBaseWidget(dialog)
+	return dialog
+}
+
+//Should be used for dialog creation by any widget that embed this widget so it can properly extend fyne's BaseWidget
+func newMsgDialog(canvas fyne.Canvas) *MsgDialog {
 	msg := widget.NewLabel("")
 	msg.Alignment = fyne.TextAlignCenter
-	popUp := &MsgDialog{
+	dialog := &MsgDialog{
 		FocusableDialog: newFocusableDialog(canvas, msg),
 		msg:             msg,
 	}
-	popUp.ExtendBaseWidget(popUp)
-	popUp.Hide()
-	return popUp
+	dialog.Hide()
+	return dialog
 }
 
 func (popUp *MsgDialog) Title() string {
