@@ -23,13 +23,22 @@ func NewTabContainer(
 	tabsData map[string][]fyne.CanvasObject,
 	onElementSelected func(element *fyne.CanvasObject),
 	onElementUnselected func(element *fyne.CanvasObject)) *TabContainer {
+	container := newTabContainer(tabsData, onElementSelected, onElementUnselected)
+	container.ExtendBaseWidget(container)
+	return container
+}
+
+//Should be used for dialog creation by any widget that embed this widget so it can properly extend fyne's BaseWidget
+func newTabContainer(
+	tabsData map[string][]fyne.CanvasObject,
+	onElementSelected func(element *fyne.CanvasObject),
+	onElementUnselected func(element *fyne.CanvasObject)) *TabContainer {
 	container := &TabContainer{
 		selectedElementIndex: 0,
 		tabsContent:          tabsData,
 		onElementSelected:    onElementSelected,
 		onElementUnselected:  onElementUnselected,
 	}
-	container.ExtendBaseWidget(container)
 	container.TabContainer.Items = getTabsFromData(tabsData)
 	container.selectElement(0)
 	container.SelectTabIndex(0)
