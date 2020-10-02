@@ -25,6 +25,13 @@ type FocusableDialog struct {
 }
 
 func NewFocusableDialog(canvas fyne.Canvas, content ...fyne.CanvasObject) *FocusableDialog {
+	dialog := newFocusableDialog(canvas, content...)
+	dialog.ExtendBaseWidget(dialog)
+	return dialog
+}
+
+//Should be used for dialog creation by any widget that embed this widget so it can properly extend fyne's BaseWidget
+func newFocusableDialog(canvas fyne.Canvas, content ...fyne.CanvasObject) *FocusableDialog {
 	title := widget.NewLabel("")
 	title.Alignment = fyne.TextAlignCenter
 	content = append([]fyne.CanvasObject{title}, content...)
@@ -35,7 +42,6 @@ func NewFocusableDialog(canvas fyne.Canvas, content ...fyne.CanvasObject) *Focus
 		focused:               false,
 		oneTimeOnHideCallback: func() {},
 	}
-	dialog.ExtendBaseWidget(dialog)
 	dialog.Hide()
 	return dialog
 }
