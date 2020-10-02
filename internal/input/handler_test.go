@@ -332,3 +332,19 @@ func TestThatWhenActionGetsHandledInInputModeProperInformationGetsReturned(t *te
 	assert.Equal(t, testAction, handlingResult.Action)
 	assert.Equal(t, SingleKeyCombination(fyne.KeyY), handlingResult.KeyCombination)
 }
+
+func TestThatFunctionRebindingWorksCorrectly(t *testing.T) {
+	testActionExecuted := false
+	testActionFunc := func(){testActionExecuted = true}
+	keymap := make(map[Action]KeyCombination)
+	keymap[testAction] = SingleKeyCombination(fyne.KeyY)
+	handler := NewHandler(keymap)
+	handler.BindFunctionToAction("First caller", testAction, testActionFunc)
+	handler.RebindAllFunctionsFromTo("First caller", "Second caller")
+	handler.HandleInNormalMode("First caller", fyne.KeyY)
+	//Second key click so that next click will correctly handle as singular key press
+	handler.HandleInNormalMode("First caller", fyne.KeyY)
+	assert.False(t, testActionExecuted)
+	handler.HandleInNormalMode("Second caller", fyne.KeyY)
+	assert.True(t, testActionExecuted)
+}

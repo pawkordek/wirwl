@@ -115,3 +115,18 @@ func (handler *Handler) tryExecutingFunctionForCallerAndKeyCombination(caller in
 func (handler *Handler) SetOnKeyPressedCallbackFunction(function func(KeyCombination)) {
 	handler.onKeyPressedCallback = function
 }
+
+//Needs to be called by widget that embeds another widget which uses the handler so that the widget that embedded owns
+//all functions which prevents any problems and allows to rebind if needed
+func (handler *Handler) RebindAllFunctionsFromTo(from interface{}, to interface{}) {
+	for actionCallerPair, function := range handler.actions {
+		if actionCallerPair.caller == from {
+			newPair := callerActionPair{
+				caller: to,
+				action: actionCallerPair.action,
+			}
+			handler.actions[newPair] = function
+			delete(handler.actions, actionCallerPair)
+		}
+	}
+}
