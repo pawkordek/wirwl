@@ -20,7 +20,7 @@ Pressing enter key anytime closes the dialog and calls the function specified fo
 Values of every form item can be set, retrieved and cleaned using proper functions.
 */
 type FormDialog struct {
-	FocusableDialog
+	*FocusableDialog
 	currentInputNum int
 	OnEnterPressed  func()
 	embeddedWidgets map[string]FormDialogEmbeddableWidget
@@ -67,7 +67,7 @@ func NewFormDialog(canvas fyne.Canvas, inputHandler input.Handler, title string,
 		embeddedWidgets[formItem.Text] = formItem.Widget.(FormDialogEmbeddableWidget)
 	}
 	dialog := &FormDialog{
-		FocusableDialog: *NewFocusableDialog(canvas, form),
+		FocusableDialog: newFocusableDialog(canvas, form),
 		currentInputNum: 0,
 		OnEnterPressed:  func() {},
 		embeddedWidgets: embeddedWidgets,
