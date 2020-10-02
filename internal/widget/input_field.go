@@ -40,6 +40,13 @@ func (inputField *InputField) CreateRenderer() fyne.WidgetRenderer {
 }
 
 func NewInputField(canvas fyne.Canvas, handler input.Handler) *InputField {
+	newInput := newInputField(canvas, handler)
+	newInput.ExtendBaseWidget(newInput)
+	return newInput
+}
+
+//Should be used for dialog creation by any widget that embed this widget so it can properly extend fyne's BaseWidget
+func newInputField(canvas fyne.Canvas, handler input.Handler) *InputField {
 	newInput := &InputField{
 		Entry:                widget.Entry{},
 		canvas:               canvas,
@@ -50,7 +57,6 @@ func NewInputField(canvas fyne.Canvas, handler input.Handler) *InputField {
 		runeAllowedToBeTyped: func(r rune) bool { return true },
 		firstRuneIgnored:     false,
 	}
-	newInput.ExtendBaseWidget(newInput)
 	newInput.inputHandler.BindFunctionToAction(newInput, input.ConfirmAction, func() { newInput.OnConfirm() })
 	newInput.inputHandler.BindFunctionToAction(newInput, input.ExitInputModeAction, func() { newInput.ExitInputMode() })
 	return newInput
