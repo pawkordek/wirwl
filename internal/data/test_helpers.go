@@ -166,6 +166,31 @@ func (provider *AlwaysFailingProvider) LoadEntries() (map[EntryType][]Entry, err
 	return nil, AlwaysFailingProviderError
 }
 
+//It's purpose is to provide some semblance of functionality of an actual provider, that is to return some test data
+//on load and a creation of file with some data on save.
+type SampleTestDataProvider struct {
+	dataOutputFile string
+}
+
+func NewSampleTestDataProvider(dataOutputFile string) Provider {
+	return SampleTestDataProvider{
+		dataOutputFile: dataOutputFile,
+	}
+}
+
+func (provider SampleTestDataProvider) SaveEntries(m map[EntryType][]Entry) error {
+	err := ioutil.WriteFile(provider.dataOutputFile, []byte(""), 0666)
+	return err
+}
+
+func (provider SampleTestDataProvider) LoadEntries() (map[EntryType][]Entry, error) {
+	testEntries := map[EntryType][]Entry{}
+	testEntries[comicsEntryType] = GetExampleComicEntries()
+	testEntries[videoEntryType] = GetExampleVideoEntries()
+	testEntries[musicEntryType] = GetExampleMusicEntries()
+	return testEntries, nil
+}
+
 /*It is supposed to provide default functions that return empty values but every single one can be overwritten
 so that desired functionality when testing can be achieved
 */
