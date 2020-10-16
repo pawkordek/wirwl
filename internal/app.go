@@ -24,6 +24,7 @@ type App struct {
 	entriesTypesTabs         *widget.TabContainer
 	recentlyPressedKeysLabel *fyneWidget.Label
 	entries                  map[data.EntryType][]data.Entry
+	entriesContainer         *data.EntriesContainer
 	dataProvider             data.Provider
 	editEntryTypeDialog      *widget.FormDialog
 	inputHandler             input.Handler
@@ -33,7 +34,7 @@ const configLoadError = "CONFIG_LOAD_ERROR"
 const entriesLoadError = "ENTRIES_LOAD_ERROR"
 
 func NewApp(fyneApp fyne.App, config Config, dataProvider data.Provider, loadingErrors map[string]string) *App {
-	return &App{fyneApp: fyneApp, config: config, dataProvider: dataProvider, loadingErrors: loadingErrors}
+	return &App{fyneApp: fyneApp, config: config, entriesContainer: data.NewEntriesContainer(dataProvider), dataProvider: dataProvider, loadingErrors: loadingErrors}
 }
 
 func (app *App) LoadAndDisplay() error {
@@ -73,14 +74,13 @@ func (app *App) setupInputHandler() {
 }
 
 func (app *App) loadEntries() {
-	entries, err := app.dataProvider.LoadEntries()
+	err := app.entriesContainer.LoadData()
 	if err != nil {
 		msg := "Failed to load entries. Application will now exit as it cannot continue."
 		err = errors.Wrap(err, msg)
 		log.Error(err)
 		app.loadingErrors[entriesLoadError] = msg
 	}
-	app.entries = entries
 }
 
 func (app *App) loadEntriesTypesTabs() {
@@ -270,7 +270,7 @@ func (app *App) noEntryTypeWithNameExists(name string) bool {
 }
 
 func (app *App) saveChangesToDb() error {
-	err := app.dataProvider.SaveEntries(app.entries)
+	err := app.entriesContainer.SaveData()
 	return err
 }
 
