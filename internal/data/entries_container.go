@@ -9,13 +9,13 @@ func NewEntriesContainer(dataProvider Provider) *EntriesContainer {
 	return &EntriesContainer{dataProvider: dataProvider}
 }
 
-func (controller *EntriesContainer) LoadData() error {
-	entries, err := controller.dataProvider.LoadEntries()
-	controller.entries = entries
+func (container *EntriesContainer) LoadData() error {
+	entries, err := container.dataProvider.LoadEntries()
+	container.entries = entries
 	return err
 }
 
-func (controller *EntriesContainer) SaveData() error {
-	err := controller.dataProvider.SaveEntries(controller.entries)
+func (container *EntriesContainer) SaveData() error {
+	err := container.dataProvider.SaveEntries(container.entries)
 	return err
 }
