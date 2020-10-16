@@ -39,3 +39,42 @@ func TestThatEntriesContainerReturnsAnErrorOnDataSaveFailuer(t *testing.T) {
 	err := container.SaveData()
 	assert.NotNil(t, err)
 }
+
+func TestThatAddingNewEntryTypeWorks(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	typeToAdd := EntryType{
+		Name:                  "added entry",
+		CompletionElementName: "test element",
+		ImageQuery:            "entry query",
+	}
+	_ = container.AddEntryType(typeToAdd)
+	assert.NotNil(t, container.entries[typeToAdd])
+}
+
+func TestThatErrorIsReturnedWhenTryingToAddEntryTypeWithTheSameName(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	typeToAdd := EntryType{
+		Name:                  "added entry",
+		CompletionElementName: "test element",
+		ImageQuery:            "entry query",
+	}
+	typeToAdd2 := EntryType{
+		Name:                  "added entry",
+		CompletionElementName: "test element2",
+		ImageQuery:            "entry query2",
+	}
+	_ = container.AddEntryType(typeToAdd)
+	err := container.AddEntryType(typeToAdd2)
+	assert.Contains(t, err.Error(), "Entry type with name added entry already exists")
+}
+
+func TestThatErrorIsReturnedWhenTryingToAddEntryTypeWithEmptyName(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	typeToAdd := EntryType{
+		Name:                  "",
+		CompletionElementName: "test element",
+		ImageQuery:            "entry query",
+	}
+	err := container.AddEntryType(typeToAdd)
+	assert.Contains(t, err.Error(), "Cannot add entry type with an empty name")
+}
