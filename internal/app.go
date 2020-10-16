@@ -242,31 +242,21 @@ func (app *App) trySavingChangesToDb() {
 }
 
 func (app *App) addNewEntryType() error {
-	newEntryTypeName := app.addEntryTypeDialog.ItemValue("Name")
-	if newEntryTypeName == "" {
-		return errors.New("You cannot add entry type with empty name")
+	newEntryType := app.getNewEntryType()
+	err := app.entriesContainer.AddEntryType(newEntryType)
+	if err != nil {
+		return err
 	}
-	if app.noEntryTypeWithNameExists(newEntryTypeName) {
-		newEntryType := data.EntryType{
-			Name:       newEntryTypeName,
-			ImageQuery: app.addEntryTypeDialog.ItemValue("Image query"),
-		}
-		app.entries[newEntryType] = []data.Entry{}
-		app.loadEntriesTypesTabs()
-		app.prepareMainWindowContent()
-		return nil
-	} else {
-		return errors.New("Entry type with name '" + newEntryTypeName + "' already exists.")
-	}
+	app.loadEntriesTypesTabs()
+	app.prepareMainWindowContent()
+	return nil
 }
 
-func (app *App) noEntryTypeWithNameExists(name string) bool {
-	for entryType := range app.entries {
-		if entryType.Name == name {
-			return false
-		}
+func (app *App) getNewEntryType() data.EntryType {
+	return data.EntryType{
+		Name:       app.addEntryTypeDialog.ItemValue("Name"),
+		ImageQuery: app.addEntryTypeDialog.ItemValue("Image query"),
 	}
-	return true
 }
 
 func (app *App) saveChangesToDb() error {
