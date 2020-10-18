@@ -24,7 +24,6 @@ type App struct {
 	entriesTypesTabs         *widget.TabContainer
 	recentlyPressedKeysLabel *fyneWidget.Label
 	entriesContainer         *data.EntriesContainer
-	dataProvider             data.Provider
 	editEntryTypeDialog      *widget.FormDialog
 	inputHandler             input.Handler
 }
@@ -33,7 +32,7 @@ const configLoadError = "CONFIG_LOAD_ERROR"
 const entriesLoadError = "ENTRIES_LOAD_ERROR"
 
 func NewApp(fyneApp fyne.App, config Config, dataProvider data.Provider, loadingErrors map[string]string) *App {
-	return &App{fyneApp: fyneApp, config: config, entriesContainer: data.NewEntriesContainer(dataProvider), dataProvider: dataProvider, loadingErrors: loadingErrors}
+	return &App{fyneApp: fyneApp, config: config, entriesContainer: data.NewEntriesContainer(dataProvider), loadingErrors: loadingErrors}
 }
 
 func (app *App) LoadAndDisplay() error {
