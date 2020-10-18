@@ -23,7 +23,6 @@ type App struct {
 	confirmationDialog       *widget.ConfirmationDialog
 	entriesTypesTabs         *widget.TabContainer
 	recentlyPressedKeysLabel *fyneWidget.Label
-	entries                  map[data.EntryType][]data.Entry
 	entriesContainer         *data.EntriesContainer
 	dataProvider             data.Provider
 	editEntryTypeDialog      *widget.FormDialog
