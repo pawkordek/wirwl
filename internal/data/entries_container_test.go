@@ -65,7 +65,7 @@ func TestThatErrorIsReturnedWhenTryingToAddEntryTypeWithTheSameName(t *testing.T
 	}
 	_ = container.AddEntryType(typeToAdd)
 	err := container.AddEntryType(typeToAdd2)
-	assert.Contains(t, err.Error(), "Entry type with name added entry already exists")
+	assert.Contains(t, err.Error(), "Entry type with name 'added entry' already exists")
 }
 
 func TestThatErrorIsReturnedWhenTryingToAddEntryTypeWithEmptyName(t *testing.T) {

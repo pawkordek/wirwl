@@ -26,7 +26,7 @@ func (container *EntriesContainer) AddEntryType(entryTypeToAdd EntryType) error 
 	if entryTypeToAdd.Name == "" {
 		return errors.New("Cannot add entry type with an empty name")
 	} else if container.typeWithNameExists(entryTypeToAdd.Name) {
-		return errors.New("Entry type with name " + entryTypeToAdd.Name + " already exists")
+		return errors.New("Entry type with name '" + entryTypeToAdd.Name + "' already exists")
 	}
 	container.entries[entryTypeToAdd] = []Entry{}
 	return nil

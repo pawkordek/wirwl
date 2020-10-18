@@ -200,7 +200,7 @@ func TestThatItIsNotPossibleToAddTheSameEntryTypeTwice(t *testing.T) {
 	app.simulateAddingNewEntryTypeWithName("type")
 	assert.Equal(t, true, app.msgDialog.Visible())
 	assert.Equal(t, "ERROR", app.msgDialog.Title())
-	assert.Equal(t, "Entry type with name 'type' already exists.", app.msgDialog.Msg())
+	assert.Equal(t, "Entry type with name 'type' already exists", app.msgDialog.Msg())
 	assert.Equal(t, 4, len(app.entriesTypesTabs.Items()))
 }
 
