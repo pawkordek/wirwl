@@ -83,3 +83,11 @@ func (container *EntriesContainer) EntryTypeWithName(typeName string) (EntryType
 	}
 	return EntryType{}, errors.New("Cannot retrieve entry type with name '" + typeName + "' as such entry type doesn't exist")
 }
+
+func (container *EntriesContainer) EntriesGroupedByType() map[EntryType][]Entry {
+	entriesToReturn := make(map[EntryType][]Entry, len(container.entries))
+	for entryType, entries := range container.entries {
+		entriesToReturn[entryType] = entries
+	}
+	return entriesToReturn
+}

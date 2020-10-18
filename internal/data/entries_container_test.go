@@ -163,3 +163,12 @@ func TestThatErrorIsReturnedWhenTryingToRetrieveNonExistentEntryType(t *testing.
 	_, err := container.EntryTypeWithName("test type")
 	assert.Contains(t, err.Error(), "Cannot retrieve entry type with name 'test type' as such entry type doesn't exist")
 }
+
+func TestThatEntriesGroupedByTypeAreProperlyReturned(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	_ = container.LoadData()
+	groupedEntries := container.EntriesGroupedByType()
+	assert.Equal(t, GetExampleComicEntries(), groupedEntries[comicsEntryType])
+	assert.Equal(t, GetExampleVideoEntries(), groupedEntries[videoEntryType])
+	assert.Equal(t, GetExampleMusicEntries(), groupedEntries[musicEntryType])
+}
