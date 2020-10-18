@@ -89,23 +89,24 @@ func (app *App) loadEntriesTypesTabs() {
 }
 
 func (app *App) getEntriesNamesGroupedByType() map[string][]string {
-	if len(app.entries) != 0 {
-		return app.getEntriesNamesGroupedByTypeMap()
+	entriesGroupedByType := app.entriesContainer.EntriesGroupedByType()
+	if len(entriesGroupedByType) != 0 {
+		return getEntriesGroupedByTypeAsStrings(entriesGroupedByType)
 	} else {
-		return app.getNoEntriesTab()
+		return getNoEntriesTab()
 	}
 }
 
-func (app *App) getEntriesNamesGroupedByTypeMap() map[string][]string {
-	entriesNames := make(map[string][]string)
-	for entryType, entries := range app.entries {
-		names := app.getEntriesNames(entries)
-		entriesNames[entryType.Name] = names
+func getEntriesGroupedByTypeAsStrings(entriesGroupedByType map[data.EntryType][]data.Entry) map[string][]string {
+	entriesGroupedByTypeAsStrings := make(map[string][]string)
+	for entryType, entries := range entriesGroupedByType {
+		names := getEntriesNamesFrom(entries)
+		entriesGroupedByTypeAsStrings[entryType.Name] = names
 	}
-	return entriesNames
+	return entriesGroupedByTypeAsStrings
 }
 
-func (app *App) getEntriesNames(entries []data.Entry) []string {
+func getEntriesNamesFrom(entries []data.Entry) []string {
 	names := make([]string, 0, len(entries))
 	for _, entry := range entries {
 		names = append(names, entry.Title)
@@ -113,7 +114,7 @@ func (app *App) getEntriesNames(entries []data.Entry) []string {
 	return names
 }
 
-func (app *App) getNoEntriesTab() map[string][]string {
+func getNoEntriesTab() map[string][]string {
 	return map[string][]string{
 		"No entries": {""},
 	}
