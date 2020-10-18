@@ -74,3 +74,12 @@ func (container *EntriesContainer) tryUpdatingEntryType(nameOfTypeToUpdate strin
 	}
 	return errors.New("Cannot update entry type '" + nameOfTypeToUpdate + "' as no such type exists")
 }
+
+func (container *EntriesContainer) EntryTypeWithName(typeName string) (EntryType, error) {
+	for entryType, _ := range container.entries {
+		if entryType.Name == typeName {
+			return entryType, nil
+		}
+	}
+	return EntryType{}, errors.New("Cannot retrieve entry type with name '" + typeName + "' as such entry type doesn't exist")
+}

@@ -145,3 +145,21 @@ func TestThatErrorIsReturnWhenTryingToUpdateNonExistentType(t *testing.T) {
 	assert.Contains(t, err.Error(), "Cannot update entry type 'test type' as no such type exists")
 	assert.Nil(t, container.entries[typeToUpdateWith])
 }
+
+func TestThatItIsPossibleToRetrieveExistingEntryType(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	addedType := EntryType{
+		Name:                  "test type",
+		CompletionElementName: "test element",
+		ImageQuery:            "entry query",
+	}
+	_ = container.AddEntryType(addedType)
+	retrievedType, _ := container.EntryTypeWithName("test type")
+	assert.Equal(t, addedType, retrievedType)
+}
+
+func TestThatErrorIsReturnedWhenTryingToRetrieveNonExistentEntryType(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	_, err := container.EntryTypeWithName("test type")
+	assert.Contains(t, err.Error(), "Cannot retrieve entry type with name 'test type' as such entry type doesn't exist")
+}
