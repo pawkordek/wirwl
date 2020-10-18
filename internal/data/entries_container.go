@@ -40,3 +40,19 @@ func (container *EntriesContainer) typeWithNameExists(nameToCheck string) bool {
 	}
 	return false
 }
+
+func (container *EntriesContainer) DeleteEntryType(typeName string) error {
+	if container.typeWithNameExists(typeName) {
+		container.deleteEntryTypeWithName(typeName)
+		return nil
+	}
+	return errors.New("Cannot delete an entry type with name '" + typeName + "' as there is no such type")
+}
+
+func (container *EntriesContainer) deleteEntryTypeWithName(typeName string) {
+	for entryType, _ := range container.entries {
+		if entryType.Name == typeName {
+			delete(container.entries, entryType)
+		}
+	}
+}

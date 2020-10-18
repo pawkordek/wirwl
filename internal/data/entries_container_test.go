@@ -78,3 +78,21 @@ func TestThatErrorIsReturnedWhenTryingToAddEntryTypeWithEmptyName(t *testing.T) 
 	err := container.AddEntryType(typeToAdd)
 	assert.Contains(t, err.Error(), "Cannot add entry type with an empty name")
 }
+
+func TestThatWhenEntryTypeExistsItIsRemoved(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	typeToAdd := EntryType{
+		Name:                  "test type",
+		CompletionElementName: "test element",
+		ImageQuery:            "entry query",
+	}
+	_ = container.AddEntryType(typeToAdd)
+	_ = container.DeleteEntryType("test type")
+	assert.Equal(t, 0, len(container.entries))
+}
+
+func TestThatWhenEntryTypeDoesNotExistErrorIsReturned(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	err := container.DeleteEntryType("non existing entry type")
+	assert.Contains(t, err.Error(), "Cannot delete an entry type with name 'non existing entry type' as there is no such type")
+}
