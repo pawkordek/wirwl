@@ -281,14 +281,19 @@ func TestThatAfterSavingSuccessfullySuccessDialogDisplays(t *testing.T) {
 }
 
 func TestThatAfterSavingUnsuccessfullyErrorDialogDisplays(t *testing.T) {
+	providerFailingOnSave := data.NewAbstractProvider()
+	providerFailingOnSave.SaveEntriesFunc = func(m map[data.EntryType][]data.Entry) error {
+		return errors.New("Testing that saving failed")
+	}
 	configurator := NewTestAppConfigurator()
-	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
+	app, cleanup := configurator.prepareConfiguratorForTestingWithExistingData().
+		setDataProvider(providerFailingOnSave).
+		createTestApplication().getRunningTestApplication()
 	defer cleanup()
-	app.dataProvider = data.NewAlwaysFailingProvider()
 	app.simulateSavingChanges()
 	assert.True(t, app.msgDialog.Visible())
 	assert.Equal(t, "ERROR", app.msgDialog.Title())
-	assert.Equal(t, data.AlwaysFailingProviderError.Error(), app.msgDialog.Msg())
+	assert.Equal(t, "Testing that saving failed", app.msgDialog.Msg())
 }
 
 func TestThatDeletingEntriesTypesWorks(t *testing.T) {
