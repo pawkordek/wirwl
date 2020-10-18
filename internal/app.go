@@ -169,12 +169,13 @@ func (app *App) deleteCurrentEntryType() {
 }
 
 func (app *App) getCurrentEntryType() data.EntryType {
-	for entryType := range app.entries {
-		if entryType.Name == app.getCurrentTabText() {
-			return entryType
-		}
+	currentEntryTypeName := app.getCurrentTabText()
+	currentEntryType, err := app.entriesContainer.EntryTypeWithName(currentEntryTypeName)
+	if err != nil {
+		err = errors.Wrap(err, "An error occurred when trying to get current entry type. This is most likely a programming error")
+		log.Error(err)
 	}
-	return data.EntryType{}
+	return currentEntryType
 }
 
 func (app *App) onEnterPressedInAddEntryTypeDialog() {
