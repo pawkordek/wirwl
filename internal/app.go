@@ -158,8 +158,12 @@ func (app *App) createEntryTypeRelatedDialogElements() []*widget.FormDialogFormI
 }
 
 func (app *App) deleteCurrentEntryType() {
-	currentEntryType := app.getCurrentEntryType()
-	delete(app.entries, currentEntryType)
+	nameOfTypeToDelete := app.getCurrentTabText()
+	err := app.entriesContainer.DeleteEntryType(nameOfTypeToDelete)
+	if err != nil {
+		err = errors.Wrap(err, "There was an error when deleting an entry type. This is most likely a programming error")
+		log.Error(err)
+	}
 	app.loadEntriesTypesTabs()
 	app.prepareMainWindowContent()
 }
