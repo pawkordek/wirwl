@@ -96,3 +96,52 @@ func TestThatWhenEntryTypeDoesNotExistErrorIsReturned(t *testing.T) {
 	err := container.DeleteEntryType("non existing entry type")
 	assert.Contains(t, err.Error(), "Cannot delete an entry type with name 'non existing entry type' as there is no such type")
 }
+
+func TestThatItIsPossibleToUpdateEntryType(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	typeToAdd := EntryType{
+		Name:                  "test type",
+		CompletionElementName: "test element",
+		ImageQuery:            "entry query",
+	}
+	_ = container.AddEntryType(typeToAdd)
+	typeToUpdateWith := EntryType{
+		Name:                  "new type",
+		CompletionElementName: "another element",
+		ImageQuery:            "some other query",
+	}
+	_ = container.UpdateEntryType("test type", typeToUpdateWith)
+	assert.Nil(t, container.entries[typeToAdd])
+	assert.NotNil(t, container.entries[typeToUpdateWith])
+}
+
+func TestThatErrorIsReturnedWhenTryingToUpdateTypeToTypeWithEmptyName(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	typeToAdd := EntryType{
+		Name:                  "test type",
+		CompletionElementName: "test element",
+		ImageQuery:            "entry query",
+	}
+	_ = container.AddEntryType(typeToAdd)
+	typeToUpdateWith := EntryType{
+		Name:                  "",
+		CompletionElementName: "another element",
+		ImageQuery:            "some other query",
+	}
+	err := container.UpdateEntryType("test type", typeToUpdateWith)
+	assert.Contains(t, err.Error(), "Cannot update entry type with name 'test type' to type with an empty name")
+	assert.NotNil(t, container.entries[typeToAdd])
+	assert.Nil(t, container.entries[typeToUpdateWith])
+}
+
+func TestThatErrorIsReturnWhenTryingToUpdateNonExistentType(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	typeToUpdateWith := EntryType{
+		Name:                  "some name",
+		CompletionElementName: "another element",
+		ImageQuery:            "some other query",
+	}
+	err := container.UpdateEntryType("test type", typeToUpdateWith)
+	assert.Contains(t, err.Error(), "Cannot update entry type 'test type' as no such type exists")
+	assert.Nil(t, container.entries[typeToUpdateWith])
+}

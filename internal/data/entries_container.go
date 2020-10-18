@@ -56,3 +56,21 @@ func (container *EntriesContainer) deleteEntryTypeWithName(typeName string) {
 		}
 	}
 }
+
+func (container *EntriesContainer) UpdateEntryType(nameOfTypeToUpdate string, typeToReplaceWith EntryType) error {
+	if typeToReplaceWith.Name == "" {
+		return errors.New("Cannot update entry type with name '" + nameOfTypeToUpdate + "' to type with an empty name")
+	}
+	return container.tryUpdatingEntryType(nameOfTypeToUpdate, typeToReplaceWith)
+}
+
+func (container *EntriesContainer) tryUpdatingEntryType(nameOfTypeToUpdate string, typeToReplaceWith EntryType) error {
+	for entryType, entries := range container.entries {
+		if entryType.Name == nameOfTypeToUpdate {
+			container.entries[typeToReplaceWith] = entries
+			delete(container.entries, entryType)
+			return nil
+		}
+	}
+	return errors.New("Cannot update entry type '" + nameOfTypeToUpdate + "' as no such type exists")
+}
