@@ -254,7 +254,7 @@ func TestThatAfterTryingToAddEntryTypeWithEmptyNameWarningMessageDisplaysAndEntr
 	app.simulateAddingNewEntryTypeWithName("")
 	assert.True(t, app.msgDialog.Visible())
 	assert.Equal(t, "ERROR", app.msgDialog.Title())
-	assert.Equal(t, "You cannot add entry type with empty name", app.msgDialog.Msg())
+	assert.Equal(t, "Cannot add entry type with an empty name", app.msgDialog.Msg())
 	assert.Equal(t, 3, len(app.entriesTypesTabs.Items()))
 }
 
