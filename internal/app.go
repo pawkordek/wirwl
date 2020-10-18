@@ -196,16 +196,24 @@ func (app *App) onEnterPressedInAddEntryTypeDialog() {
 }
 
 func (app *App) applyChangesToCurrentEntryType() {
-	currentEntryType := app.getCurrentEntryType()
-	oldType := currentEntryType
-	currentEntryType.Name = app.editEntryTypeDialog.ItemValue("Name")
-	currentEntryType.ImageQuery = app.editEntryTypeDialog.ItemValue("Image query")
-	app.entries[currentEntryType] = app.entries[oldType]
-	delete(app.entries, oldType)
+	nameOfEntryToUpdate := app.getCurrentTabText()
+	entryToUpdateWith := app.getEntryToUpdateWith()
+	err := app.entriesContainer.UpdateEntryType(nameOfEntryToUpdate, entryToUpdateWith)
+	if err != nil {
+		log.Error(err)
+	}
 	currentTabIndex := app.entriesTypesTabs.CurrentTabIndex()
 	app.loadEntriesTypesTabs()
 	app.prepareMainWindowContent()
 	app.entriesTypesTabs.SelectTabIndex(currentTabIndex)
+}
+
+func (app *App) getEntryToUpdateWith() data.EntryType {
+	return data.EntryType{
+		Name:                  app.editEntryTypeDialog.ItemValue("Name"),
+		CompletionElementName: "",
+		ImageQuery:            app.editEntryTypeDialog.ItemValue("Image query"),
+	}
 }
 
 func (app *App) getCurrentTabText() string {
