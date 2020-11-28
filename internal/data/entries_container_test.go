@@ -213,3 +213,43 @@ func TestThatChangeCallbackFunctionIsCalledOnEveryChangeForEveryListener(t *test
 	function1Called = false
 	function2Called = false
 }
+
+func TestThatItIsPossibleToUpdateEntryTypeWhenBothUpdatedAndEntryToUpdateHaveTheSameName(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	err := container.AddEntryType(comicsEntryType)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = container.UpdateEntryType(comicsEntryType.Name, EntryType{
+		Name:                  comicsEntryType.Name,
+		CompletionElementName: "updated name",
+		ImageQuery:            "updated query",
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	updatedEntryType, err := container.EntryTypeWithName(comicsEntryType.Name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, comicsEntryType.Name, updatedEntryType.Name)
+	assert.Equal(t, "updated name", updatedEntryType.CompletionElementName)
+	assert.Equal(t, "updated query", updatedEntryType.ImageQuery)
+}
+
+func TestThatEntryTypeIsNotRemovedWhenItIsUpdatedWithTheExactSameDataAsItHasCurrently(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	err := container.AddEntryType(comicsEntryType)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = container.UpdateEntryType(comicsEntryType.Name, comicsEntryType)
+	if err != nil {
+		log.Fatal(err)
+	}
+	updatedEntryType, err := container.EntryTypeWithName(comicsEntryType.Name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.NotNil(t, updatedEntryType)
+}

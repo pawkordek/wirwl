@@ -76,8 +76,8 @@ func (container *EntriesContainer) UpdateEntryType(nameOfTypeToUpdate string, ty
 func (container *EntriesContainer) tryUpdatingEntryType(nameOfTypeToUpdate string, typeToReplaceWith EntryType) error {
 	for entryType, entries := range container.entries {
 		if entryType.Name == nameOfTypeToUpdate {
-			container.entries[typeToReplaceWith] = entries
 			delete(container.entries, entryType)
+			container.entries[typeToReplaceWith] = entries
 			container.notifyListenersAboutChange()
 			return nil
 		}
