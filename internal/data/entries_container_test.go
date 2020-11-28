@@ -172,3 +172,44 @@ func TestThatEntriesGroupedByTypeAreProperlyReturned(t *testing.T) {
 	assert.Equal(t, GetExampleVideoEntries(), groupedEntries[videoEntryType])
 	assert.Equal(t, GetExampleMusicEntries(), groupedEntries[musicEntryType])
 }
+
+func TestThatChangeCallbackFunctionIsCalledOnEveryChangeForEveryListener(t *testing.T) {
+	function1Called := false
+	function2Called := false
+	function1 := func() {
+		function1Called = true
+	}
+	function2 := func() {
+		function2Called = true
+	}
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	container.SubscribeToChanges(function1)
+	container.SubscribeToChanges(function2)
+
+	err := container.AddEntryType(comicsEntryType)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.True(t, function1Called)
+	assert.True(t, function2Called)
+	function1Called = false
+	function2Called = false
+
+	err = container.UpdateEntryType(comicsEntryType.Name, videoEntryType)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.True(t, function1Called)
+	assert.True(t, function2Called)
+	function1Called = false
+	function2Called = false
+
+	err = container.DeleteEntryType(videoEntryType.Name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.True(t, function1Called)
+	assert.True(t, function2Called)
+	function1Called = false
+	function2Called = false
+}

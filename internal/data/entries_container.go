@@ -3,8 +3,9 @@ package data
 import "github.com/pkg/errors"
 
 type EntriesContainer struct {
-	dataProvider Provider
-	entries      map[EntryType][]Entry
+	dataProvider                     Provider
+	entries                          map[EntryType][]Entry
+	changeListenersCallbackFunctions []func()
 }
 
 func NewEntriesContainer(dataProvider Provider) *EntriesContainer {
@@ -29,6 +30,7 @@ func (container *EntriesContainer) AddEntryType(entryTypeToAdd EntryType) error 
 		return errors.New("Entry type with name '" + entryTypeToAdd.Name + "' already exists")
 	}
 	container.entries[entryTypeToAdd] = []Entry{}
+	container.notifyListenersAboutChange()
 	return nil
 }
 
@@ -41,9 +43,16 @@ func (container *EntriesContainer) typeWithNameExists(nameToCheck string) bool {
 	return false
 }
 
+func (container *EntriesContainer) notifyListenersAboutChange() {
+	for _, callback := range container.changeListenersCallbackFunctions {
+		callback()
+	}
+}
+
 func (container *EntriesContainer) DeleteEntryType(typeName string) error {
 	if container.typeWithNameExists(typeName) {
 		container.deleteEntryTypeWithName(typeName)
+		container.notifyListenersAboutChange()
 		return nil
 	}
 	return errors.New("Cannot delete an entry type with name '" + typeName + "' as there is no such type")
@@ -69,6 +78,7 @@ func (container *EntriesContainer) tryUpdatingEntryType(nameOfTypeToUpdate strin
 		if entryType.Name == nameOfTypeToUpdate {
 			container.entries[typeToReplaceWith] = entries
 			delete(container.entries, entryType)
+			container.notifyListenersAboutChange()
 			return nil
 		}
 	}
@@ -90,4 +100,8 @@ func (container *EntriesContainer) EntriesGroupedByType() map[EntryType][]Entry 
 		entriesToReturn[entryType] = entries
 	}
 	return entriesToReturn
+}
+
+func (container *EntriesContainer) SubscribeToChanges(callbackFunction func()) {
+	container.changeListenersCallbackFunctions = append(container.changeListenersCallbackFunctions, callbackFunction)
 }
