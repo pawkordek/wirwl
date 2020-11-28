@@ -34,8 +34,6 @@ func (app *App) addNewEntryType() error {
 	if err != nil {
 		return err
 	}
-	app.loadEntriesTypesTabs()
-	app.prepareMainWindowContent()
 	return nil
 }
 

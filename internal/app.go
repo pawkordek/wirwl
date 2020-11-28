@@ -79,6 +79,7 @@ func (app *App) loadEntries() {
 		log.Error(err)
 		app.loadingErrors[entriesLoadError] = msg
 	}
+	app.entriesContainer.SubscribeToChanges(app.reloadGUI)
 }
 
 func (app *App) loadEntriesTypesTabs() {
@@ -147,6 +148,11 @@ func (app *App) prepareDialogs() {
 	app.editEntryTypeDialog.OnEnterPressed = app.applyChangesToCurrentEntryType
 }
 
+func (app *App) reloadGUI() {
+	app.loadEntriesTypesTabs()
+	app.prepareMainWindowContent()
+}
+
 func (app *App) createEntryTypeRelatedDialogElements() []*widget.FormDialogFormItem {
 	formItemFactory := widget.NewFormDialogFormItemFactory(app.mainWindow.Canvas(), app.inputHandler)
 	entryTypeRelatedDialogElements := []*widget.FormDialogFormItem{}
@@ -162,8 +168,6 @@ func (app *App) deleteCurrentEntryType() {
 		err = errors.Wrap(err, "There was an error when deleting an entry type. This is most likely a programming error")
 		log.Error(err)
 	}
-	app.loadEntriesTypesTabs()
-	app.prepareMainWindowContent()
 }
 
 func (app *App) getCurrentEntryType() data.EntryType {
@@ -177,15 +181,13 @@ func (app *App) getCurrentEntryType() data.EntryType {
 }
 
 func (app *App) applyChangesToCurrentEntryType() {
+	currentTabIndex := app.entriesTypesTabs.CurrentTabIndex()
 	nameOfEntryToUpdate := app.getCurrentTabText()
 	entryToUpdateWith := app.getEntryToUpdateWith()
 	err := app.entriesContainer.UpdateEntryType(nameOfEntryToUpdate, entryToUpdateWith)
 	if err != nil {
 		log.Error(err)
 	}
-	currentTabIndex := app.entriesTypesTabs.CurrentTabIndex()
-	app.loadEntriesTypesTabs()
-	app.prepareMainWindowContent()
 	app.entriesTypesTabs.SelectTabIndex(currentTabIndex)
 }
 
