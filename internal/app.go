@@ -180,25 +180,6 @@ func (app *App) getCurrentEntryType() data.EntryType {
 	return currentEntryType
 }
 
-func (app *App) applyChangesToCurrentEntryType() {
-	currentTabIndex := app.entriesTypesTabs.CurrentTabIndex()
-	nameOfEntryToUpdate := app.getCurrentTabText()
-	entryToUpdateWith := app.getEntryToUpdateWith()
-	err := app.entriesContainer.UpdateEntryType(nameOfEntryToUpdate, entryToUpdateWith)
-	if err != nil {
-		log.Error(err)
-	}
-	app.entriesTypesTabs.SelectTabIndex(currentTabIndex)
-}
-
-func (app *App) getEntryToUpdateWith() data.EntryType {
-	return data.EntryType{
-		Name:                  app.editEntryTypeDialog.ItemValue("Name"),
-		CompletionElementName: "",
-		ImageQuery:            app.editEntryTypeDialog.ItemValue("Image query"),
-	}
-}
-
 func (app *App) getCurrentTabText() string {
 	return app.entriesTypesTabs.CurrentTab().Text
 }
