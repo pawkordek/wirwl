@@ -209,17 +209,12 @@ func (app *App) tryDeletingCurrentEntryType() {
 }
 
 func (app *App) trySavingChangesToDb() {
-	err := app.saveChangesToDb()
+	err := app.entriesContainer.SaveData()
 	if err != nil {
 		app.msgDialog.Display(widget.ErrorPopUp, err.Error())
 	} else {
 		app.msgDialog.Display(widget.SuccessPopUp, "Changes saved.")
 	}
-}
-
-func (app *App) saveChangesToDb() error {
-	err := app.entriesContainer.SaveData()
-	return err
 }
 
 func (app *App) shutdown() {
