@@ -116,8 +116,8 @@ func (dialog *FormDialog) handleEnterKey() {
 func (dialog *FormDialog) Display() {
 	dialog.currentInputNum = 0
 	dialog.currentWidget().Highlight()
-	dialog.Canvas.Focus(dialog)
 	dialog.Show()
+	dialog.Canvas.Focus(dialog)
 }
 
 func (dialog *FormDialog) TypedKey(key *fyne.KeyEvent) {
