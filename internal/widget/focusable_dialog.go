@@ -52,8 +52,8 @@ func (dialog *FocusableDialog) Title() string {
 
 func (dialog *FocusableDialog) Display(title string) {
 	dialog.title.SetText(title)
-	dialog.Canvas.Focus(dialog)
 	dialog.Show()
+	dialog.Canvas.Focus(dialog)
 }
 
 func (dialog *FocusableDialog) TypedKey(key *fyne.KeyEvent) {

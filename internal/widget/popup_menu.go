@@ -107,13 +107,13 @@ func (menu *PopUpMenu) TypedKey(key *fyne.KeyEvent) {
 }
 
 func (menu *PopUpMenu) Show() {
-	menu.Canvas.Focus(menu)
 	menu.PopUp.Show()
+	menu.Canvas.Focus(menu)
 }
 
 func (menu *PopUpMenu) ShowAtPosition(position fyne.Position) {
-	menu.Canvas.Focus(menu)
 	menu.PopUp.ShowAtPosition(position)
+	menu.Canvas.Focus(menu)
 }
 
 func (menu *PopUpMenu) onChoiceSelected() {
