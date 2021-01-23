@@ -33,6 +33,10 @@ func NewTable(columnAmount int, headerData []fyne.CanvasObject, data []fyne.Canv
 	return table
 }
 
+func (table Table) HeaderColumns() []fyne.CanvasObject {
+	return table.headerObjects
+}
+
 func (table Table) CreateRenderer() fyne.WidgetRenderer {
 	renderer := tableRenderer{table: table,}
 	return renderer
