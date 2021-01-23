@@ -3,7 +3,7 @@ package wirwl
 import (
 	"fmt"
 	"fyne.io/fyne"
-	"fyne.io/fyne/layout"
+	"fyne.io/fyne/container"
 	"fyne.io/fyne/theme"
 	fyneWidget "fyne.io/fyne/widget"
 	"github.com/pkg/errors"
@@ -25,6 +25,7 @@ type App struct {
 	recentlyPressedKeysLabel *fyneWidget.Label
 	entriesContainer         *data.EntriesContainer
 	editEntryTypeDialog      *widget.FormDialog
+	entriesTable             *widget.Table
 	inputHandler             input.Handler
 }
 
@@ -121,7 +122,9 @@ func getNoEntriesTab() map[string][]string {
 
 func (app *App) prepareMainWindowContent() {
 	app.recentlyPressedKeysLabel = fyneWidget.NewLabel("Recently pressed keys: ")
-	app.mainWindow.SetContent(fyneWidget.NewVBox(app.entriesTypesTabs, layout.NewSpacer(), app.recentlyPressedKeysLabel))
+	app.createEntriesTable([]data.Entry{})
+	content := container.NewBorder(app.entriesTypesTabs, app.recentlyPressedKeysLabel, nil, nil, app.entriesTable)
+	app.mainWindow.SetContent(content)
 }
 
 func (app *App) displayLoadingErrors() {

@@ -3,6 +3,7 @@ package wirwl
 import (
 	"errors"
 	"fyne.io/fyne"
+	fyneWidget "fyne.io/fyne/widget"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"os"
@@ -379,4 +380,32 @@ func TestThatRecentlyPressedKeysLabelDisplaysTheCorrectInformation(t *testing.T)
 	assert.Equal(t, "Recently pressed keys: Q,G", app.recentlyPressedKeysLabel.Text)
 	app.simulateKeyPress(fyne.KeyEscape)
 	assert.Equal(t, "Recently pressed keys: Escape", app.recentlyPressedKeysLabel.Text)
+}
+
+func TestThatEntriesTableHasCorrectHeader(t *testing.T) {
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
+	defer cleanup()
+	headerColumns := app.entriesTable.HeaderColumns()
+	assert.Equal(t, 14, len(headerColumns))
+	headerColumnsNames := []string{
+		"Num",
+		"Image",
+		"Status",
+		"Title",
+		"Elements completed",
+		"Total amount",
+		"Score",
+		"Start date",
+		"Finish date",
+		"Link",
+		"Description",
+		"Comment",
+		"Tags",
+		"Image query",
+	}
+	for _, column := range headerColumns {
+		label := column.(*fyneWidget.Label)
+		assert.Contains(t, headerColumnsNames, label.Text)
+	}
 }
