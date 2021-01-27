@@ -4,12 +4,14 @@ import (
 	"fyne.io/fyne"
 	"fyne.io/fyne/widget"
 	"github.com/stretchr/testify/assert"
+	"image/color"
 	"strconv"
 	"testing"
 )
 
 const testLabelWidth = 20
 const testLabelHeight = 10
+const expectedHeaderHeight = 50
 
 func createLabelsForTesting(amountOfLabels int) []fyne.CanvasObject {
 	labels := []fyne.CanvasObject{}
@@ -78,4 +80,17 @@ func TestThatObjectsThatCreateDataRowsHaveCorrectSize(t *testing.T) {
 		assert.Equal(t, 100, object.Size().Width, "Width of object num "+strconv.Itoa(i)+" is incorrect")
 		assert.Equal(t, 141, object.Size().Height, "Height of object num "+strconv.Itoa(i)+" is incorrect")
 	}
+}
+
+func TestThatHeaderRowBorderIsDrawnCorrectly(t *testing.T) {
+	const columnAmount = 14
+	table := NewTable(columnAmount, createLabelsForTesting(14), []fyne.CanvasObject{})
+	renderer := table.CreateRenderer().(tableRenderer)
+	renderer.Layout(fyne.NewSize(1000, 1000))
+	rectangle := renderer.headerRowBorder
+	assert.Equal(t, columnAmount*135, rectangle.Size().Width)
+	assert.Equal(t, expectedHeaderHeight, rectangle.Size().Height)
+	assert.Equal(t, float32(2), rectangle.StrokeWidth)
+	assert.Equal(t, color.Black, rectangle.StrokeColor)
+	assert.Equal(t, color.Transparent, rectangle.FillColor)
 }

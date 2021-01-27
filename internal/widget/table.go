@@ -2,6 +2,7 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	"fyne.io/fyne/canvas"
 	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
 	"image/color"
@@ -38,12 +39,16 @@ func (table Table) HeaderColumns() []fyne.CanvasObject {
 }
 
 func (table Table) CreateRenderer() fyne.WidgetRenderer {
-	renderer := tableRenderer{table: table,}
+	renderer := tableRenderer{
+		table:           table,
+		headerRowBorder: canvas.NewRectangle(color.Black),
+	}
 	return renderer
 }
 
 type tableRenderer struct {
-	table Table
+	table           Table
+	headerRowBorder *canvas.Rectangle
 }
 
 func (renderer tableRenderer) BackgroundColor() color.Color {
@@ -60,6 +65,12 @@ func (renderer tableRenderer) Layout(fyne.Size) {
 }
 
 func (renderer tableRenderer) renderHeader() fyne.Position {
+	renderer.renderHeaderData()
+	renderer.renderHeaderRowRectangle()
+	return fyne.NewPos(0, headerHeight)
+}
+
+func (renderer tableRenderer) renderHeaderData() {
 	position := fyne.NewPos(0, 0)
 	for _, object := range renderer.table.headerObjects {
 		object.Move(position)
@@ -67,7 +78,15 @@ func (renderer tableRenderer) renderHeader() fyne.Position {
 		object.Resize(size)
 		position = position.Add(fyne.NewPos(size.Width+widthBetweenColumns, 0))
 	}
-	return fyne.NewPos(0, headerHeight)
+}
+
+func (renderer tableRenderer) renderHeaderRowRectangle() {
+	renderer.headerRowBorder.Move(fyne.NewPos(0, 0))
+	headerRowRectangleSize := fyne.NewSize((columnWidth+widthBetweenColumns)*len(renderer.table.headerObjects), headerHeight)
+	renderer.headerRowBorder.StrokeWidth = 2
+	renderer.headerRowBorder.FillColor = color.Transparent
+	renderer.headerRowBorder.StrokeColor = color.Black
+	renderer.headerRowBorder.Resize(headerRowRectangleSize)
 }
 
 func (renderer tableRenderer) renderDataRows(startingPosition fyne.Position) {
@@ -109,6 +128,7 @@ func (renderer tableRenderer) Objects() []fyne.CanvasObject {
 	objects := []fyne.CanvasObject{}
 	objects = append(objects, renderer.table.objects...)
 	objects = append(objects, renderer.table.headerObjects...)
+	objects = append(objects, renderer.headerRowBorder)
 	return objects
 }
 
