@@ -60,14 +60,13 @@ func (renderer tableRenderer) Destroy() {
 }
 
 func (renderer tableRenderer) Layout(fyne.Size) {
-	firstRowPosition := renderer.renderHeader()
-	renderer.renderDataRows(firstRowPosition)
+	renderer.renderHeader()
+	renderer.renderDataRows()
 }
 
-func (renderer tableRenderer) renderHeader() fyne.Position {
+func (renderer tableRenderer) renderHeader() {
 	renderer.renderHeaderData()
 	renderer.renderHeaderRowRectangle()
-	return fyne.NewPos(0, headerHeight)
 }
 
 func (renderer tableRenderer) renderHeaderData() {
@@ -89,8 +88,8 @@ func (renderer tableRenderer) renderHeaderRowRectangle() {
 	renderer.headerRowBorder.Resize(headerRowRectangleSize)
 }
 
-func (renderer tableRenderer) renderDataRows(startingPosition fyne.Position) {
-	position := startingPosition
+func (renderer tableRenderer) renderDataRows() {
+	position := fyne.NewPos(0, headerHeight)
 	currentColumnNum := 1
 	for _, object := range renderer.table.objects {
 		size := fyne.NewSize(columnWidth, rowHeight)
