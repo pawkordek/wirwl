@@ -12,6 +12,9 @@ import (
 const testLabelWidth = 20
 const testLabelHeight = 10
 const expectedHeaderHeight = 50
+const expectedColumnWidth = 100
+const expectedColumnWidthWithPadding = 135
+const expectedRowHeight = 141
 
 func createLabelsForTesting(amountOfLabels int) []fyne.CanvasObject {
 	labels := []fyne.CanvasObject{}
@@ -40,7 +43,7 @@ func TestThatObjectsInHeaderHaveCorrectPositions(t *testing.T) {
 	for i, object := range table.headerObjects {
 		assert.Equal(t, posX, object.Position().X, "Position x of object num "+strconv.Itoa(i)+" is incorrect")
 		assert.Equal(t, posY, object.Position().Y, "Position y of object num "+strconv.Itoa(i)+" is incorrect")
-		posX += 135
+		posX += expectedColumnWidthWithPadding
 	}
 }
 
@@ -48,8 +51,8 @@ func TestThatObjectsInHeaderHaveCorrectSize(t *testing.T) {
 	table := NewTable(14, createLabelsForTesting(14), []fyne.CanvasObject{})
 	table.CreateRenderer().Layout(fyne.NewSize(1000, 1000))
 	for i, object := range table.headerObjects {
-		assert.Equal(t, 100, object.Size().Width, "Width of object num "+strconv.Itoa(i)+" is incorrect")
-		assert.Equal(t, 50, object.Size().Height, "Height of object num "+strconv.Itoa(i)+" is incorrect")
+		assert.Equal(t, expectedColumnWidth, object.Size().Width, "Width of object num "+strconv.Itoa(i)+" is incorrect")
+		assert.Equal(t, expectedHeaderHeight, object.Size().Height, "Height of object num "+strconv.Itoa(i)+" is incorrect")
 	}
 }
 
@@ -59,14 +62,14 @@ func TestThatObjectsThatCreateDataRowsHaveCorrectPositions(t *testing.T) {
 	table := NewTable(columnAmount, []fyne.CanvasObject{}, createLabelsForTesting(columnAmount*rowAmount))
 	table.CreateRenderer().Layout(fyne.NewSize(1000, 1000))
 	posX := 0
-	posY := 50
+	posY := expectedHeaderHeight
 	for i, object := range table.objects {
 		assert.Equal(t, posX, object.Position().X, "Position x of object num "+strconv.Itoa(i)+" is incorrect")
 		assert.Equal(t, posY, object.Position().Y, "Position y of object num "+strconv.Itoa(i)+" is incorrect")
-		posX += 135
+		posX += expectedColumnWidthWithPadding
 		if i != 0 && (i+1)%columnAmount == 0 {
 			posX = 0
-			posY += 141
+			posY += expectedRowHeight
 		}
 	}
 }
@@ -77,8 +80,8 @@ func TestThatObjectsThatCreateDataRowsHaveCorrectSize(t *testing.T) {
 	table := NewTable(columnAmount, []fyne.CanvasObject{}, createLabelsForTesting(columnAmount*rowAmount))
 	table.CreateRenderer().Layout(fyne.NewSize(1000, 1000))
 	for i, object := range table.objects {
-		assert.Equal(t, 100, object.Size().Width, "Width of object num "+strconv.Itoa(i)+" is incorrect")
-		assert.Equal(t, 141, object.Size().Height, "Height of object num "+strconv.Itoa(i)+" is incorrect")
+		assert.Equal(t, expectedColumnWidth, object.Size().Width, "Width of object num "+strconv.Itoa(i)+" is incorrect")
+		assert.Equal(t, expectedRowHeight, object.Size().Height, "Height of object num "+strconv.Itoa(i)+" is incorrect")
 	}
 }
 
@@ -88,7 +91,7 @@ func TestThatHeaderRowBorderIsDrawnCorrectly(t *testing.T) {
 	renderer := table.CreateRenderer().(tableRenderer)
 	renderer.Layout(fyne.NewSize(1000, 1000))
 	rectangle := renderer.headerRowBorder
-	assert.Equal(t, columnAmount*135, rectangle.Size().Width)
+	assert.Equal(t, columnAmount*expectedColumnWidthWithPadding, rectangle.Size().Width)
 	assert.Equal(t, expectedHeaderHeight, rectangle.Size().Height)
 	assert.Equal(t, float32(2), rectangle.StrokeWidth)
 	assert.Equal(t, color.Black, rectangle.StrokeColor)
