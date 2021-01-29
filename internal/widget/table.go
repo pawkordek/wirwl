@@ -39,16 +39,19 @@ func (table Table) HeaderColumns() []fyne.CanvasObject {
 }
 
 func (table Table) CreateRenderer() fyne.WidgetRenderer {
-	renderer := tableRenderer{
-		table:           table,
-		headerRowBorder: canvas.NewRectangle(color.Black),
-	}
-	return renderer
+	return newTableRenderer(table)
 }
 
 type tableRenderer struct {
 	table           Table
 	headerRowBorder *canvas.Rectangle
+}
+
+func newTableRenderer(table Table) tableRenderer {
+	return tableRenderer{
+		table:           table,
+		headerRowBorder: canvas.NewRectangle(color.Black),
+	}
 }
 
 func (renderer tableRenderer) BackgroundColor() color.Color {
