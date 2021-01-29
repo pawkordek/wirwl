@@ -45,15 +45,26 @@ func (table Table) CreateRenderer() fyne.WidgetRenderer {
 type tableRenderer struct {
 	table           Table
 	headerRowBorder *canvas.Rectangle
+	dataRowsBorders []*canvas.Rectangle
 	borderColor     color.Color
 }
 
 func newTableRenderer(table Table) tableRenderer {
+	dataRowsBorders := createDataRowsBorders(len(table.objects) / table.columnAmount)
 	return tableRenderer{
 		table:           table,
 		headerRowBorder: canvas.NewRectangle(color.Black),
+		dataRowsBorders: dataRowsBorders,
 		borderColor:     color.Black,
 	}
+}
+
+func createDataRowsBorders(amount int) []*canvas.Rectangle {
+	dataRowsBorders := []*canvas.Rectangle{}
+	for i := 1; i <= amount; i++ {
+		dataRowsBorders = append(dataRowsBorders, canvas.NewRectangle(color.Black))
+	}
+	return dataRowsBorders
 }
 
 func (renderer tableRenderer) BackgroundColor() color.Color {
@@ -66,7 +77,7 @@ func (renderer tableRenderer) Destroy() {
 
 func (renderer tableRenderer) Layout(fyne.Size) {
 	renderer.renderHeader()
-	renderer.renderDataRows()
+	renderer.renderData()
 }
 
 func (renderer tableRenderer) renderHeader() {
@@ -93,6 +104,11 @@ func (renderer tableRenderer) renderHeaderRowRectangle() {
 	renderer.headerRowBorder.Resize(headerRowRectangleSize)
 }
 
+func (renderer tableRenderer) renderData() {
+	renderer.renderDataRows()
+	renderer.renderDataRowsBorders()
+}
+
 func (renderer tableRenderer) renderDataRows() {
 	position := fyne.NewPos(0, headerHeight)
 	currentColumnNum := 1
@@ -107,6 +123,19 @@ func (renderer tableRenderer) renderDataRows() {
 			currentColumnNum = 0
 		}
 		currentColumnNum += 1
+	}
+}
+
+func (renderer tableRenderer) renderDataRowsBorders() {
+	size := fyne.NewSize((columnWidth+widthBetweenColumns)*len(renderer.table.headerObjects), rowHeight)
+	position := fyne.NewPos(0, headerHeight)
+	for _, border := range renderer.dataRowsBorders {
+		border.Move(position)
+		border.StrokeWidth = 2
+		border.FillColor = color.Transparent
+		border.StrokeColor = renderer.borderColor
+		border.Resize(size)
+		position = position.Add(fyne.NewPos(0, rowHeight))
 	}
 }
 
@@ -133,6 +162,9 @@ func (renderer tableRenderer) Objects() []fyne.CanvasObject {
 	objects = append(objects, renderer.table.objects...)
 	objects = append(objects, renderer.table.headerObjects...)
 	objects = append(objects, renderer.headerRowBorder)
+	for _, border := range renderer.dataRowsBorders {
+		objects = append(objects, border)
+	}
 	return objects
 }
 

@@ -97,3 +97,50 @@ func TestThatHeaderRowBorderIsDrawnCorrectly(t *testing.T) {
 	assert.Equal(t, color.Black, rectangle.StrokeColor)
 	assert.Equal(t, color.Transparent, rectangle.FillColor)
 }
+
+func TestThatThereIsCorrectAmountOfDataRowBorders(t *testing.T) {
+	const columnAmount = 14
+	const amountOfRows = 20
+	table := NewTable(columnAmount, createLabelsForTesting(columnAmount), createLabelsForTesting(columnAmount*amountOfRows))
+	renderer := table.CreateRenderer().(tableRenderer)
+	renderer.Layout(fyne.NewSize(1000, 1000))
+	assert.Equal(t, amountOfRows, len(renderer.dataRowsBorders))
+}
+
+func TestThatAllDataRowBordersHaveCorrectSize(t *testing.T) {
+	const columnAmount = 14
+	const amountOfRows = 20
+	table := NewTable(columnAmount, createLabelsForTesting(columnAmount), createLabelsForTesting(columnAmount*amountOfRows))
+	renderer := table.CreateRenderer().(tableRenderer)
+	renderer.Layout(fyne.NewSize(1000, 1000))
+	for i, border := range renderer.dataRowsBorders {
+		assert.Equal(t, columnAmount*expectedColumnWidthWithPadding, border.Size().Width, "Border with number "+strconv.Itoa(i)+" does not have the correct width")
+		assert.Equal(t, expectedRowHeight, border.Size().Height, "Border with number "+strconv.Itoa(i)+" does not have the correct height")
+	}
+}
+
+func TestThatAllDataBordersHaveCorrectPosition(t *testing.T) {
+	const columnAmount = 14
+	const amountOfRows = 20
+	table := NewTable(columnAmount, createLabelsForTesting(columnAmount), createLabelsForTesting(columnAmount*amountOfRows))
+	renderer := table.CreateRenderer().(tableRenderer)
+	renderer.Layout(fyne.NewSize(1000, 1000))
+	expectedPosition := fyne.NewPos(0, expectedHeaderHeight)
+	for i, border := range renderer.dataRowsBorders {
+		assert.Equal(t, expectedPosition, border.Position(), "Border with number "+strconv.Itoa(i)+" does not have correct position")
+		expectedPosition = expectedPosition.Add(fyne.NewPos(0, expectedRowHeight))
+	}
+}
+
+func TestThatAllDataBordersHaveCorrectProperties(t *testing.T) {
+	const columnAmount = 14
+	const amountOfRows = 20
+	table := NewTable(columnAmount, createLabelsForTesting(columnAmount), createLabelsForTesting(columnAmount*amountOfRows))
+	renderer := table.CreateRenderer().(tableRenderer)
+	renderer.Layout(fyne.NewSize(1000, 1000))
+	for i, border := range renderer.dataRowsBorders {
+		assert.Equal(t, float32(2), border.StrokeWidth, "Border with number "+strconv.Itoa(i)+" does not have correct stroke width")
+		assert.Equal(t, color.Black, border.StrokeColor, "Border with number "+strconv.Itoa(i)+" does not have correct stroke color")
+		assert.Equal(t, color.Transparent, border.FillColor, "Border with number "+strconv.Itoa(i)+" does not have correct fill color")
+	}
+}
