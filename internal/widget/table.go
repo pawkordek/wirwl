@@ -45,12 +45,14 @@ func (table Table) CreateRenderer() fyne.WidgetRenderer {
 type tableRenderer struct {
 	table           Table
 	headerRowBorder *canvas.Rectangle
+	borderColor     color.Color
 }
 
 func newTableRenderer(table Table) tableRenderer {
 	return tableRenderer{
 		table:           table,
 		headerRowBorder: canvas.NewRectangle(color.Black),
+		borderColor:     color.Black,
 	}
 }
 
@@ -87,7 +89,7 @@ func (renderer tableRenderer) renderHeaderRowRectangle() {
 	headerRowRectangleSize := fyne.NewSize((columnWidth+widthBetweenColumns)*len(renderer.table.headerObjects), headerHeight)
 	renderer.headerRowBorder.StrokeWidth = 2
 	renderer.headerRowBorder.FillColor = color.Transparent
-	renderer.headerRowBorder.StrokeColor = color.Black
+	renderer.headerRowBorder.StrokeColor = renderer.borderColor
 	renderer.headerRowBorder.Resize(headerRowRectangleSize)
 }
 
