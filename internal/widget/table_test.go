@@ -44,8 +44,8 @@ func createTableForTesting(columnAmount int, rowAmount int) Table {
 
 func TestThatTableHasCorrectMinSize(t *testing.T) {
 	table := createTableForTesting(testColumnAmount, testRowAmount)
-	assert.Equal(t, testColumnAmount*testLabelWidth, table.MinSize().Width, "Table has incorrect minimum width")
-	assert.Equal(t, testRowAmount*testLabelHeight, table.MinSize().Height, "Table has incorrect minimum height")
+	assert.Equal(t, testColumnAmount*expectedColumnWidthWithPadding, table.MinSize().Width, "Table has incorrect minimum width")
+	assert.Equal(t, testRowAmount*expectedRowHeight+expectedHeaderHeight, table.MinSize().Height, "Table has incorrect minimum height")
 }
 
 func TestThatObjectsInHeaderHaveCorrectPositions(t *testing.T) {

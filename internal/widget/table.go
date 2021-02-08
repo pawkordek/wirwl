@@ -160,7 +160,7 @@ func (renderer tableRenderer) MinSize() fyne.Size {
 	layoutHeight := 0
 	for i, object := range renderer.table.objects {
 		objectMinSize := object.Size()
-		layoutWidth += objectMinSize.Width
+		layoutWidth += objectMinSize.Width + widthBetweenColumns
 		if object.Size().Height > layoutHeight {
 			layoutHeight = object.Size().Height
 		}
@@ -169,7 +169,7 @@ func (renderer tableRenderer) MinSize() fyne.Size {
 		}
 	}
 	amountOfRows := len(renderer.table.objects) / renderer.table.columnAmount
-	layoutHeight = amountOfRows * layoutHeight
+	layoutHeight = amountOfRows * layoutHeight + headerHeight
 	return fyne.NewSize(layoutWidth, layoutHeight)
 }
 
