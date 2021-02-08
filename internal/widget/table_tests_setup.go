@@ -6,15 +6,19 @@ import (
 	"strconv"
 )
 
-const testLabelWidth = 20
-const testLabelHeight = 10
-const expectedHeaderHeight = 50
-const expectedColumnWidth = 100
-const expectedColumnWidthWithPadding = 135
-const expectedRowHeight = 141
+const (
+	testLabelWidth   = 20
+	testLabelHeight  = 10
+	testColumnAmount = 14
+	testRowAmount    = 20
+)
 
-const testColumnAmount = 14
-const testRowAmount = 20
+const (
+	expectedHeaderHeight           = 50
+	expectedColumnWidth            = 100
+	expectedColumnWidthWithPadding = 135
+	expectedRowHeight              = 141
+)
 
 func createLabelsForTesting(amountOfLabels int) []fyne.CanvasObject {
 	labels := []fyne.CanvasObject{}
