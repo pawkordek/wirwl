@@ -18,7 +18,7 @@ func TestThatObjectsInHeaderHaveCorrectPositions(t *testing.T) {
 	table := createTableForTesting(testColumnAmount, testRowAmount)
 	posX := 0
 	posY := 0
-	for i, object := range table.headerObjects {
+	for i, object := range table.columnLabels {
 		assert.Equal(t, posX, object.Position().X, "Position x of object num "+strconv.Itoa(i)+" is incorrect")
 		assert.Equal(t, posY, object.Position().Y, "Position y of object num "+strconv.Itoa(i)+" is incorrect")
 		posX += expectedColumnWidthWithPadding
@@ -27,7 +27,7 @@ func TestThatObjectsInHeaderHaveCorrectPositions(t *testing.T) {
 
 func TestThatObjectsInHeaderHaveCorrectSize(t *testing.T) {
 	table := createTableForTesting(testColumnAmount, testRowAmount)
-	for i, object := range table.headerObjects {
+	for i, object := range table.columnLabels {
 		assert.Equal(t, expectedColumnWidth, object.Size().Width, "Width of object num "+strconv.Itoa(i)+" is incorrect")
 		assert.Equal(t, expectedHeaderHeight, object.Size().Height, "Height of object num "+strconv.Itoa(i)+" is incorrect")
 	}

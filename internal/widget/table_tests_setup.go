@@ -20,6 +20,15 @@ const (
 	expectedRowHeight              = 141
 )
 
+func createColumnDataForTesting(amountOfColumns int) []TableColumn {
+	data := []TableColumn{}
+	for i := 1; i <= amountOfColumns; i++ {
+		column := TableColumn{Type: TextColumn, Name: string(i)}
+		data = append(data, column)
+	}
+	return data
+}
+
 func createLabelsForTesting(amountOfLabels int) []fyne.CanvasObject {
 	labels := []fyne.CanvasObject{}
 	for i := 1; i <= amountOfLabels; i++ {
@@ -31,7 +40,7 @@ func createLabelsForTesting(amountOfLabels int) []fyne.CanvasObject {
 }
 
 func createTableRendererForTesting(tableColumnAmount int, tableRowAmount int) tableRenderer {
-	table := NewTable(testColumnAmount, createLabelsForTesting(testColumnAmount), createLabelsForTesting(testColumnAmount*testRowAmount))
+	table := NewTable(testColumnAmount, createColumnDataForTesting(testColumnAmount), createLabelsForTesting(testColumnAmount*testRowAmount))
 	renderer := table.CreateRenderer().(tableRenderer)
 	//The size is arbitrary but shouldn't be zero as layout with zero size doesn't make any sense
 	renderer.Layout(fyne.NewSize(1000, 1000))

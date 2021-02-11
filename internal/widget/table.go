@@ -15,27 +15,49 @@ const widthBetweenColumns = 35
 
 /*
 A widget that consists of data displayed like in a table.
-First a header is displayed for which data is passed separately, then the rest of the data.
+It consists of a header with labels displaying the column names and rows below containing the actual data.
 */
 type Table struct {
 	widget.BaseWidget
-	headerObjects []fyne.CanvasObject
-	objects       []fyne.CanvasObject
-	columnAmount  int
+	columnData   []TableColumn
+	columnLabels []fyne.CanvasObject
+	objects      []fyne.CanvasObject
+	columnAmount int
 }
 
-func NewTable(columnAmount int, headerData []fyne.CanvasObject, data []fyne.CanvasObject) *Table {
+type TableColumn struct {
+	Type ColumnType
+	Name string
+}
+
+type ColumnType string
+
+const (
+	TextColumn  ColumnType = "TEXT_COLUMN"
+	ImageColumn ColumnType = "IMAGE_COLUMN"
+)
+
+func NewTable(columnAmount int, columnData []TableColumn, data []fyne.CanvasObject) *Table {
 	table := &Table{
-		headerObjects: headerData,
-		objects:       data,
-		columnAmount:  columnAmount,
+		columnData:   columnData,
+		columnLabels: createColumnLabels(columnData),
+		objects:      data,
+		columnAmount: columnAmount,
 	}
 	table.ExtendBaseWidget(table)
 	return table
 }
 
+func createColumnLabels(columnData []TableColumn) []fyne.CanvasObject {
+	labels := []fyne.CanvasObject{}
+	for _, column := range columnData {
+		labels = append(labels, widget.NewLabel(column.Name))
+	}
+	return labels
+}
+
 func (table Table) HeaderColumns() []fyne.CanvasObject {
-	return table.headerObjects
+	return table.columnLabels
 }
 
 func (table Table) CreateRenderer() fyne.WidgetRenderer {
@@ -89,7 +111,7 @@ func (renderer tableRenderer) renderHeader() {
 
 func (renderer tableRenderer) renderHeaderData() {
 	position := fyne.NewPos(0, 0)
-	for _, object := range renderer.table.headerObjects {
+	for _, object := range renderer.table.columnLabels {
 		object.Move(position)
 		size := fyne.NewSize(columnWidth, headerHeight)
 		object.Resize(size)
@@ -99,7 +121,7 @@ func (renderer tableRenderer) renderHeaderData() {
 
 func (renderer tableRenderer) renderHeaderRowRectangle() {
 	renderer.headerRowBorder.Move(fyne.NewPos(0, 0))
-	headerRowRectangleSize := fyne.NewSize((columnWidth+widthBetweenColumns)*len(renderer.table.headerObjects), headerHeight)
+	headerRowRectangleSize := fyne.NewSize((columnWidth+widthBetweenColumns)*len(renderer.table.columnLabels), headerHeight)
 	renderer.headerRowBorder.StrokeWidth = 2
 	renderer.headerRowBorder.FillColor = color.Transparent
 	renderer.headerRowBorder.StrokeColor = renderer.borderColor
@@ -130,7 +152,7 @@ func (renderer tableRenderer) renderDataRows() {
 }
 
 func (renderer tableRenderer) renderDataRowsBorders() {
-	size := fyne.NewSize((columnWidth+widthBetweenColumns)*len(renderer.table.headerObjects), rowHeight)
+	size := fyne.NewSize((columnWidth+widthBetweenColumns)*len(renderer.table.columnLabels), rowHeight)
 	position := fyne.NewPos(0, headerHeight)
 	for _, border := range renderer.dataRowsBorders {
 		border.Move(position)
@@ -176,7 +198,7 @@ func (renderer tableRenderer) MinSize() fyne.Size {
 func (renderer tableRenderer) Objects() []fyne.CanvasObject {
 	objects := []fyne.CanvasObject{}
 	objects = append(objects, renderer.table.objects...)
-	objects = append(objects, renderer.table.headerObjects...)
+	objects = append(objects, renderer.table.columnLabels...)
 	objects = append(objects, renderer.headerRowBorder)
 	for _, border := range renderer.dataRowsBorders {
 		objects = append(objects, border)

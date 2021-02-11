@@ -13,7 +13,7 @@ const columnAmount = 14
 
 func (app *App) createEntriesTable(entries []data.Entry) {
 	tableData := []fyne.CanvasObject{}
-	headerData := createHeader()
+	columnData := createColumnData()
 	for i, entry := range entries {
 		tableData = append(tableData, newSpreadsheetLabelWithNumber(i))
 		tableData = append(tableData, newSpreadsheetLabelWithText("This will be an image"))
@@ -30,7 +30,7 @@ func (app *App) createEntriesTable(entries []data.Entry) {
 		tableData = append(tableData, newSpreadsheetLabelWithText(entry.Tags))
 		tableData = append(tableData, newSpreadsheetLabelWithText(entry.ImageQuery))
 	}
-	table := widget.NewTable(columnAmount, headerData, tableData)
+	table := widget.NewTable(columnAmount, columnData, tableData)
 	app.entriesTable = table
 }
 
@@ -44,8 +44,8 @@ func newSpreadsheetLabelWithNumber(number int) *fyneWidget.Label {
 	return newSpreadsheetLabelWithText(strconv.Itoa(number))
 }
 
-func createHeader() []fyne.CanvasObject {
-	headerColumns := []string{
+func createColumnData() []widget.TableColumn {
+	columnsNames := []string{
 		"Num",
 		"Image",
 		"Status",
@@ -61,16 +61,10 @@ func createHeader() []fyne.CanvasObject {
 		"Tags",
 		"Image query",
 	}
-	headerData := []fyne.CanvasObject{}
-	for _, columnName := range headerColumns {
-		label := fyneWidget.NewLabel(columnName)
-		label.TextStyle = fyne.TextStyle{
-			Bold:      true,
-			Italic:    false,
-			Monospace: false,
-		}
-		label.Alignment = fyne.TextAlignCenter
-		headerData = append(headerData, label)
+	columnData := []widget.TableColumn{}
+	for _, columnName := range columnsNames {
+		column := widget.TableColumn{Type: widget.TextColumn, Name: columnName}
+		columnData = append(columnData, column)
 	}
-	return headerData
+	return columnData
 }
