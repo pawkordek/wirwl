@@ -22,7 +22,6 @@ type Table struct {
 	columnData   []TableColumn
 	columnLabels []fyne.CanvasObject
 	rowData      []TableRow
-	columnAmount int
 }
 
 type TableColumn struct {
@@ -39,12 +38,11 @@ const (
 
 type TableRow []fyne.CanvasObject
 
-func NewTable(columnAmount int, columnData []TableColumn, rowData []TableRow) *Table {
+func NewTable(columnData []TableColumn, rowData []TableRow) *Table {
 	table := &Table{
 		columnData:   columnData,
 		columnLabels: createColumnLabels(columnData),
 		rowData:      rowData,
-		columnAmount: columnAmount,
 	}
 	table.ExtendBaseWidget(table)
 	return table
@@ -66,6 +64,10 @@ func (table Table) CreateRenderer() fyne.WidgetRenderer {
 	return newTableRenderer(table)
 }
 
+func (table Table) columnAmount() int {
+	return len(table.columnData)
+}
+
 type tableRenderer struct {
 	table           Table
 	headerRowBorder *canvas.Rectangle
@@ -80,7 +82,7 @@ func newTableRenderer(table Table) tableRenderer {
 		table:           table,
 		headerRowBorder: canvas.NewRectangle(color.Black),
 		dataRowsBorders: dataRowsBorders,
-		columnBorders:   createBorders(table.columnAmount),
+		columnBorders:   createBorders(table.columnAmount()),
 		borderColor:     color.Black,
 	}
 }
@@ -187,7 +189,7 @@ func (renderer tableRenderer) MinSize() fyne.Size {
 			if cell.Size().Height > layoutHeight {
 				layoutHeight = cell.Size().Height
 			}
-			if i == renderer.table.columnAmount-1 {
+			if i == renderer.table.columnAmount()-1 {
 				break
 			}
 		}

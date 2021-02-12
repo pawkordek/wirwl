@@ -44,7 +44,7 @@ func createLabelsForTesting(amountOfColumns int, amountOfRows int) []TableRow {
 }
 
 func createTableRendererForTesting(tableColumnAmount int, tableRowAmount int) tableRenderer {
-	table := NewTable(testColumnAmount, createColumnDataForTesting(testColumnAmount), createLabelsForTesting(testColumnAmount, testRowAmount))
+	table := NewTable(createColumnDataForTesting(testColumnAmount), createLabelsForTesting(testColumnAmount, testRowAmount))
 	renderer := table.CreateRenderer().(tableRenderer)
 	//The size is arbitrary but shouldn't be zero as layout with zero size doesn't make any sense
 	renderer.Layout(fyne.NewSize(1000, 1000))
