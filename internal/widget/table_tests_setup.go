@@ -29,18 +29,22 @@ func createColumnDataForTesting(amountOfColumns int) []TableColumn {
 	return data
 }
 
-func createLabelsForTesting(amountOfLabels int) []fyne.CanvasObject {
-	labels := []fyne.CanvasObject{}
-	for i := 1; i <= amountOfLabels; i++ {
-		label := widget.NewLabel("Test label num " + strconv.Itoa(i))
-		label.Resize(fyne.NewSize(testLabelWidth, testLabelHeight))
-		labels = append(labels, label)
+func createLabelsForTesting(amountOfColumns int, amountOfRows int) []TableRow {
+	labels := []TableRow{}
+	for j := 1; j <= amountOfRows; j++ {
+		row := TableRow{}
+		for i := 1; i <= amountOfColumns; i++ {
+			label := widget.NewLabel("Test label num " + strconv.Itoa(i))
+			label.Resize(fyne.NewSize(testLabelWidth, testLabelHeight))
+			row = append(row, label)
+		}
+		labels = append(labels, row)
 	}
 	return labels
 }
 
 func createTableRendererForTesting(tableColumnAmount int, tableRowAmount int) tableRenderer {
-	table := NewTable(testColumnAmount, createColumnDataForTesting(testColumnAmount), createLabelsForTesting(testColumnAmount*testRowAmount))
+	table := NewTable(testColumnAmount, createColumnDataForTesting(testColumnAmount), createLabelsForTesting(testColumnAmount, testRowAmount))
 	renderer := table.CreateRenderer().(tableRenderer)
 	//The size is arbitrary but shouldn't be zero as layout with zero size doesn't make any sense
 	renderer.Layout(fyne.NewSize(1000, 1000))

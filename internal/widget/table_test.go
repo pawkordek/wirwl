@@ -37,22 +37,26 @@ func TestThatObjectsThatCreateDataRowsHaveCorrectPositions(t *testing.T) {
 	table := createTableForTesting(testColumnAmount, testRowAmount)
 	posX := 0
 	posY := expectedHeaderHeight
-	for i, object := range table.objects {
-		assert.Equal(t, posX, object.Position().X, "Position x of object num "+strconv.Itoa(i)+" is incorrect")
-		assert.Equal(t, posY, object.Position().Y, "Position y of object num "+strconv.Itoa(i)+" is incorrect")
-		posX += expectedColumnWidthWithPadding
-		if i != 0 && (i+1)%testColumnAmount == 0 {
-			posX = 0
-			posY += expectedRowHeight
+	for _, row := range table.rowData {
+		for i, cell := range row {
+			assert.Equal(t, posX, cell.Position().X, "Position x of cell num "+strconv.Itoa(i)+" is incorrect")
+			assert.Equal(t, posY, cell.Position().Y, "Position y of cell num "+strconv.Itoa(i)+" is incorrect")
+			posX += expectedColumnWidthWithPadding
+			if i != 0 && (i+1)%testColumnAmount == 0 {
+				posX = 0
+				posY += expectedRowHeight
+			}
 		}
 	}
 }
 
 func TestThatObjectsThatCreateDataRowsHaveCorrectSize(t *testing.T) {
 	table := createTableForTesting(testColumnAmount, testRowAmount)
-	for i, object := range table.objects {
-		assert.Equal(t, expectedColumnWidth, object.Size().Width, "Width of object num "+strconv.Itoa(i)+" is incorrect")
-		assert.Equal(t, expectedRowHeight, object.Size().Height, "Height of object num "+strconv.Itoa(i)+" is incorrect")
+	for _, row := range table.rowData {
+		for i, cell := range row {
+			assert.Equal(t, expectedColumnWidth, cell.Size().Width, "Width of cell num "+strconv.Itoa(i)+" is incorrect")
+			assert.Equal(t, expectedRowHeight, cell.Size().Height, "Height of cell num "+strconv.Itoa(i)+" is incorrect")
+		}
 	}
 }
 
