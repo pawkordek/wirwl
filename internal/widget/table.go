@@ -109,16 +109,16 @@ func (renderer tableRenderer) Layout(fyne.Size) {
 }
 
 func (renderer tableRenderer) renderHeader() {
-	renderer.renderHeaderData()
+	renderer.renderHeaderColumnLabels()
 	renderer.renderHeaderRowRectangle()
 }
 
-func (renderer tableRenderer) renderHeaderData() {
-	position := fyne.NewPos(0, 0)
-	for _, object := range renderer.table.columnLabels {
-		object.Move(position)
-		size := fyne.NewSize(columnWidth, headerHeight)
-		object.Resize(size)
+func (renderer tableRenderer) renderHeaderColumnLabels() {
+	position := fyne.NewPos(widthBetweenColumns/2, 0)
+	for _, columnLabel := range renderer.table.columnLabels {
+		columnLabel.Move(position)
+		size := fyne.NewSize(columnLabel.MinSize().Width, headerHeight)
+		columnLabel.Resize(size)
 		position = position.Add(fyne.NewPos(size.Width+widthBetweenColumns, 0))
 	}
 }
@@ -166,15 +166,17 @@ func (renderer tableRenderer) renderDataRowsBorders() {
 }
 
 func (renderer tableRenderer) renderColumnBorders() {
-	size := fyne.NewSize(columnWidth+widthBetweenColumns, headerHeight+rowHeight*len(renderer.table.rowData))
 	position := fyne.NewPos(0, 0)
-	for _, border := range renderer.columnBorders {
+	for columnNum, border := range renderer.columnBorders {
+		columnWidth := renderer.table.columnLabels[columnNum].Size().Width+widthBetweenColumns
+		columnHeight := headerHeight+rowHeight*len(renderer.table.rowData)
+		size := fyne.NewSize(columnWidth, columnHeight)
 		border.Move(position)
 		border.StrokeWidth = 2
 		border.FillColor = color.Transparent
 		border.StrokeColor = renderer.borderColor
 		border.Resize(size)
-		position = position.Add(fyne.NewPos(columnWidth+widthBetweenColumns, 0))
+		position = position.Add(fyne.NewPos(columnWidth, 0))
 	}
 }
 

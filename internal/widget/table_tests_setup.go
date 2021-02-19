@@ -16,7 +16,8 @@ const (
 const (
 	expectedHeaderHeight           = 50
 	expectedColumnWidth            = 100
-	expectedColumnWidthWithPadding = 135
+	expectedPadding                = 35
+	expectedColumnWidthWithPadding = expectedColumnWidth + expectedPadding
 	expectedRowHeight              = 141
 )
 

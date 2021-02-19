@@ -16,19 +16,19 @@ func TestThatTableHasCorrectMinSize(t *testing.T) {
 
 func TestThatObjectsInHeaderHaveCorrectPositions(t *testing.T) {
 	table := createTableForTesting(testColumnAmount, testRowAmount)
-	posX := 0
+	posX := expectedPadding / 2
 	posY := 0
-	for i, object := range table.columnLabels {
-		assert.Equal(t, posX, object.Position().X, "Position x of object num "+strconv.Itoa(i)+" is incorrect")
-		assert.Equal(t, posY, object.Position().Y, "Position y of object num "+strconv.Itoa(i)+" is incorrect")
-		posX += expectedColumnWidthWithPadding
+	for i, columnLabel := range table.columnLabels {
+		assert.Equal(t, posX, columnLabel.Position().X, "Position x of columnLabel num "+strconv.Itoa(i)+" is incorrect")
+		assert.Equal(t, posY, columnLabel.Position().Y, "Position y of columnLabel num "+strconv.Itoa(i)+" is incorrect")
+		posX += columnLabel.Size().Width + expectedPadding
 	}
 }
 
 func TestThatObjectsInHeaderHaveCorrectSize(t *testing.T) {
 	table := createTableForTesting(testColumnAmount, testRowAmount)
 	for i, object := range table.columnLabels {
-		assert.Equal(t, expectedColumnWidth, object.Size().Width, "Width of object num "+strconv.Itoa(i)+" is incorrect")
+		assert.Equal(t, object.MinSize().Width, object.Size().Width, "Width of object num "+strconv.Itoa(i)+" is incorrect")
 		assert.Equal(t, expectedHeaderHeight, object.Size().Height, "Height of object num "+strconv.Itoa(i)+" is incorrect")
 	}
 }
@@ -109,7 +109,7 @@ func TestThatThereIsCorrectAmountOfColumnBorders(t *testing.T) {
 func TestThatAllColumnBordersHaveCorrectSize(t *testing.T) {
 	renderer := createTableRendererForTesting(testColumnAmount, testRowAmount)
 	for i, border := range renderer.columnBorders {
-		assert.Equal(t, expectedColumnWidthWithPadding, border.Size().Width, "Border with number "+strconv.Itoa(i)+" does not have the correct width")
+		assert.Equal(t, renderer.table.columnLabels[i].Size().Width+expectedPadding, border.Size().Width, "Border with number "+strconv.Itoa(i)+" does not have the correct width")
 		assert.Equal(t, expectedHeaderHeight+expectedRowHeight*testRowAmount, border.Size().Height, "Border with number "+strconv.Itoa(i)+" does not have the correct height")
 	}
 }
@@ -119,7 +119,7 @@ func TestThatAllColumnBordersHaveCorrectPosition(t *testing.T) {
 	expectedPosition := fyne.NewPos(0, 0)
 	for i, border := range renderer.columnBorders {
 		assert.Equal(t, expectedPosition, border.Position(), "Border with number "+strconv.Itoa(i)+" does not have correct position")
-		expectedPosition = expectedPosition.Add(fyne.NewPos(expectedColumnWidthWithPadding, 0))
+		expectedPosition = expectedPosition.Add(fyne.NewPos(renderer.table.columnLabels[i].Size().Width+expectedPadding, 0))
 	}
 }
 
