@@ -2,6 +2,7 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	"fyne.io/fyne/widget"
 	"github.com/stretchr/testify/assert"
 	"image/color"
 	"strconv"
@@ -30,6 +31,14 @@ func TestThatObjectsInHeaderHaveCorrectSize(t *testing.T) {
 	for i, object := range table.columnLabels {
 		assert.Equal(t, object.MinSize().Width, object.Size().Width, "Width of object num "+strconv.Itoa(i)+" is incorrect")
 		assert.Equal(t, expectedHeaderHeight, object.Size().Height, "Height of object num "+strconv.Itoa(i)+" is incorrect")
+	}
+}
+
+func TestThatColumnLabelsAreBolded(t *testing.T) {
+	table := createTableForTesting(testColumnAmount, testRowAmount)
+	for i, object := range table.columnLabels {
+		label := object.(*widget.Label)
+		assert.Equal(t, true, label.TextStyle.Bold, "Column label num "+strconv.Itoa(i)+" is not bolded")
 	}
 }
 

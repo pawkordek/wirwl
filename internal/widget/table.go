@@ -116,9 +116,11 @@ func (renderer tableRenderer) renderHeader() {
 func (renderer tableRenderer) renderHeaderColumnLabels() {
 	position := fyne.NewPos(widthBetweenColumns/2, 0)
 	for _, columnLabel := range renderer.table.columnLabels {
-		columnLabel.Move(position)
-		size := fyne.NewSize(columnLabel.MinSize().Width, headerHeight)
-		columnLabel.Resize(size)
+		label := columnLabel.(*widget.Label)
+		label.TextStyle.Bold = true
+		label.Move(position)
+		size := fyne.NewSize(label.MinSize().Width, headerHeight)
+		label.Resize(size)
 		position = position.Add(fyne.NewPos(size.Width+widthBetweenColumns, 0))
 	}
 }
