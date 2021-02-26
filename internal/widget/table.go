@@ -127,11 +127,21 @@ func (renderer tableRenderer) renderHeaderColumnLabels() {
 
 func (renderer tableRenderer) renderHeaderRowRectangle() {
 	renderer.headerRowBorder.Move(fyne.NewPos(0, 0))
-	headerRowRectangleSize := fyne.NewSize((columnWidth+widthBetweenColumns)*len(renderer.table.columnLabels), headerHeight)
+	tableWidth := renderer.tableWidth()
+	headerRowRectangleSize := fyne.NewSize(tableWidth, headerHeight)
 	renderer.headerRowBorder.StrokeWidth = 2
 	renderer.headerRowBorder.FillColor = color.Transparent
 	renderer.headerRowBorder.StrokeColor = renderer.borderColor
 	renderer.headerRowBorder.Resize(headerRowRectangleSize)
+}
+
+//Should only be called after header column labels have been rendered, otherwise width will be wrong
+func (renderer tableRenderer) tableWidth() int {
+	tableWidth := 0
+	for _, columnLabel := range renderer.table.columnLabels {
+		tableWidth += columnLabel.Size().Width + widthBetweenColumns
+	}
+	return tableWidth
 }
 
 func (renderer tableRenderer) renderData() {

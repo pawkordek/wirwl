@@ -72,7 +72,7 @@ func TestThatObjectsThatCreateDataRowsHaveCorrectSize(t *testing.T) {
 func TestThatHeaderRowBorderIsDrawnCorrectly(t *testing.T) {
 	renderer := createTableRendererForTesting(testColumnAmount, testRowAmount)
 	rectangle := renderer.headerRowBorder
-	assert.Equal(t, testColumnAmount*expectedColumnWidthWithPadding, rectangle.Size().Width)
+	assert.Equal(t, expectedTableWidth, rectangle.Size().Width)
 	assert.Equal(t, expectedHeaderHeight, rectangle.Size().Height)
 	assert.Equal(t, float32(2), rectangle.StrokeWidth)
 	assert.Equal(t, color.Black, rectangle.StrokeColor)

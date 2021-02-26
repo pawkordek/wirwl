@@ -19,6 +19,7 @@ const (
 	expectedPadding                = 35
 	expectedColumnWidthWithPadding = expectedColumnWidth + expectedPadding
 	expectedRowHeight              = 141
+	expectedTableWidth             = 741
 )
 
 func createColumnDataForTesting(amountOfColumns int) []TableColumn {
