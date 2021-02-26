@@ -87,7 +87,7 @@ func TestThatThereIsCorrectAmountOfDataRowBorders(t *testing.T) {
 func TestThatAllDataRowBordersHaveCorrectSize(t *testing.T) {
 	renderer := createTableRendererForTesting(testColumnAmount, testRowAmount)
 	for i, border := range renderer.dataRowsBorders {
-		assert.Equal(t, testColumnAmount*expectedColumnWidthWithPadding, border.Size().Width, "Border with number "+strconv.Itoa(i)+" does not have the correct width")
+		assert.Equal(t, expectedTableWidth, border.Size().Width, "Border with number "+strconv.Itoa(i)+" does not have the correct width")
 		assert.Equal(t, expectedRowHeight, border.Size().Height, "Border with number "+strconv.Itoa(i)+" does not have the correct height")
 	}
 }

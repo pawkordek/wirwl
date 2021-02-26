@@ -165,7 +165,7 @@ func (renderer tableRenderer) renderRowData() {
 }
 
 func (renderer tableRenderer) renderDataRowsBorders() {
-	size := fyne.NewSize((columnWidth+widthBetweenColumns)*len(renderer.table.columnLabels), rowHeight)
+	size := fyne.NewSize(renderer.tableWidth(), rowHeight)
 	position := fyne.NewPos(0, headerHeight)
 	for _, border := range renderer.dataRowsBorders {
 		border.Move(position)
@@ -180,8 +180,8 @@ func (renderer tableRenderer) renderDataRowsBorders() {
 func (renderer tableRenderer) renderColumnBorders() {
 	position := fyne.NewPos(0, 0)
 	for columnNum, border := range renderer.columnBorders {
-		columnWidth := renderer.table.columnLabels[columnNum].Size().Width+widthBetweenColumns
-		columnHeight := headerHeight+rowHeight*len(renderer.table.rowData)
+		columnWidth := renderer.table.columnLabels[columnNum].Size().Width + widthBetweenColumns
+		columnHeight := headerHeight + rowHeight*len(renderer.table.rowData)
 		size := fyne.NewSize(columnWidth, columnHeight)
 		border.Move(position)
 		border.StrokeWidth = 2
