@@ -145,22 +145,29 @@ func (renderer tableRenderer) tableWidth() int {
 }
 
 func (renderer tableRenderer) renderData() {
-	renderer.renderRowData()
+	renderer.renderCellsContent()
 	renderer.renderDataRowsBorders()
 	renderer.renderColumnBorders()
 }
 
-func (renderer tableRenderer) renderRowData() {
-	position := fyne.NewPos(0, headerHeight)
+func (renderer tableRenderer) renderCellsContent() {
+	position := fyne.NewPos(widthBetweenColumns/2, headerHeight)
 	for _, row := range renderer.table.rowData {
-		size := fyne.NewSize(columnWidth, rowHeight)
-		for _, cell := range row {
-			cell.Resize(size)
-			cell.Move(position)
+		size := fyne.NewSize(0, rowHeight)
+		for i, cellContent := range row {
+			columnWidth := renderer.table.columnLabels[i].Size().Width
+			size := fyne.NewSize(columnWidth, rowHeight)
+			cellContent.Resize(size)
+			if renderer.table.columnData[i].Type == TextColumn {
+				contentLabel := cellContent.(*widget.Label)
+				contentLabel.Wrapping = fyne.TextWrapWord
+				contentLabel.Alignment = fyne.TextAlignCenter
+			}
+			cellContent.Move(position)
 			position = position.Add(fyne.NewPos(size.Width+widthBetweenColumns, 0))
 		}
-		position = position.Add(fyne.NewPos(0, size.Height))
 		position = position.Subtract(fyne.NewPos(position.X, 0))
+		position = position.Add(fyne.NewPos(widthBetweenColumns/2, size.Height))
 	}
 }
 

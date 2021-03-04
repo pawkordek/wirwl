@@ -11,7 +11,7 @@ import (
 
 func TestThatTableHasCorrectMinSize(t *testing.T) {
 	table := createTableForTesting(testColumnAmount, testRowAmount)
-	assert.Equal(t, testColumnAmount*expectedColumnWidthWithPadding, table.MinSize().Width, "Table has incorrect minimum width")
+	assert.Equal(t, expectedTableWidth, table.MinSize().Width, "Table has incorrect minimum width")
 	assert.Equal(t, testRowAmount*expectedRowHeight+expectedHeaderHeight, table.MinSize().Height, "Table has incorrect minimum height")
 }
 
@@ -44,15 +44,15 @@ func TestThatColumnLabelsAreBolded(t *testing.T) {
 
 func TestThatObjectsThatCreateDataRowsHaveCorrectPositions(t *testing.T) {
 	table := createTableForTesting(testColumnAmount, testRowAmount)
-	posX := 0
+	posX := expectedPadding/2
 	posY := expectedHeaderHeight
 	for _, row := range table.rowData {
 		for i, cell := range row {
 			assert.Equal(t, posX, cell.Position().X, "Position x of cell num "+strconv.Itoa(i)+" is incorrect")
 			assert.Equal(t, posY, cell.Position().Y, "Position y of cell num "+strconv.Itoa(i)+" is incorrect")
-			posX += expectedColumnWidthWithPadding
+			posX += table.columnLabels[i].Size().Width + expectedPadding
 			if i != 0 && (i+1)%testColumnAmount == 0 {
-				posX = 0
+				posX = expectedPadding/2
 				posY += expectedRowHeight
 			}
 		}
@@ -63,7 +63,7 @@ func TestThatObjectsThatCreateDataRowsHaveCorrectSize(t *testing.T) {
 	table := createTableForTesting(testColumnAmount, testRowAmount)
 	for _, row := range table.rowData {
 		for i, cell := range row {
-			assert.Equal(t, expectedColumnWidth, cell.Size().Width, "Width of cell num "+strconv.Itoa(i)+" is incorrect")
+			assert.Equal(t, table.columnLabels[i].Size().Width, cell.Size().Width, "Width of cell num "+strconv.Itoa(i)+" is incorrect")
 			assert.Equal(t, expectedRowHeight, cell.Size().Height, "Height of cell num "+strconv.Itoa(i)+" is incorrect")
 		}
 	}

@@ -1,7 +1,6 @@
 package wirwl
 
 import (
-	"fyne.io/fyne"
 	fyneWidget "fyne.io/fyne/widget"
 	"strconv"
 	"wirwl/internal/data"
@@ -38,7 +37,6 @@ func (app *App) createEntriesTable(entries []data.Entry) {
 
 func newSpreadsheetLabelWithText(text string) *fyneWidget.Label {
 	label := fyneWidget.NewLabel(text)
-	label.Alignment = fyne.TextAlignCenter
 	return label
 }
 
