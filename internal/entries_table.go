@@ -31,7 +31,7 @@ func (app *App) createEntriesTable(entries []data.Entry) {
 		row = append(row, newSpreadsheetLabelWithText(entry.ImageQuery))
 		rowData = append(rowData, row)
 	}
-	table := widget.NewTable(columnData, rowData)
+	table := widget.NewTable(app.mainWindow.Canvas(), columnData, rowData)
 	app.entriesTable = table
 }
 

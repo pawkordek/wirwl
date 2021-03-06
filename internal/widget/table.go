@@ -14,6 +14,8 @@ type Table struct {
 	columnData   []TableColumn
 	columnLabels []fyne.CanvasObject
 	rowData      []TableRow
+	canvas       fyne.Canvas
+	focused      bool
 }
 
 type TableColumn struct {
@@ -30,11 +32,13 @@ const (
 
 type TableRow []fyne.CanvasObject
 
-func NewTable(columnData []TableColumn, rowData []TableRow) *Table {
+func NewTable(canvas fyne.Canvas, columnData []TableColumn, rowData []TableRow) *Table {
 	table := &Table{
 		columnData:   columnData,
 		columnLabels: createColumnLabels(columnData),
 		rowData:      rowData,
+		canvas:       canvas,
+		focused:      false,
 	}
 	table.ExtendBaseWidget(table)
 	return table
@@ -58,4 +62,31 @@ func (table Table) CreateRenderer() fyne.WidgetRenderer {
 
 func (table Table) columnAmount() int {
 	return len(table.columnData)
+}
+
+func (table Table) FocusGained() {
+	table.focused = true
+}
+
+func (table Table) FocusLost() {
+	table.focused = false
+}
+
+func (table Table) Focused() bool {
+	return table.focused
+}
+
+func (table Table) TypedRune(rune) {
+	//Table will not support any sort of typing therefore no implementation is needed
+}
+
+func (table Table) TypedKey(*fyne.KeyEvent) {
+}
+
+func (table Table) EnterInputMode() {
+	table.canvas.Focus(table)
+}
+
+func (table Table) ExitInputMode() {
+	table.canvas.Unfocus()
 }

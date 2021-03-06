@@ -2,6 +2,7 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	"fyne.io/fyne/test"
 	"fyne.io/fyne/widget"
 	"strconv"
 )
@@ -45,15 +46,23 @@ func createLabelsForTesting(amountOfColumns int, amountOfRows int) []TableRow {
 	return labels
 }
 
-func createTableRendererForTesting(tableColumnAmount int, tableRowAmount int) tableRenderer {
-	table := NewTable(createColumnDataForTesting(testColumnAmount), createLabelsForTesting(testColumnAmount, testRowAmount))
+func createTableRendererForTesting(table Table) tableRenderer {
 	renderer := table.CreateRenderer().(tableRenderer)
 	//The size is arbitrary but shouldn't be zero as layout with zero size doesn't make any sense
 	renderer.Layout(fyne.NewSize(1000, 1000))
 	return renderer
 }
 
-func createTableForTesting(columnAmount int, rowAmount int) Table {
-	renderer := createTableRendererForTesting(columnAmount, rowAmount)
+func createTableForTesting(canvas fyne.Canvas, columnAmount int, rowAmount int) Table {
+	table := NewTable(canvas, createColumnDataForTesting(testColumnAmount), createLabelsForTesting(testColumnAmount, testRowAmount))
+	renderer := createTableRendererForTesting(*table)
 	return renderer.table
+}
+
+func createDefaultTableForTesting() Table {
+	return createTableForTesting(test.Canvas(), testColumnAmount, testRowAmount)
+}
+
+func createDefaultTableForTestingWithCustomCanvas(canvas fyne.Canvas) Table {
+	return createTableForTesting(canvas, testColumnAmount, testRowAmount)
 }
