@@ -166,11 +166,15 @@ func (renderer tableRenderer) Objects() []fyne.CanvasObject {
 	}
 	objects = append(objects, renderer.table.columnLabels...)
 	objects = append(objects, renderer.headerRowBorder)
-	for _, border := range renderer.dataRowsBorders {
-		objects = append(objects, border)
-	}
-	for _, border := range renderer.columnBorders {
-		objects = append(objects, border)
+	objects = append(objects, convertRectanglesToCanvasObjects(renderer.dataRowsBorders)...)
+	objects = append(objects, convertRectanglesToCanvasObjects(renderer.columnBorders)...)
+	return objects
+}
+
+func convertRectanglesToCanvasObjects(rectangles []*canvas.Rectangle) []fyne.CanvasObject {
+	objects := []fyne.CanvasObject{}
+	for _, rectangle := range rectangles {
+		objects = append(objects, rectangle)
 	}
 	return objects
 }
