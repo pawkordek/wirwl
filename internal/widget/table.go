@@ -8,7 +8,6 @@ import (
 	"image/color"
 )
 
-const columnWidth = 100
 const headerHeight = 50
 const rowHeight = 141
 const widthBetweenColumns = 35
