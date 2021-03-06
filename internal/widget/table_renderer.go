@@ -76,11 +76,8 @@ func (renderer tableRenderer) renderHeaderColumnLabels() {
 
 func (renderer tableRenderer) renderHeaderRowRectangle() {
 	renderer.headerRowBorder.Move(fyne.NewPos(0, 0))
-	tableWidth := renderer.tableWidth()
-	headerRowRectangleSize := fyne.NewSize(tableWidth, headerHeight)
-	renderer.headerRowBorder.StrokeWidth = 2
-	renderer.headerRowBorder.FillColor = color.Transparent
-	renderer.headerRowBorder.StrokeColor = renderer.borderColor
+	headerRowRectangleSize := fyne.NewSize(renderer.tableWidth(), headerHeight)
+	renderer.setBorderProperties(renderer.headerRowBorder)
 	renderer.headerRowBorder.Resize(headerRowRectangleSize)
 }
 
