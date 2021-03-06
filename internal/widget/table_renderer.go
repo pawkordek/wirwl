@@ -59,7 +59,7 @@ func (renderer tableRenderer) Layout(fyne.Size) {
 
 func (renderer tableRenderer) renderHeader() {
 	renderer.renderHeaderColumnLabels()
-	renderer.renderHeaderRowRectangle()
+	renderer.renderHeaderRowBorder()
 }
 
 func (renderer tableRenderer) renderHeaderColumnLabels() {
@@ -74,7 +74,7 @@ func (renderer tableRenderer) renderHeaderColumnLabels() {
 	}
 }
 
-func (renderer tableRenderer) renderHeaderRowRectangle() {
+func (renderer tableRenderer) renderHeaderRowBorder() {
 	renderer.headerRowBorder.Move(fyne.NewPos(0, 0))
 	headerRowRectangleSize := fyne.NewSize(renderer.tableWidth(), headerHeight)
 	renderer.setBorderProperties(renderer.headerRowBorder)
