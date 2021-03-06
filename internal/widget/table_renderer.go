@@ -137,8 +137,7 @@ func (renderer tableRenderer) renderColumnBorders() {
 	position := fyne.NewPos(0, 0)
 	for columnNum, border := range renderer.columnBorders {
 		columnWidth := renderer.table.columnLabels[columnNum].Size().Width + widthBetweenColumns
-		columnHeight := headerHeight + rowHeight*len(renderer.table.rowData)
-		size := fyne.NewSize(columnWidth, columnHeight)
+		size := fyne.NewSize(columnWidth, renderer.tableHeight())
 		border.Move(position)
 		border.Resize(size)
 		renderer.setBorderProperties(border)
