@@ -175,10 +175,8 @@ func (renderer tableRenderer) renderDataRowsBorders() {
 	position := fyne.NewPos(0, headerHeight)
 	for _, border := range renderer.dataRowsBorders {
 		border.Move(position)
-		border.StrokeWidth = 2
-		border.FillColor = color.Transparent
-		border.StrokeColor = renderer.borderColor
 		border.Resize(size)
+		renderer.setBorderProperties(border)
 		position = position.Add(fyne.NewPos(0, rowHeight))
 	}
 }
@@ -190,12 +188,16 @@ func (renderer tableRenderer) renderColumnBorders() {
 		columnHeight := headerHeight + rowHeight*len(renderer.table.rowData)
 		size := fyne.NewSize(columnWidth, columnHeight)
 		border.Move(position)
-		border.StrokeWidth = 2
-		border.FillColor = color.Transparent
-		border.StrokeColor = renderer.borderColor
 		border.Resize(size)
+		renderer.setBorderProperties(border)
 		position = position.Add(fyne.NewPos(columnWidth, 0))
 	}
+}
+
+func (renderer tableRenderer) setBorderProperties(border *canvas.Rectangle){
+	border.StrokeWidth = 2
+	border.FillColor = color.Transparent
+	border.StrokeColor = renderer.borderColor
 }
 
 func (renderer tableRenderer) MinSize() fyne.Size {
