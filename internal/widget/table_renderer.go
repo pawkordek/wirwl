@@ -109,16 +109,21 @@ func (renderer tableRenderer) renderCellsContent() {
 			columnWidth := renderer.table.columnLabels[i].Size().Width
 			size := fyne.NewSize(columnWidth, rowHeight)
 			cellContent.Resize(size)
-			if renderer.table.columnData[i].Type == TextColumn {
-				contentLabel := cellContent.(*widget.Label)
-				contentLabel.Wrapping = fyne.TextWrapWord
-				contentLabel.Alignment = fyne.TextAlignCenter
-			}
 			cellContent.Move(position)
+			renderer.setContentProperties(cellContent, renderer.table.columnData[i].Type)
 			position = position.Add(fyne.NewPos(size.Width+widthBetweenColumns, 0))
 		}
 		position = position.Subtract(fyne.NewPos(position.X, 0))
 		position = position.Add(fyne.NewPos(widthBetweenColumns/2, size.Height))
+	}
+}
+
+func (renderer tableRenderer) setContentProperties(content fyne.CanvasObject, columnType ColumnType) {
+	switch columnType {
+	case TextColumn:
+		contentLabel := content.(*widget.Label)
+		contentLabel.Wrapping = fyne.TextWrapWord
+		contentLabel.Alignment = fyne.TextAlignCenter
 	}
 }
 
