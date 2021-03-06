@@ -151,13 +151,9 @@ func (renderer tableRenderer) setBorderProperties(border *canvas.Rectangle) {
 }
 
 func (renderer tableRenderer) MinSize() fyne.Size {
-	layoutWidth := 0
 	layoutHeight := 0
 	for _, row := range renderer.table.rowData {
-		layoutWidth = 0
 		for i, cell := range row {
-			cellSize := cell.Size()
-			layoutWidth += cellSize.Width + widthBetweenColumns
 			if cell.Size().Height > layoutHeight {
 				layoutHeight = cell.Size().Height
 			}
@@ -168,7 +164,7 @@ func (renderer tableRenderer) MinSize() fyne.Size {
 	}
 	amountOfRows := len(renderer.table.rowData)
 	layoutHeight = amountOfRows*layoutHeight + headerHeight
-	return fyne.NewSize(layoutWidth, layoutHeight)
+	return fyne.NewSize(renderer.tableWidth(), layoutHeight)
 }
 
 func (renderer tableRenderer) Objects() []fyne.CanvasObject {
