@@ -14,25 +14,30 @@ func (app *App) createEntriesTable(entryType data.EntryType, entries []data.Entr
 	rowData := []widget.TableRow{}
 	columnData := createColumnData()
 	for i, entry := range entries {
-		row := widget.TableRow{}
-		row = append(row, newSpreadsheetLabelWithNumber(i))
-		row = append(row, newSpreadsheetLabelWithText("This will be an image"))
-		row = append(row, newSpreadsheetLabelWithText(string(entry.Status)))
-		row = append(row, newSpreadsheetLabelWithText(entry.Title))
-		row = append(row, newSpreadsheetLabelWithNumber(entry.ElementsCompleted))
-		row = append(row, newSpreadsheetLabelWithNumber(entry.TotalAmountOfElementsToComplete))
-		row = append(row, newSpreadsheetLabelWithNumber(entry.Score))
-		row = append(row, newSpreadsheetLabelWithText(entry.StartDate))
-		row = append(row, newSpreadsheetLabelWithText(entry.FinishDate))
-		row = append(row, newSpreadsheetLabelWithText(entry.Link))
-		row = append(row, newSpreadsheetLabelWithText(entry.Description))
-		row = append(row, newSpreadsheetLabelWithText(entry.Comment))
-		row = append(row, newSpreadsheetLabelWithText(entry.Tags))
-		row = append(row, newSpreadsheetLabelWithText(entry.ImageQuery))
+		row := createEntriesTableRow(i, entry)
 		rowData = append(rowData, row)
 	}
 	table := widget.NewTable(app.mainWindow.Canvas(), columnData, rowData)
 	app.entriesTables[entryType] = table
+}
+
+func createEntriesTableRow(rowNum int, entry data.Entry) widget.TableRow {
+	row := widget.TableRow{}
+	row = append(row, newSpreadsheetLabelWithNumber(rowNum))
+	row = append(row, newSpreadsheetLabelWithText("This will be an image"))
+	row = append(row, newSpreadsheetLabelWithText(string(entry.Status)))
+	row = append(row, newSpreadsheetLabelWithText(entry.Title))
+	row = append(row, newSpreadsheetLabelWithNumber(entry.ElementsCompleted))
+	row = append(row, newSpreadsheetLabelWithNumber(entry.TotalAmountOfElementsToComplete))
+	row = append(row, newSpreadsheetLabelWithNumber(entry.Score))
+	row = append(row, newSpreadsheetLabelWithText(entry.StartDate))
+	row = append(row, newSpreadsheetLabelWithText(entry.FinishDate))
+	row = append(row, newSpreadsheetLabelWithText(entry.Link))
+	row = append(row, newSpreadsheetLabelWithText(entry.Description))
+	row = append(row, newSpreadsheetLabelWithText(entry.Comment))
+	row = append(row, newSpreadsheetLabelWithText(entry.Tags))
+	row = append(row, newSpreadsheetLabelWithText(entry.ImageQuery))
+	return row
 }
 
 func newSpreadsheetLabelWithText(text string) *fyneWidget.Label {
