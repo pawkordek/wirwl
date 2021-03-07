@@ -12,7 +12,6 @@ import (
 	"wirwl/internal/data"
 	"wirwl/internal/input"
 	"wirwl/internal/log"
-	"wirwl/internal/widget"
 )
 
 func TestThatApplicationDisplaysNoEntriesTabWhenRunForFirstTime(t *testing.T) {
@@ -92,25 +91,6 @@ func TestThatCorrectConfigFileGetsWrittenToDiskAfterApplicationExits(t *testing.
 	assert.Equal(t, savedConfig, loadedConfig)
 }
 
-func TestThatEntriesTabsWithContentDisplayInCorrectOrder(t *testing.T) {
-	configurator := NewTestAppConfigurator()
-	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
-	defer cleanup()
-	assert.Equal(t, 3, len(app.entriesTypesTabs.Items()))
-	firstTab := app.entriesTypesTabs.Items()[0]
-	assert.Equal(t, firstTab.Text, "comics")
-	assert.Equal(t, 0, widget.GetLabelPositionInContent(firstTab.Content, "some comic1"))
-	assert.Equal(t, 1, widget.GetLabelPositionInContent(firstTab.Content, "some comic2"))
-	secondTab := app.entriesTypesTabs.Items()[1]
-	assert.Equal(t, secondTab.Text, "music")
-	assert.Equal(t, 0, widget.GetLabelPositionInContent(secondTab.Content, "some music1"))
-	assert.Equal(t, 1, widget.GetLabelPositionInContent(secondTab.Content, "some music2"))
-	thirdTab := app.entriesTypesTabs.Items()[2]
-	assert.Equal(t, thirdTab.Text, "videos")
-	assert.Equal(t, 0, widget.GetLabelPositionInContent(thirdTab.Content, "some video1"))
-	assert.Equal(t, 1, widget.GetLabelPositionInContent(thirdTab.Content, "some video2"))
-}
-
 func TestSwitchingTabs(t *testing.T) {
 	configurator := NewTestAppConfigurator()
 	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
@@ -128,23 +108,6 @@ func TestSwitchingTabs(t *testing.T) {
 	assert.Equal(t, "music", app.getCurrentTabText())
 	app.simulateSwitchingToPreviousEntryType()
 	assert.Equal(t, "comics", app.getCurrentTabText())
-}
-
-func TestEntryHighlightingWhenSwitchingTabs(t *testing.T) {
-	configurator := NewTestAppConfigurator()
-	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
-	defer cleanup()
-	currentTab := app.entriesTypesTabs.CurrentTab()
-	assert.Equal(t, fyne.TextStyle{Bold: true}, widget.GetLabelFromContent(currentTab.Content, "some comic1").TextStyle)
-	assert.Equal(t, fyne.TextStyle{Bold: false}, widget.GetLabelFromContent(currentTab.Content, "some comic2").TextStyle)
-	app.simulateSwitchingToNextEntryType()
-	currentTab = app.entriesTypesTabs.CurrentTab()
-	assert.Equal(t, fyne.TextStyle{Bold: true}, widget.GetLabelFromContent(currentTab.Content, "some music1").TextStyle)
-	assert.Equal(t, fyne.TextStyle{Bold: false}, widget.GetLabelFromContent(currentTab.Content, "some music2").TextStyle)
-	app.simulateSwitchingToPreviousEntryType()
-	currentTab = app.entriesTypesTabs.CurrentTab()
-	assert.Equal(t, fyne.TextStyle{Bold: true}, widget.GetLabelFromContent(currentTab.Content, "some comic1").TextStyle)
-	assert.Equal(t, fyne.TextStyle{Bold: false}, widget.GetLabelFromContent(currentTab.Content, "some comic2").TextStyle)
 }
 
 func TestThatApplicationDoesNotCrashWhenTryingToSwitchToATabThatDoesNotExist(t *testing.T) {
@@ -232,16 +195,6 @@ func TestThatAddingNewEntryTypeDoesNotChangeCurrentlyOpenedTab(t *testing.T) {
 	app.simulateSwitchingToNextEntryType()
 	app.simulateAddingNewEntryTypeWithName("type")
 	assert.Equal(t, "music", app.getCurrentTabText())
-}
-
-func TestThatAfterAddingNewEntryOpenedTabStillHasTheSameElementHighlighted(t *testing.T) {
-	configurator := NewTestAppConfigurator()
-	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
-	defer cleanup()
-	app.simulateAddingNewEntryTypeWithName("type")
-	currentTab := app.entriesTypesTabs.CurrentTab()
-	assert.Equal(t, fyne.TextStyle{Bold: true}, widget.GetLabelFromContent(currentTab.Content, "some comic1").TextStyle)
-	assert.Equal(t, fyne.TextStyle{Bold: false}, widget.GetLabelFromContent(currentTab.Content, "some comic2").TextStyle)
 }
 
 func TestThatAfterTryingToAddExistingEntryTypeAndClosingWarningMessageAboutItDialogForAddingEntriesTypesIsStillOpen(t *testing.T) {
