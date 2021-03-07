@@ -14,6 +14,7 @@ const (
 	MoveUpAction               Action = "MOVE_UP"
 	EnterInputModeAction       Action = "ENTER_INPUT_MODE"
 	ExitInputModeAction        Action = "EXIT_INPUT_MODE"
+	ExitTableAction            Action = "EXIT_TABLE"
 	ConfirmAction              Action = "CONFIRM"
 	CancelAction               Action = "CANCEL"
 )

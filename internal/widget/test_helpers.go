@@ -82,6 +82,7 @@ func getInputHandlerForTesting() input.Handler {
 	keymap[input.MoveUpAction] = input.SingleKeyCombination(fyne.KeyK)
 	keymap[input.EnterInputModeAction] = input.SingleKeyCombination(fyne.KeyI)
 	keymap[input.ExitInputModeAction] = input.SingleKeyCombination(fyne.KeyEscape)
+	keymap[input.ExitTableAction] = input.SingleKeyCombination(fyne.KeySpace)
 	keymap[input.ConfirmAction] = input.SingleKeyCombination(fyne.KeyReturn)
 	keymap[input.CancelAction] = input.SingleKeyCombination(fyne.KeyEscape)
 	return input.NewHandler(keymap)

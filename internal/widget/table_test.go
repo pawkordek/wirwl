@@ -1,6 +1,7 @@
 package widget
 
 import (
+	"fyne.io/fyne"
 	"fyne.io/fyne/test"
 	"fyne.io/fyne/widget"
 	"github.com/stretchr/testify/assert"
@@ -101,4 +102,14 @@ func TestThatAfterAddingARowPreviousRowsAndNewRowsDataDisplaysOnCorrectPositions
 			}
 		}
 	}
+}
+
+func TestThatTableCallsOnExitCallbackFunction(t *testing.T) {
+	functionExecuted := false
+	function := func() { functionExecuted = true }
+	table := createDefaultTableForTesting()
+	table.SetOnExitCallbackFunction(function)
+	table.EnterInputMode()
+	SimulateKeyPress(table, fyne.KeySpace)
+	assert.True(t, functionExecuted)
 }
