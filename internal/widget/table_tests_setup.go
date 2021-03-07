@@ -53,7 +53,7 @@ func createDefaultTableRendererForTesting() *tableRenderer {
 }
 
 func createTableForTesting(canvas fyne.Canvas, columnAmount int, rowAmount int) *Table {
-	table := NewTable(canvas, createColumnDataForTesting(testColumnAmount), createLabelsForTesting(testColumnAmount, testRowAmount))
+	table := NewTable(canvas, createColumnDataForTesting(columnAmount), createLabelsForTesting(columnAmount, rowAmount))
 	renderer := test.WidgetRenderer(table).(*tableRenderer)
 	renderer.Layout(fyne.NewSize(0, 0))
 	return table
