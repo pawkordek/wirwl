@@ -77,8 +77,11 @@ func (container *TabContainer) selectElement(num int) {
 }
 
 func (container *TabContainer) currentTabHasElements() bool {
-	currentTabText := container.CurrentTab().Text
-	return len(container.tabsContent[currentTabText]) > 0
+	currentTab := container.CurrentTab()
+	if currentTab != nil {
+		return len(container.tabsContent[currentTab.Text]) > 0
+	}
+	return false
 }
 
 func (container *TabContainer) selectedElement() fyne.CanvasObject {

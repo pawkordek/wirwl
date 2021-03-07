@@ -93,3 +93,11 @@ func TestThatChangingIntoTabWithNoContentDoesNotPanic(t *testing.T) {
 	)
 	container.SelectNextTab()
 }
+
+func TestThatThereIsNoPanicWhenCheckingIfTabHasElementsOnContainerWithoutElements(t *testing.T) {
+	container := NewTabContainer(
+		make(map[string][]fyne.CanvasObject),
+		func(element *fyne.CanvasObject) {},
+		func(element *fyne.CanvasObject) {})
+	container.currentTabHasElements()
+}
