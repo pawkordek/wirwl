@@ -202,7 +202,11 @@ func (app *App) getCurrentEntryType() data.EntryType {
 }
 
 func (app *App) getCurrentTabText() string {
-	return app.entriesTypesTabs.CurrentTab().Text
+	currentTab := app.entriesTypesTabs.CurrentTab()
+	if currentTab != nil {
+		return currentTab.Text
+	}
+	return ""
 }
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
