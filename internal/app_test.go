@@ -380,3 +380,11 @@ func TestThatEntriesTablesHaveCorrectHeaderLabels(t *testing.T) {
 		}
 	}
 }
+
+func TestThatEntriesTableGetsFocusedWhenPressingKey(t *testing.T) {
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
+	defer cleanup()
+	app.simulateKeyPress(fyne.KeyI)
+	assert.Equal(t, app.getCurrentEntryTypeTable(), app.mainWindow.Canvas().Focused())
+}

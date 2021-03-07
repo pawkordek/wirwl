@@ -75,6 +75,7 @@ func (app *App) setupInputHandler() {
 	app.inputHandler.BindFunctionToAction(appName, input.AddEntryTypeAction, func() { app.displayDialogForAddingNewEntryType() })
 	app.inputHandler.BindFunctionToAction(appName, input.EditCurrentEntryTypeAction, func() { app.editCurrentEntryType() })
 	app.inputHandler.BindFunctionToAction(appName, input.RemoveEntryTypeAction, func() { app.tryDeletingCurrentEntryType() })
+	app.inputHandler.BindFunctionToAction(appName, input.EnterInputModeAction, func() { app.getCurrentEntryTypeTable().EnterInputMode() })
 }
 
 func (app *App) loadEntries() {
@@ -218,6 +219,10 @@ func (app *App) getCurrentTabText() string {
 		return currentTab.Text
 	}
 	return ""
+}
+
+func (app *App) getCurrentEntryTypeTable() *widget.Table {
+	return app.entriesTables[app.getCurrentEntryType()]
 }
 
 func (app *App) onKeyPressed(event *fyne.KeyEvent) {
