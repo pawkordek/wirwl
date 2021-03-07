@@ -85,6 +85,17 @@ func (app *App) loadEntries() {
 		log.Error(err)
 		app.loadingErrors[entriesLoadError] = msg
 	}
+	if app.entriesContainer.AmountOfTypes() == 0 {
+		noEntriesType := data.EntryType{
+			Name:                  "No entries",
+			CompletionElementName: "",
+			ImageQuery:            "",
+		}
+		err = app.entriesContainer.AddEntryType(noEntriesType)
+		if err != nil {
+			log.Error(err)
+		}
+	}
 	app.entriesContainer.SubscribeToChanges(app.reloadGUI)
 }
 

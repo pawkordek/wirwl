@@ -15,6 +15,14 @@ import (
 	"wirwl/internal/widget"
 )
 
+func TestThatApplicationDisplaysNoEntriesTabWhenRunForFirstTime(t *testing.T) {
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatWillRunForFirstTime().getRunningTestApplication()
+	defer cleanup()
+	assert.Equal(t, 1, len(app.entriesTypesTabs.Items()))
+	assert.Equal(t, "No entries", app.entriesTypesTabs.CurrentTab().Text)
+}
+
 func TestThatLoadingErrorsMsgDialogDoesNotDisplayIfThereAreNoErrors(t *testing.T) {
 	configurator := NewTestAppConfigurator()
 	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
