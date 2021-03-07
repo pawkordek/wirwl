@@ -9,7 +9,7 @@ import (
 )
 
 func TestThatHeaderRowBorderIsDrawnCorrectly(t *testing.T) {
-	renderer := createTableRendererForTesting(createDefaultTableForTesting())
+	renderer := createDefaultTableRendererForTesting()
 	rectangle := renderer.headerRowBorder
 	assert.Equal(t, expectedTableWidth, rectangle.Size().Width)
 	assert.Equal(t, expectedHeaderHeight, rectangle.Size().Height)
@@ -19,12 +19,12 @@ func TestThatHeaderRowBorderIsDrawnCorrectly(t *testing.T) {
 }
 
 func TestThatThereIsCorrectAmountOfDataRowBorders(t *testing.T) {
-	renderer := createTableRendererForTesting(createDefaultTableForTesting())
+	renderer := createDefaultTableRendererForTesting()
 	assert.Equal(t, testRowAmount, len(renderer.dataRowsBorders))
 }
 
 func TestThatAllDataRowBordersHaveCorrectSize(t *testing.T) {
-	renderer := createTableRendererForTesting(createDefaultTableForTesting())
+	renderer := createDefaultTableRendererForTesting()
 	for i, border := range renderer.dataRowsBorders {
 		assert.Equal(t, expectedTableWidth, border.Size().Width, "Border with number "+strconv.Itoa(i)+" does not have the correct width")
 		assert.Equal(t, expectedRowHeight, border.Size().Height, "Border with number "+strconv.Itoa(i)+" does not have the correct height")
@@ -32,7 +32,7 @@ func TestThatAllDataRowBordersHaveCorrectSize(t *testing.T) {
 }
 
 func TestThatAllDataBordersHaveCorrectPosition(t *testing.T) {
-	renderer := createTableRendererForTesting(createDefaultTableForTesting())
+	renderer := createDefaultTableRendererForTesting()
 	expectedPosition := fyne.NewPos(0, expectedHeaderHeight)
 	for i, border := range renderer.dataRowsBorders {
 		assert.Equal(t, expectedPosition, border.Position(), "Border with number "+strconv.Itoa(i)+" does not have correct position")
@@ -41,7 +41,7 @@ func TestThatAllDataBordersHaveCorrectPosition(t *testing.T) {
 }
 
 func TestThatAllDataBordersHaveCorrectProperties(t *testing.T) {
-	renderer := createTableRendererForTesting(createDefaultTableForTesting())
+	renderer := createDefaultTableRendererForTesting()
 	for i, border := range renderer.dataRowsBorders {
 		assert.Equal(t, float32(2), border.StrokeWidth, "Border with number "+strconv.Itoa(i)+" does not have correct stroke width")
 		assert.Equal(t, color.Black, border.StrokeColor, "Border with number "+strconv.Itoa(i)+" does not have correct stroke color")
@@ -50,12 +50,12 @@ func TestThatAllDataBordersHaveCorrectProperties(t *testing.T) {
 }
 
 func TestThatThereIsCorrectAmountOfColumnBorders(t *testing.T) {
-	renderer := createTableRendererForTesting(createDefaultTableForTesting())
+	renderer := createDefaultTableRendererForTesting()
 	assert.Equal(t, testColumnAmount, len(renderer.columnBorders))
 }
 
 func TestThatAllColumnBordersHaveCorrectSize(t *testing.T) {
-	renderer := createTableRendererForTesting(createDefaultTableForTesting())
+	renderer := createDefaultTableRendererForTesting()
 	for i, border := range renderer.columnBorders {
 		assert.Equal(t, renderer.table.columnLabels[i].Size().Width+expectedPadding, border.Size().Width, "Border with number "+strconv.Itoa(i)+" does not have the correct width")
 		assert.Equal(t, expectedHeaderHeight+expectedRowHeight*testRowAmount, border.Size().Height, "Border with number "+strconv.Itoa(i)+" does not have the correct height")
@@ -63,7 +63,7 @@ func TestThatAllColumnBordersHaveCorrectSize(t *testing.T) {
 }
 
 func TestThatAllColumnBordersHaveCorrectPosition(t *testing.T) {
-	renderer := createTableRendererForTesting(createDefaultTableForTesting())
+	renderer := createDefaultTableRendererForTesting()
 	expectedPosition := fyne.NewPos(0, 0)
 	for i, border := range renderer.columnBorders {
 		assert.Equal(t, expectedPosition, border.Position(), "Border with number "+strconv.Itoa(i)+" does not have correct position")
@@ -72,7 +72,7 @@ func TestThatAllColumnBordersHaveCorrectPosition(t *testing.T) {
 }
 
 func TestThatAllColumnBordersHaveCorrectProperties(t *testing.T) {
-	renderer := createTableRendererForTesting(createDefaultTableForTesting())
+	renderer := createDefaultTableRendererForTesting()
 	for i, border := range renderer.columnBorders {
 		assert.Equal(t, float32(2), border.StrokeWidth, "Border with number "+strconv.Itoa(i)+" does not have correct stroke width")
 		assert.Equal(t, color.Black, border.StrokeColor, "Border with number "+strconv.Itoa(i)+" does not have correct stroke color")
