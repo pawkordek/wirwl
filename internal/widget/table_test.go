@@ -71,7 +71,7 @@ func TestThatObjectsThatCreateDataRowsHaveCorrectSize(t *testing.T) {
 func TestThatTableGetsFocusWhenEnteringInputMode(t *testing.T) {
 	testWindow := test.NewApp().NewWindow("")
 	table := createDefaultTableForTestingWithCustomCanvas(testWindow.Canvas())
-	testWindow.SetContent(&table)
+	testWindow.SetContent(table)
 	table.EnterInputMode()
 	assert.Equal(t, table, testWindow.Canvas().Focused())
 }
@@ -79,7 +79,7 @@ func TestThatTableGetsFocusWhenEnteringInputMode(t *testing.T) {
 func TestThatTableIsNotFocusedAfterExitingInputMode(t *testing.T) {
 	testWindow := test.NewApp().NewWindow("")
 	table := createDefaultTableForTestingWithCustomCanvas(testWindow.Canvas())
-	testWindow.SetContent(&table)
+	testWindow.SetContent(table)
 	table.EnterInputMode()
 	table.ExitInputMode()
 	assert.NotEqual(t, table, testWindow.Canvas().Focused())

@@ -18,14 +18,14 @@ Header labels, data cells content and borders are all rendered separately.
 Borders are created by drawing rectangles horizontally for every row and vertically for every column.
 */
 type tableRenderer struct {
-	table           Table
+	table           *Table
 	headerRowBorder *canvas.Rectangle
 	dataRowsBorders []*canvas.Rectangle
 	columnBorders   []*canvas.Rectangle
 	borderColor     color.Color
 }
 
-func newTableRenderer(table Table) tableRenderer {
+func newTableRenderer(table *Table) tableRenderer {
 	dataRowsBorders := createBorders(len(table.rowData))
 	return tableRenderer{
 		table:           table,

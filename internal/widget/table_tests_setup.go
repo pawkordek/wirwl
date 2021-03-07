@@ -46,23 +46,23 @@ func createLabelsForTesting(amountOfColumns int, amountOfRows int) []TableRow {
 	return labels
 }
 
-func createTableRendererForTesting(table Table) tableRenderer {
+func createTableRendererForTesting(table *Table) tableRenderer {
 	renderer := table.CreateRenderer().(tableRenderer)
 	//The size is arbitrary but shouldn't be zero as layout with zero size doesn't make any sense
 	renderer.Layout(fyne.NewSize(1000, 1000))
 	return renderer
 }
 
-func createTableForTesting(canvas fyne.Canvas, columnAmount int, rowAmount int) Table {
+func createTableForTesting(canvas fyne.Canvas, columnAmount int, rowAmount int) *Table {
 	table := NewTable(canvas, createColumnDataForTesting(testColumnAmount), createLabelsForTesting(testColumnAmount, testRowAmount))
-	renderer := createTableRendererForTesting(*table)
+	renderer := createTableRendererForTesting(table)
 	return renderer.table
 }
 
-func createDefaultTableForTesting() Table {
+func createDefaultTableForTesting() *Table {
 	return createTableForTesting(test.Canvas(), testColumnAmount, testRowAmount)
 }
 
-func createDefaultTableForTestingWithCustomCanvas(canvas fyne.Canvas) Table {
+func createDefaultTableForTestingWithCustomCanvas(canvas fyne.Canvas) *Table {
 	return createTableForTesting(canvas, testColumnAmount, testRowAmount)
 }

@@ -52,41 +52,41 @@ func createColumnLabels(columnData []TableColumn) []fyne.CanvasObject {
 	return labels
 }
 
-func (table Table) HeaderColumns() []fyne.CanvasObject {
+func (table *Table) HeaderColumns() []fyne.CanvasObject {
 	return table.columnLabels
 }
 
-func (table Table) CreateRenderer() fyne.WidgetRenderer {
+func (table *Table) CreateRenderer() fyne.WidgetRenderer {
 	return newTableRenderer(table)
 }
 
-func (table Table) columnAmount() int {
+func (table *Table) columnAmount() int {
 	return len(table.columnData)
 }
 
-func (table Table) FocusGained() {
+func (table *Table) FocusGained() {
 	table.focused = true
 }
 
-func (table Table) FocusLost() {
+func (table *Table) FocusLost() {
 	table.focused = false
 }
 
-func (table Table) Focused() bool {
+func (table *Table) Focused() bool {
 	return table.focused
 }
 
-func (table Table) TypedRune(rune) {
+func (table *Table) TypedRune(rune) {
 	//Table will not support any sort of typing therefore no implementation is needed
 }
 
-func (table Table) TypedKey(*fyne.KeyEvent) {
+func (table *Table) TypedKey(*fyne.KeyEvent) {
 }
 
-func (table Table) EnterInputMode() {
+func (table *Table) EnterInputMode() {
 	table.canvas.Focus(table)
 }
 
-func (table Table) ExitInputMode() {
+func (table *Table) ExitInputMode() {
 	table.canvas.Unfocus()
 }
