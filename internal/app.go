@@ -25,15 +25,20 @@ type App struct {
 	recentlyPressedKeysLabel *fyneWidget.Label
 	entriesContainer         *data.EntriesContainer
 	editEntryTypeDialog      *widget.FormDialog
-	entriesTable             *widget.Table
 	inputHandler             input.Handler
+	entriesTables            map[data.EntryType]*widget.Table
 }
 
 const configLoadError = "CONFIG_LOAD_ERROR"
 const entriesLoadError = "ENTRIES_LOAD_ERROR"
 
 func NewApp(fyneApp fyne.App, config Config, dataProvider data.Provider, loadingErrors map[string]string) *App {
-	return &App{fyneApp: fyneApp, config: config, entriesContainer: data.NewEntriesContainer(dataProvider), loadingErrors: loadingErrors}
+	return &App{
+		fyneApp:          fyneApp,
+		config:           config,
+		entriesContainer: data.NewEntriesContainer(dataProvider),
+		loadingErrors:    loadingErrors,
+		entriesTables:    map[data.EntryType]*widget.Table{}}
 }
 
 func (app *App) LoadAndDisplay() error {
@@ -84,8 +89,22 @@ func (app *App) loadEntries() {
 }
 
 func (app *App) loadEntriesTypesTabs() {
-	entriesGroupedByType := app.getEntriesNamesGroupedByType()
-	app.entriesTypesTabs = widget.NewLabelsInTabContainer(entriesGroupedByType)
+	app.entriesTypesTabs = widget.NewTabContainer(
+		app.createTabsWithEntriesTableForEachEntryType(),
+		func(element *fyne.CanvasObject) {},
+		func(element *fyne.CanvasObject) {})
+}
+
+func (app *App) createTabsWithEntriesTableForEachEntryType() map[string][]fyne.CanvasObject {
+	entriesGroupedByType := app.entriesContainer.EntriesGroupedByType()
+	tabsData := make(map[string][]fyne.CanvasObject, len(entriesGroupedByType))
+	for entryType, entries := range entriesGroupedByType {
+		app.createEntriesTable(entryType, entries)
+		tabElements := make([]fyne.CanvasObject, 0, 1)
+		tabElements = append(tabElements, app.entriesTables[entryType])
+		tabsData[entryType.Name] = tabElements
+	}
+	return tabsData
 }
 
 func (app *App) getEntriesNamesGroupedByType() map[string][]string {
@@ -122,8 +141,7 @@ func getNoEntriesTab() map[string][]string {
 
 func (app *App) prepareMainWindowContent() {
 	app.recentlyPressedKeysLabel = fyneWidget.NewLabel("Recently pressed keys: ")
-	app.createEntriesTable([]data.Entry{})
-	content := container.NewBorder(app.entriesTypesTabs, app.recentlyPressedKeysLabel, nil, nil, app.entriesTable)
+	content := container.NewBorder(app.entriesTypesTabs, app.recentlyPressedKeysLabel, nil, nil)
 	app.mainWindow.SetContent(content)
 }
 

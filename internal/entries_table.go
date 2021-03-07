@@ -10,7 +10,7 @@ import (
 //Should be equal to amount of fields Entry type has, minus the id field
 const columnAmount = 14
 
-func (app *App) createEntriesTable(entries []data.Entry) {
+func (app *App) createEntriesTable(entryType data.EntryType, entries []data.Entry) {
 	rowData := []widget.TableRow{}
 	columnData := createColumnData()
 	for i, entry := range entries {
@@ -32,7 +32,7 @@ func (app *App) createEntriesTable(entries []data.Entry) {
 		rowData = append(rowData, row)
 	}
 	table := widget.NewTable(app.mainWindow.Canvas(), columnData, rowData)
-	app.entriesTable = table
+	app.entriesTables[entryType] = table
 }
 
 func newSpreadsheetLabelWithText(text string) *fyneWidget.Label {

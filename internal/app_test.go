@@ -382,12 +382,17 @@ func TestThatRecentlyPressedKeysLabelDisplaysTheCorrectInformation(t *testing.T)
 	assert.Equal(t, "Recently pressed keys: Escape", app.recentlyPressedKeysLabel.Text)
 }
 
-func TestThatEntriesTableHasCorrectHeader(t *testing.T) {
+func TestThatEntriesTablesHaveCorrectAmountOfHeaderColumns(t *testing.T) {
 	configurator := NewTestAppConfigurator()
 	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
 	defer cleanup()
-	headerColumns := app.entriesTable.HeaderColumns()
-	assert.Equal(t, 14, len(headerColumns))
+	for entryType, entriesTable := range app.entriesTables {
+		amountOfHeaderColumns := len(entriesTable.HeaderColumns())
+		assert.Equal(t, 14, amountOfHeaderColumns, "The table for entry type "+entryType.Name+" has incorrect amount of header columns")
+	}
+}
+
+func TestThatEntriesTablesHaveCorrectHeaderLabels(t *testing.T) {
 	headerColumnsNames := []string{
 		"Num",
 		"Image",
@@ -404,8 +409,13 @@ func TestThatEntriesTableHasCorrectHeader(t *testing.T) {
 		"Tags",
 		"Image query",
 	}
-	for _, column := range headerColumns {
-		label := column.(*fyneWidget.Label)
-		assert.Contains(t, headerColumnsNames, label.Text)
+	configurator := NewTestAppConfigurator()
+	app, cleanup := configurator.createTestApplicationThatUsesExistingData().getRunningTestApplication()
+	defer cleanup()
+	for entryType, entriesTable := range app.entriesTables {
+		for _, column := range entriesTable.HeaderColumns() {
+			label := column.(*fyneWidget.Label)
+			assert.Contains(t, headerColumnsNames, label.Text, "The table for entry type "+entryType.Name+" doesn't have a header label with text "+label.Text)
+		}
 	}
 }
