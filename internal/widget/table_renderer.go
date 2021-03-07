@@ -199,6 +199,11 @@ func convertRectanglesToCanvasObjects(rectangles []*canvas.Rectangle) []fyne.Can
 }
 
 func (renderer *tableRenderer) Refresh() {
+	renderer.recreateDataBorders()
 	//The size can be anything as it is ignored by renderer
 	renderer.Layout(fyne.NewSize(0, 0))
+}
+
+func (renderer *tableRenderer) recreateDataBorders() {
+	renderer.dataRowsBorders = createBorders(len(renderer.table.rowData))
 }

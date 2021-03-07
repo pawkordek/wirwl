@@ -2,6 +2,7 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	"fyne.io/fyne/test"
 	"fyne.io/fyne/theme"
 	"github.com/stretchr/testify/assert"
 	"image/color"
@@ -97,4 +98,11 @@ func TestThatFocusedBorderHidesAndShowsCorrectly(t *testing.T) {
 	assert.True(t, renderer.focusedBorder.Visible())
 	renderer.table.ExitInputMode()
 	assert.True(t, renderer.focusedBorder.Hidden)
+}
+
+func TestThatAfterRowIsAddedThereIsCorrectAmountOfRowBorders(t *testing.T) {
+	table := createDefaultTableForTesting()
+	table.AddRow(createTestTableRow(testColumnAmount))
+	renderer := test.WidgetRenderer(table).(*tableRenderer)
+	assert.Equal(t, testRowAmount+1, len(renderer.dataRowsBorders))
 }
