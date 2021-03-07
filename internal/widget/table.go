@@ -85,8 +85,10 @@ func (table *Table) TypedKey(*fyne.KeyEvent) {
 
 func (table *Table) EnterInputMode() {
 	table.canvas.Focus(table)
+	table.Refresh()
 }
 
 func (table *Table) ExitInputMode() {
 	table.canvas.Unfocus()
+	table.Refresh()
 }

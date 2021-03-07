@@ -22,6 +22,7 @@ type tableRenderer struct {
 	headerRowBorder *canvas.Rectangle
 	dataRowsBorders []*canvas.Rectangle
 	columnBorders   []*canvas.Rectangle
+	focusedBorder   *canvas.Rectangle
 	borderColor     color.Color
 }
 
@@ -32,6 +33,7 @@ func newTableRenderer(table *Table) *tableRenderer {
 		headerRowBorder: canvas.NewRectangle(color.Black),
 		dataRowsBorders: dataRowsBorders,
 		columnBorders:   createBorders(table.columnAmount()),
+		focusedBorder:   canvas.NewRectangle(color.Transparent),
 		borderColor:     color.Black,
 	}
 }
@@ -52,9 +54,10 @@ func (renderer *tableRenderer) Destroy() {
 	//No resources to clear
 }
 
-func (renderer *tableRenderer) Layout(fyne.Size) {
+func (renderer *tableRenderer) Layout(_ fyne.Size) {
 	renderer.renderHeader()
 	renderer.renderData()
+	renderer.renderFocusedBorder()
 }
 
 func (renderer *tableRenderer) renderHeader() {
@@ -156,6 +159,20 @@ func (renderer *tableRenderer) setBorderProperties(border *canvas.Rectangle) {
 	border.StrokeColor = renderer.borderColor
 }
 
+func (renderer *tableRenderer) renderFocusedBorder() {
+	if renderer.table.focused {
+		renderer.focusedBorder.Show()
+	} else {
+		renderer.focusedBorder.Hide()
+	}
+	renderer.focusedBorder.StrokeWidth = 3
+	renderer.focusedBorder.FillColor = color.Transparent
+	renderer.focusedBorder.StrokeColor = theme.FocusColor()
+	renderer.focusedBorder.Move(fyne.NewPos(0, 0))
+	size := fyne.NewSize(renderer.tableWidth(), renderer.tableHeight())
+	renderer.focusedBorder.Resize(size)
+}
+
 func (renderer *tableRenderer) MinSize() fyne.Size {
 	return fyne.NewSize(renderer.tableWidth(), renderer.tableHeight())
 }
@@ -169,6 +186,7 @@ func (renderer *tableRenderer) Objects() []fyne.CanvasObject {
 	objects = append(objects, renderer.headerRowBorder)
 	objects = append(objects, convertRectanglesToCanvasObjects(renderer.dataRowsBorders)...)
 	objects = append(objects, convertRectanglesToCanvasObjects(renderer.columnBorders)...)
+	objects = append(objects, renderer.focusedBorder)
 	return objects
 }
 
@@ -181,5 +199,6 @@ func convertRectanglesToCanvasObjects(rectangles []*canvas.Rectangle) []fyne.Can
 }
 
 func (renderer *tableRenderer) Refresh() {
-	//Nothing to refresh due to lack of interactivity
+	//The size can be anything as it is ignored by renderer
+	renderer.Layout(fyne.NewSize(0, 0))
 }

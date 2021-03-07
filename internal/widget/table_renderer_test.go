@@ -2,6 +2,7 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	"fyne.io/fyne/theme"
 	"github.com/stretchr/testify/assert"
 	"image/color"
 	"strconv"
@@ -78,4 +79,22 @@ func TestThatAllColumnBordersHaveCorrectProperties(t *testing.T) {
 		assert.Equal(t, color.Black, border.StrokeColor, "Border with number "+strconv.Itoa(i)+" does not have correct stroke color")
 		assert.Equal(t, color.Transparent, border.FillColor, "Border with number "+strconv.Itoa(i)+" does not have correct fill color")
 	}
+}
+
+func TestThatFocusedBorderHasCorrectProperties(t *testing.T) {
+	renderer := createDefaultTableRendererForTesting()
+	assert.Equal(t, expectedTableWidth, renderer.focusedBorder.Size().Width)
+	assert.Equal(t, expectedTableHeight, renderer.focusedBorder.Size().Height)
+	assert.Equal(t, float32(3), renderer.focusedBorder.StrokeWidth)
+	assert.Equal(t, theme.FocusColor(), renderer.focusedBorder.StrokeColor)
+	assert.Equal(t, color.Transparent, renderer.focusedBorder.FillColor)
+}
+
+func TestThatFocusedBorderHidesAndShowsCorrectly(t *testing.T) {
+	renderer := createDefaultTableRendererForTesting()
+	assert.True(t, renderer.focusedBorder.Hidden)
+	renderer.table.EnterInputMode()
+	assert.True(t, renderer.focusedBorder.Visible())
+	renderer.table.ExitInputMode()
+	assert.True(t, renderer.focusedBorder.Hidden)
 }
