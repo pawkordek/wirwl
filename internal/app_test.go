@@ -42,7 +42,7 @@ func TestThatErrorDisplaysWhenEntriesFailToLoad(t *testing.T) {
 	configurator := NewTestAppConfigurator()
 	dataProvider := data.NewAbstractProvider()
 	dataProvider.LoadEntriesFunc = func() (map[data.EntryType][]data.Entry, error) {
-		return nil, errors.New("An error occured when entries failed to load")
+		return make(map[data.EntryType][]data.Entry), errors.New("An error occured when entries failed to load")
 	}
 	app, cleanup := configurator.prepareConfiguratorForTestingWithExistingData().
 		setDataProvider(dataProvider).
