@@ -25,9 +25,9 @@ type tableRenderer struct {
 	borderColor     color.Color
 }
 
-func newTableRenderer(table *Table) tableRenderer {
+func newTableRenderer(table *Table) *tableRenderer {
 	dataRowsBorders := createBorders(len(table.rowData))
-	return tableRenderer{
+	return &tableRenderer{
 		table:           table,
 		headerRowBorder: canvas.NewRectangle(color.Black),
 		dataRowsBorders: dataRowsBorders,
@@ -44,25 +44,25 @@ func createBorders(amount int) []*canvas.Rectangle {
 	return borders
 }
 
-func (renderer tableRenderer) BackgroundColor() color.Color {
+func (renderer *tableRenderer) BackgroundColor() color.Color {
 	return theme.BackgroundColor()
 }
 
-func (renderer tableRenderer) Destroy() {
+func (renderer *tableRenderer) Destroy() {
 	//No resources to clear
 }
 
-func (renderer tableRenderer) Layout(fyne.Size) {
+func (renderer *tableRenderer) Layout(fyne.Size) {
 	renderer.renderHeader()
 	renderer.renderData()
 }
 
-func (renderer tableRenderer) renderHeader() {
+func (renderer *tableRenderer) renderHeader() {
 	renderer.renderHeaderColumnLabels()
 	renderer.renderHeaderRowBorder()
 }
 
-func (renderer tableRenderer) renderHeaderColumnLabels() {
+func (renderer *tableRenderer) renderHeaderColumnLabels() {
 	position := fyne.NewPos(widthBetweenColumns/2, 0)
 	for _, columnLabel := range renderer.table.columnLabels {
 		label := columnLabel.(*widget.Label)
@@ -74,7 +74,7 @@ func (renderer tableRenderer) renderHeaderColumnLabels() {
 	}
 }
 
-func (renderer tableRenderer) renderHeaderRowBorder() {
+func (renderer *tableRenderer) renderHeaderRowBorder() {
 	renderer.headerRowBorder.Move(fyne.NewPos(0, 0))
 	headerRowRectangleSize := fyne.NewSize(renderer.tableWidth(), headerHeight)
 	renderer.setBorderProperties(renderer.headerRowBorder)
@@ -82,7 +82,7 @@ func (renderer tableRenderer) renderHeaderRowBorder() {
 }
 
 //Should only be called after header column labels have been rendered, otherwise width will be wrong
-func (renderer tableRenderer) tableWidth() int {
+func (renderer *tableRenderer) tableWidth() int {
 	tableWidth := 0
 	for _, columnLabel := range renderer.table.columnLabels {
 		tableWidth += columnLabel.Size().Width + widthBetweenColumns
@@ -90,18 +90,18 @@ func (renderer tableRenderer) tableWidth() int {
 	return tableWidth
 }
 
-func (renderer tableRenderer) tableHeight() int {
+func (renderer *tableRenderer) tableHeight() int {
 	//All data rows have the same height
 	return headerHeight + len(renderer.table.rowData)*rowHeight
 }
 
-func (renderer tableRenderer) renderData() {
+func (renderer *tableRenderer) renderData() {
 	renderer.renderCellsContent()
 	renderer.renderDataRowsBorders()
 	renderer.renderColumnBorders()
 }
 
-func (renderer tableRenderer) renderCellsContent() {
+func (renderer *tableRenderer) renderCellsContent() {
 	position := fyne.NewPos(widthBetweenColumns/2, headerHeight)
 	for _, row := range renderer.table.rowData {
 		size := fyne.NewSize(0, rowHeight)
@@ -118,7 +118,7 @@ func (renderer tableRenderer) renderCellsContent() {
 	}
 }
 
-func (renderer tableRenderer) setContentProperties(content fyne.CanvasObject, columnType ColumnType) {
+func (renderer *tableRenderer) setContentProperties(content fyne.CanvasObject, columnType ColumnType) {
 	switch columnType {
 	case TextColumn:
 		contentLabel := content.(*widget.Label)
@@ -127,7 +127,7 @@ func (renderer tableRenderer) setContentProperties(content fyne.CanvasObject, co
 	}
 }
 
-func (renderer tableRenderer) renderDataRowsBorders() {
+func (renderer *tableRenderer) renderDataRowsBorders() {
 	size := fyne.NewSize(renderer.tableWidth(), rowHeight)
 	position := fyne.NewPos(0, headerHeight)
 	for _, border := range renderer.dataRowsBorders {
@@ -138,7 +138,7 @@ func (renderer tableRenderer) renderDataRowsBorders() {
 	}
 }
 
-func (renderer tableRenderer) renderColumnBorders() {
+func (renderer *tableRenderer) renderColumnBorders() {
 	position := fyne.NewPos(0, 0)
 	for columnNum, border := range renderer.columnBorders {
 		columnWidth := renderer.table.columnLabels[columnNum].Size().Width + widthBetweenColumns
@@ -150,17 +150,17 @@ func (renderer tableRenderer) renderColumnBorders() {
 	}
 }
 
-func (renderer tableRenderer) setBorderProperties(border *canvas.Rectangle) {
+func (renderer *tableRenderer) setBorderProperties(border *canvas.Rectangle) {
 	border.StrokeWidth = 2
 	border.FillColor = color.Transparent
 	border.StrokeColor = renderer.borderColor
 }
 
-func (renderer tableRenderer) MinSize() fyne.Size {
+func (renderer *tableRenderer) MinSize() fyne.Size {
 	return fyne.NewSize(renderer.tableWidth(), renderer.tableHeight())
 }
 
-func (renderer tableRenderer) Objects() []fyne.CanvasObject {
+func (renderer *tableRenderer) Objects() []fyne.CanvasObject {
 	objects := []fyne.CanvasObject{}
 	for _, row := range renderer.table.rowData {
 		objects = append(objects, row...)
@@ -180,6 +180,6 @@ func convertRectanglesToCanvasObjects(rectangles []*canvas.Rectangle) []fyne.Can
 	return objects
 }
 
-func (renderer tableRenderer) Refresh() {
+func (renderer *tableRenderer) Refresh() {
 	//Nothing to refresh due to lack of interactivity
 }

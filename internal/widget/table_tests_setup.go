@@ -46,8 +46,8 @@ func createLabelsForTesting(amountOfColumns int, amountOfRows int) []TableRow {
 	return labels
 }
 
-func createTableRendererForTesting(table *Table) tableRenderer {
-	renderer := table.CreateRenderer().(tableRenderer)
+func createTableRendererForTesting(table *Table) *tableRenderer {
+	renderer := table.CreateRenderer().(*tableRenderer)
 	//The size is arbitrary but shouldn't be zero as layout with zero size doesn't make any sense
 	renderer.Layout(fyne.NewSize(1000, 1000))
 	return renderer
