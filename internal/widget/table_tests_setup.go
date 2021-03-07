@@ -36,15 +36,20 @@ func createColumnDataForTesting(amountOfColumns int) []TableColumn {
 func createLabelsForTesting(amountOfColumns int, amountOfRows int) []TableRow {
 	labels := []TableRow{}
 	for j := 1; j <= amountOfRows; j++ {
-		row := TableRow{}
-		for i := 1; i <= amountOfColumns; i++ {
-			label := widget.NewLabel("Test label num " + strconv.Itoa(i))
-			label.Resize(fyne.NewSize(testLabelWidth, testLabelHeight))
-			row = append(row, label)
-		}
+		row := createTestTableRow(amountOfColumns)
 		labels = append(labels, row)
 	}
 	return labels
+}
+
+func createTestTableRow(amountOfColumns int) TableRow {
+	row := TableRow{}
+	for i := 1; i <= amountOfColumns; i++ {
+		label := widget.NewLabel("Test label num " + strconv.Itoa(i))
+		label.Resize(fyne.NewSize(testLabelWidth, testLabelHeight))
+		row = append(row, label)
+	}
+	return row
 }
 
 func createDefaultTableRendererForTesting() *tableRenderer {

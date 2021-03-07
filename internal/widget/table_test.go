@@ -84,3 +84,21 @@ func TestThatTableIsNotFocusedAfterExitingInputMode(t *testing.T) {
 	table.ExitInputMode()
 	assert.NotEqual(t, table, testWindow.Canvas().Focused())
 }
+
+func TestThatAfterAddingARowPreviousRowsAndNewRowsDataDisplaysOnCorrectPositions(t *testing.T) {
+	table := createDefaultTableForTesting()
+	table.AddRow(createTestTableRow(testColumnAmount))
+	posX := expectedPadding / 2
+	posY := expectedHeaderHeight
+	for _, row := range table.rowData {
+		for i, cell := range row {
+			assert.Equal(t, posX, cell.Position().X, "Position x of cell num "+strconv.Itoa(i)+" is incorrect")
+			assert.Equal(t, posY, cell.Position().Y, "Position y of cell num "+strconv.Itoa(i)+" is incorrect")
+			posX += table.columnLabels[i].Size().Width + expectedPadding
+			if i != 0 && (i+1)%testColumnAmount == 0 {
+				posX = expectedPadding / 2
+				posY += expectedRowHeight
+			}
+		}
+	}
+}

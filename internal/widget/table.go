@@ -92,3 +92,8 @@ func (table *Table) ExitInputMode() {
 	table.canvas.Unfocus()
 	table.Refresh()
 }
+
+func (table *Table) AddRow(row TableRow) {
+	table.rowData = append(table.rowData, row)
+	table.Refresh()
+}
