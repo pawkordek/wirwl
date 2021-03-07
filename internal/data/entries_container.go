@@ -105,3 +105,7 @@ func (container *EntriesContainer) EntriesGroupedByType() map[EntryType][]Entry 
 func (container *EntriesContainer) SubscribeToChanges(callbackFunction func()) {
 	container.changeListenersCallbackFunctions = append(container.changeListenersCallbackFunctions, callbackFunction)
 }
+
+func (container *EntriesContainer) AmountOfTypes() int {
+	return len(container.entries)
+}

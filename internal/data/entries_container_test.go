@@ -253,3 +253,12 @@ func TestThatEntryTypeIsNotRemovedWhenItIsUpdatedWithTheExactSameDataAsItHasCurr
 	}
 	assert.NotNil(t, updatedEntryType)
 }
+
+func TestThatContainerReturnsCorrectAmountOfEntryTypes(t *testing.T) {
+	container := NewEntriesContainer(NewSampleTestDataProvider(""))
+	err := container.LoadData()
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, 3, container.AmountOfTypes())
+}
