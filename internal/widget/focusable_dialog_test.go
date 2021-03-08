@@ -39,7 +39,7 @@ func TestThatPressingAnyKeyHidesFocusableDialog(t *testing.T) {
 func TestThatTitleIsDisplayedFirst(t *testing.T) {
 	label := widget.NewLabel("some title")
 	dialog := NewFocusableDialog(test.Canvas(), label)
-	assert.Equal(t, dialog.Content.(*widget.Box).Children[1], label)
+	assert.Equal(t, dialog.Content.(*fyne.Container).Objects[1], label)
 }
 
 func TestThatAfterOnlyFirstHidingCallbackFunctionIsCalled(t *testing.T) {
@@ -62,7 +62,7 @@ func TestThatFocusIsNotLostIfItWasSetInHidingCallbackFunctionWhenHidingOnKeyPres
 		test.Canvas().Focus(input)
 	})
 	dialog.Canvas.Focus(dialog)
-	assert.False(t, input.Focused())
+	assert.NotEqual(t, input, test.Canvas().Focused())
 	SimulateKeyPress(dialog, fyne.KeyE)
-	assert.True(t, input.Focused())
+	assert.Equal(t, input, test.Canvas().Focused())
 }

@@ -2,6 +2,7 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	"fyne.io/fyne/container"
 	"fyne.io/fyne/widget"
 )
 
@@ -35,7 +36,7 @@ func newFocusableDialog(canvas fyne.Canvas, content ...fyne.CanvasObject) *Focus
 	title := widget.NewLabel("")
 	title.Alignment = fyne.TextAlignCenter
 	content = append([]fyne.CanvasObject{title}, content...)
-	popupContent := widget.NewVBox(content...)
+	popupContent := container.NewVBox(content...)
 	dialog := &FocusableDialog{
 		PopUp:                 widget.NewModalPopUp(popupContent, canvas),
 		title:                 title,
