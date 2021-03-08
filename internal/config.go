@@ -2,7 +2,7 @@ package wirwl
 
 import (
 	"fmt"
-	"fyne.io/fyne"
+	"fyne.io/fyne/v2"
 	"github.com/BurntSushi/toml"
 	"github.com/pkg/errors"
 	"io/ioutil"

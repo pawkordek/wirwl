@@ -2,10 +2,10 @@ package wirwl
 
 import (
 	"fmt"
-	"fyne.io/fyne"
-	"fyne.io/fyne/container"
-	"fyne.io/fyne/theme"
-	fyneWidget "fyne.io/fyne/widget"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
+	fyneWidget "fyne.io/fyne/v2/widget"
 	"github.com/pkg/errors"
 	"wirwl/internal/data"
 	"wirwl/internal/input"

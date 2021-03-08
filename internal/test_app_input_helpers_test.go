@@ -1,6 +1,6 @@
 package wirwl
 
-import "fyne.io/fyne"
+import "fyne.io/fyne/v2"
 
 func (app *App) simulateKeyPress(key fyne.KeyName) {
 	event := &fyne.KeyEvent{Name: key}

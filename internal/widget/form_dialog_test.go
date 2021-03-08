@@ -1,8 +1,8 @@
 package widget
 
 import (
-	"fyne.io/fyne"
-	"fyne.io/fyne/test"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/test"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"wirwl/internal/log"

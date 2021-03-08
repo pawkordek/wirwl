@@ -1,6 +1,6 @@
 package widget
 
-import "fyne.io/fyne"
+import "fyne.io/fyne/v2"
 
 /*
 Implementation of a typical yes/no dialog except that confirmation and cancellation are done by using 'y' and 'n' keys

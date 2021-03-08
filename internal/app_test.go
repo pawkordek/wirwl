@@ -2,8 +2,8 @@ package wirwl
 
 import (
 	"errors"
-	"fyne.io/fyne"
-	fyneWidget "fyne.io/fyne/widget"
+	"fyne.io/fyne/v2"
+	fyneWidget "fyne.io/fyne/v2/widget"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"os"

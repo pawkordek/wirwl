@@ -1,7 +1,7 @@
 package wirwl
 
 import (
-	fyneTest "fyne.io/fyne/test"
+	fyneTest "fyne.io/fyne/v2/test"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"path/filepath"

@@ -1,7 +1,7 @@
 package wirwl
 
 import (
-	fyneWidget "fyne.io/fyne/widget"
+	fyneWidget "fyne.io/fyne/v2/widget"
 	"strconv"
 	"wirwl/internal/data"
 	widget "wirwl/internal/widget"

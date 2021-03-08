@@ -1,6 +1,6 @@
 package widget
 
-import "fyne.io/fyne"
+import "fyne.io/fyne/v2"
 
 type FormDialogEmbeddableWidget interface {
 	fyne.CanvasObject

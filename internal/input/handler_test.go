@@ -1,7 +1,7 @@
 package input
 
 import (
-	"fyne.io/fyne"
+	"fyne.io/fyne/v2"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

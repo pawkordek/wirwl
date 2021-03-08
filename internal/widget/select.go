@@ -1,9 +1,9 @@
 package widget
 
 import (
-	"fyne.io/fyne"
-	"fyne.io/fyne/theme"
-	fyneWidget "fyne.io/fyne/widget"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/theme"
+	fyneWidget "fyne.io/fyne/v2/widget"
 	"image/color"
 	"wirwl/internal/input"
 )

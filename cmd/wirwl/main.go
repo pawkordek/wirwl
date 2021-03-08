@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"fyne.io/fyne/app"
+	"fyne.io/fyne/v2/app"
 	"github.com/pkg/errors"
 	"os"
 	"path/filepath"
