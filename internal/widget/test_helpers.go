@@ -40,7 +40,7 @@ func SimulateKeyPress(focusable fyne.Focusable, key fyne.KeyName) {
 }
 
 func ContainsWidget(content fyne.CanvasObject, searchedWidget interface{}) bool {
-	for _, existingWidget := range content.(*widget.Box).Children {
+	for _, existingWidget := range content.(*fyne.Container).Objects {
 		if existingWidget == searchedWidget {
 			return true
 		}
@@ -49,7 +49,7 @@ func ContainsWidget(content fyne.CanvasObject, searchedWidget interface{}) bool 
 }
 
 func ContainsLabelWithSameText(content fyne.CanvasObject, searchedText string) bool {
-	for _, existingWidget := range content.(*widget.Box).Children {
+	for _, existingWidget := range content.(*fyne.Container).Objects {
 		if existingWidget.(*widget.Label).Text == searchedText {
 			return true
 		}
@@ -58,7 +58,7 @@ func ContainsLabelWithSameText(content fyne.CanvasObject, searchedText string) b
 }
 
 func GetLabelFromContent(content fyne.CanvasObject, labelText string) *widget.Label {
-	for _, existingWidget := range content.(*widget.Box).Children {
+	for _, existingWidget := range content.(*fyne.Container).Objects {
 		if existingWidget.(*widget.Label).Text == labelText {
 			return existingWidget.(*widget.Label)
 		}
@@ -67,7 +67,7 @@ func GetLabelFromContent(content fyne.CanvasObject, labelText string) *widget.La
 }
 
 func GetLabelPositionInContent(content fyne.CanvasObject, labelText string) int {
-	for position, existingWidget := range content.(*widget.Box).Children {
+	for position, existingWidget := range content.(*fyne.Container).Objects {
 		if existingWidget.(*widget.Label).Text == labelText {
 			return position
 		}
