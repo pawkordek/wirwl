@@ -39,6 +39,29 @@ func SimulateKeyPress(focusable fyne.Focusable, key fyne.KeyName) {
 	}
 }
 
+func SimulateKeyPressOnTestCanvas(key fyne.KeyName) {
+	SimulateKeyPressOn(test.Canvas(), key)
+}
+
+/*Should behave mostly the same as the actual key presses in the application except it shouldn't be used for testing
+typing in some text that has keys like Space, Escape etc. For that just use TypeIntoFocusable.
+Overall, this should be used for testing key presses that are supposed to trigger some kind of actions.*/
+func SimulateKeyPressOn(canvas fyne.Canvas, key fyne.KeyName) {
+	event := &fyne.KeyEvent{Name: key}
+	focused := canvas.Focused()
+	if focused != nil {
+		focused.TypedKey(event)
+	}
+	//Focused object has to be retrieved again in case it has been unfocused somewhere after key was pressed
+	focused = canvas.Focused()
+	if focused != nil {
+		/*This is a very naive way of retrieving a character to type in and will work incorrectly for e.g. Escape key
+		which will send 'E' character to the focused object */
+		character := []rune(event.Name)[0]
+		focused.TypedRune(character)
+	}
+}
+
 func ContainsWidget(content fyne.CanvasObject, searchedWidget interface{}) bool {
 	for _, existingWidget := range content.(*fyne.Container).Objects {
 		if existingWidget == searchedWidget {
