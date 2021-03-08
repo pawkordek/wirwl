@@ -3,7 +3,6 @@ package widget
 import (
 	"fyne.io/fyne/v2"
 	fyneContainer "fyne.io/fyne/v2/container"
-	fyneWidget "fyne.io/fyne/v2/widget"
 	"sort"
 )
 
@@ -50,7 +49,7 @@ func getTabsFromData(tabsData map[string][]fyne.CanvasObject) []*fyneContainer.T
 	var tabs []*fyneContainer.TabItem
 	sortedTabsNames := getAlphabeticallySortedTabsNames(tabsData)
 	for _, tabName := range sortedTabsNames {
-		formItem := fyneWidget.NewTabItem(tabName, fyneContainer.NewVBox(tabsData[tabName]...))
+		formItem := fyneContainer.NewTabItem(tabName, fyneContainer.NewVBox(tabsData[tabName]...))
 		tabs = append(tabs, formItem)
 	}
 	return tabs
