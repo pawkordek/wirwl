@@ -31,15 +31,15 @@ func TestThatWhenEnteringInputModeMenuGetsShownOverSelectWithChoices(t *testing.
 func TestThatWhenExitingInputModeSelectedChoiceInMenuGetsSetAsSelectValue(t *testing.T) {
 	selectWidget := NewSelect(test.Canvas(), getInputHandlerForTesting(), "1", "2")
 	selectWidget.EnterInputMode()
-	SimulateKeyPress(selectWidget.menu, fyne.KeyJ)
-	SimulateKeyPress(selectWidget.menu, fyne.KeyReturn)
+	SimulateKeyPressOnTestCanvas(fyne.KeyJ)
+	SimulateKeyPressOnTestCanvas(fyne.KeyReturn)
 	assert.Equal(t, "2", selectWidget.Selected)
 }
 
 func TestThatWhenExitingInputModeMenuGetsHidden(t *testing.T) {
 	selectWidget := NewSelect(test.Canvas(), getInputHandlerForTesting(), "1", "2")
 	selectWidget.EnterInputMode()
-	SimulateKeyPress(selectWidget.menu, fyne.KeyReturn)
+	SimulateKeyPressOnTestCanvas(fyne.KeyReturn)
 	assert.False(t, selectWidget.menu.Visible())
 	assert.False(t, selectWidget.menu.Focused())
 	assert.NotEqual(t, selectWidget.menu, test.Canvas().Focused())
@@ -50,7 +50,7 @@ func TestThatWhenChoiceWasMadeInMenuSelectUnfocusesAndCallsOnExitInpuModeFunctio
 	selectWidget := NewSelect(test.Canvas(), getInputHandlerForTesting(), "1", "2")
 	selectWidget.EnterInputMode()
 	selectWidget.SetOnExitInputModeFunction(func() { functionCalled = true })
-	SimulateKeyPress(selectWidget.menu, fyne.KeyReturn)
+	SimulateKeyPressOnTestCanvas(fyne.KeyReturn)
 	assert.False(t, selectWidget.Focused())
 	assert.NotEqual(t, selectWidget, test.Canvas().Focused())
 	assert.True(t, functionCalled)

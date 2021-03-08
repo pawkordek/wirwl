@@ -45,11 +45,11 @@ func TestThatCallingDisplayViewsAndFocusesPopUp(t *testing.T) {
 func TestThatPressingAnyKeyHidesThePopUp(t *testing.T) {
 	popUp := NewMsgPopUp(test.Canvas())
 	popUp.Display(InfoPopUp, "testing")
-	SimulateKeyPress(popUp, fyne.KeyQ)
+	SimulateKeyPressOnTestCanvas(fyne.Key0)
 	assert.Equal(t, true, popUp.Hidden)
 	assert.Equal(t, false, popUp.Focused())
 	popUp.Display(InfoPopUp, "testing")
-	SimulateKeyPress(popUp, fyne.Key1)
+	SimulateKeyPressOnTestCanvas(fyne.Key1)
 	assert.Equal(t, true, popUp.Hidden)
 	assert.Equal(t, false, popUp.Focused())
 }

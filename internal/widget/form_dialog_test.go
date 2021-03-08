@@ -29,13 +29,13 @@ func TestThatPressingJAndKSwitchesCurrentInput(t *testing.T) {
 	dialog := NewFormDialog(test.Canvas(), getInputHandlerForTesting(), "", getThreeInputFieldsForFormDialogTesting()...)
 	dialog.Display()
 	assert.Equal(t, dialog.currentWidget(), dialog.embeddedWidgets["first"])
-	SimulateKeyPress(dialog, fyne.KeyJ)
+	SimulateKeyPressOnTestCanvas(fyne.KeyJ)
 	assert.Equal(t, dialog.currentWidget(), dialog.embeddedWidgets["second"])
-	SimulateKeyPress(dialog, fyne.KeyJ)
+	SimulateKeyPressOnTestCanvas(fyne.KeyJ)
 	assert.Equal(t, dialog.currentWidget(), dialog.embeddedWidgets["third"])
-	SimulateKeyPress(dialog, fyne.KeyK)
+	SimulateKeyPressOnTestCanvas(fyne.KeyK)
 	assert.Equal(t, dialog.currentWidget(), dialog.embeddedWidgets["second"])
-	SimulateKeyPress(dialog, fyne.KeyK)
+	SimulateKeyPressOnTestCanvas(fyne.KeyK)
 	assert.Equal(t, dialog.currentWidget(), dialog.embeddedWidgets["first"])
 }
 
@@ -43,15 +43,15 @@ func TestThatPressingIFocusesCurrentInput(t *testing.T) {
 	dialog := NewFormDialog(test.Canvas(), getInputHandlerForTesting(), "", getThreeInputFieldsForFormDialogTesting()...)
 	dialog.Display()
 	assert.NotEqual(t, dialog.currentWidget(), test.Canvas().Focused())
-	SimulateKeyPress(dialog, fyne.KeyI)
+	SimulateKeyPressOnTestCanvas(fyne.KeyI)
 	assert.Equal(t, dialog.currentWidget(), test.Canvas().Focused())
 }
 
 func TestThatPressingEscapeUnfocusesCurrentInput(t *testing.T) {
 	dialog := NewFormDialog(test.Canvas(), getInputHandlerForTesting(), "", getThreeInputFieldsForFormDialogTesting()...)
 	dialog.Display()
-	SimulateKeyPress(dialog, fyne.KeyI)
-	SimulateKeyPress(dialog.currentWidget(), fyne.KeyEscape)
+	SimulateKeyPressOnTestCanvas(fyne.KeyI)
+	SimulateKeyPressOnTestCanvas(fyne.KeyEscape)
 	assert.NotEqual(t, dialog.currentWidget(), test.Canvas().Focused())
 }
 
@@ -60,7 +60,7 @@ func TestThatPressingEnterCallsFunctionAndHidesAndUnfocusesDialog(t *testing.T) 
 	dialog := NewFormDialog(test.Canvas(), getInputHandlerForTesting(), "", getThreeInputFieldsForFormDialogTesting()...)
 	dialog.OnEnterPressed = func() { functionCalled = true }
 	dialog.Display()
-	SimulateKeyPress(dialog, fyne.KeyReturn)
+	SimulateKeyPressOnTestCanvas(fyne.KeyReturn)
 	assert.True(t, dialog.Hidden)
 	assert.False(t, dialog.Focused())
 	assert.True(t, functionCalled)
@@ -69,8 +69,8 @@ func TestThatPressingEnterCallsFunctionAndHidesAndUnfocusesDialog(t *testing.T) 
 func TestThatFirstInputIsSelectedOnDialogReopening(t *testing.T) {
 	dialog := NewFormDialog(test.Canvas(), getInputHandlerForTesting(), "", getThreeInputFieldsForFormDialogTesting()...)
 	dialog.Display()
-	SimulateKeyPress(dialog, fyne.KeyJ)
-	SimulateKeyPress(dialog, fyne.KeyEnter)
+	SimulateKeyPressOnTestCanvas(fyne.KeyJ)
+	SimulateKeyPressOnTestCanvas(fyne.KeyEnter)
 	dialog.Display()
 	assert.Equal(t, dialog.embeddedWidgets["first"], dialog.currentWidget())
 }
@@ -78,7 +78,7 @@ func TestThatFirstInputIsSelectedOnDialogReopening(t *testing.T) {
 func TestThatPressingEscapeWhenNotInEditionModeClosesDialog(t *testing.T) {
 	dialog := NewFormDialog(test.Canvas(), getInputHandlerForTesting(), "", getOneInputFieldForDialogTesting()...)
 	dialog.Display()
-	SimulateKeyPress(dialog, fyne.KeyEscape)
+	SimulateKeyPressOnTestCanvas(fyne.KeyEscape)
 	assert.True(t, dialog.Hidden)
 	assert.False(t, dialog.Focused())
 }
@@ -111,7 +111,7 @@ func TestThatFormDialogHidesBeforeItCallsOnEnterPressed(t *testing.T) {
 	dialog.OnEnterPressed = func() {
 		assert.Nil(t, dialog.Canvas.Overlays())
 	}
-	SimulateKeyPress(dialog, fyne.KeyEnter)
+	SimulateKeyPressOnTestCanvas(fyne.KeyEnter)
 }
 
 func TestThatFormDialogItemFactoryCreatesCorrectInputField(t *testing.T) {

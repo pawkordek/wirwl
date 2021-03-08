@@ -26,12 +26,12 @@ func TestThatDisplayShowsFocusedFocusableDialogWithSpecifiedData(t *testing.T) {
 func TestThatPressingAnyKeyHidesFocusableDialog(t *testing.T) {
 	dialog := NewFocusableDialog(test.Canvas())
 	dialog.Display("")
-	SimulateKeyPress(dialog, fyne.KeyQ)
+	SimulateKeyPressOnTestCanvas(fyne.KeyQ)
 	assert.Equal(t, true, dialog.Hidden)
 	assert.Equal(t, false, dialog.Focused())
 	dialog = NewFocusableDialog(test.Canvas())
 	dialog.Display("")
-	SimulateKeyPress(dialog, fyne.Key1)
+	SimulateKeyPressOnTestCanvas(fyne.Key1)
 	assert.Equal(t, true, dialog.Hidden)
 	assert.Equal(t, false, dialog.Focused())
 }
@@ -63,6 +63,6 @@ func TestThatFocusIsNotLostIfItWasSetInHidingCallbackFunctionWhenHidingOnKeyPres
 	})
 	dialog.Canvas.Focus(dialog)
 	assert.NotEqual(t, input, test.Canvas().Focused())
-	SimulateKeyPress(dialog, fyne.KeyE)
+	SimulateKeyPressOnTestCanvas(fyne.KeyE)
 	assert.Equal(t, input, test.Canvas().Focused())
 }

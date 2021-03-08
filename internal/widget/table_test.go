@@ -110,6 +110,6 @@ func TestThatTableCallsOnExitCallbackFunction(t *testing.T) {
 	table := createDefaultTableForTesting()
 	table.SetOnExitCallbackFunction(function)
 	table.EnterInputMode()
-	SimulateKeyPress(table, fyne.KeySpace)
+	SimulateKeyPressOnTestCanvas(fyne.KeySpace)
 	assert.True(t, functionExecuted)
 }

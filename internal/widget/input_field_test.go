@@ -14,7 +14,7 @@ func TestThatFunctionGetsCalledOnConfirm(t *testing.T) {
 	inputField := NewInputField(test.Canvas(), getInputHandlerForTesting())
 	inputField.SetOnConfirm(func() { functionExecuted = true })
 	inputField.canvas.Focus(inputField)
-	SimulateKeyPress(inputField, fyne.KeyReturn)
+	SimulateKeyPressOnTestCanvas(fyne.KeyReturn)
 	assert.Equal(t, true, functionExecuted)
 }
 
@@ -23,7 +23,7 @@ func TestThatFunctionGetsCalledOnCancel(t *testing.T) {
 	inputField := NewInputField(test.Canvas(), getInputHandlerForTesting())
 	inputField.SetOnExitInputModeFunction(func() { functionExecuted = true })
 	inputField.canvas.Focus(inputField)
-	SimulateKeyPress(inputField, fyne.KeyEscape)
+	SimulateKeyPressOnTestCanvas(fyne.KeyEscape)
 	assert.True(t, functionExecuted)
 }
 
@@ -66,8 +66,8 @@ func TestThatWhenExitingInputModeWithTwoKeyCombinationNeitherKeyOfCombinationGet
 	inputField := NewInputField(test.Canvas(), inputHandler)
 	inputField.canvas.Focus(inputField)
 	inputField.Type("abc")
-	SimulateKeyPress(inputField, fyne.KeyJ)
-	SimulateKeyPress(inputField, fyne.KeyJ)
+	SimulateKeyPressOnTestCanvas(fyne.KeyJ)
+	SimulateKeyPressOnTestCanvas(fyne.KeyJ)
 	assert.Equal(t, "abc", inputField.Text)
 }
 
