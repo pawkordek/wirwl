@@ -2,6 +2,7 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	fyneContainer "fyne.io/fyne/container"
 	"fyne.io/fyne/widget"
 )
 
@@ -10,7 +11,7 @@ Tab container which contains labels as elements stored in every tab.
 It will mark selected label using bolded text.
 */
 type LabelsInTabContainer struct {
-	widget.TabContainer
+	fyneContainer.AppTabs
 }
 
 func NewLabelsInTabContainer(tabsData map[string][]string) *TabContainer {
