@@ -8,9 +8,9 @@ import (
 	"image/color"
 )
 
-const headerHeight = 50
-const rowHeight = 141
-const widthBetweenColumns = 35
+const headerHeight float32 = 50.0
+const rowHeight float32 = 141.0
+const widthBetweenColumns float32 = 35.0
 
 /*
 A renderer for table widget.
@@ -85,17 +85,17 @@ func (renderer *tableRenderer) renderHeaderRowBorder() {
 }
 
 //Should only be called after header column labels have been rendered, otherwise width will be wrong
-func (renderer *tableRenderer) tableWidth() int {
-	tableWidth := 0
+func (renderer *tableRenderer) tableWidth() float32 {
+	var tableWidth float32 = 0.0
 	for _, columnLabel := range renderer.table.columnLabels {
 		tableWidth += columnLabel.Size().Width + widthBetweenColumns
 	}
 	return tableWidth
 }
 
-func (renderer *tableRenderer) tableHeight() int {
+func (renderer *tableRenderer) tableHeight() float32 {
 	//All data rows have the same height
-	return headerHeight + len(renderer.table.rowData)*rowHeight
+	return headerHeight + float32(len(renderer.table.rowData))*rowHeight
 }
 
 func (renderer *tableRenderer) renderData() {
