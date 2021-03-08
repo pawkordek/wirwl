@@ -26,19 +26,6 @@ func (dialog *FormDialog) Type(chars string) {
 	TypeIntoFocusable(dialog.currentWidget(), chars)
 }
 
-//Please make sure that tested focusable is focused if used on a standalone focusable, otherwise this won't work
-func SimulateKeyPress(focusable fyne.Focusable, key fyne.KeyName) {
-	event := &fyne.KeyEvent{Name: key}
-	if focusable.Focused() {
-		focusable.TypedKey(event)
-	}
-	if focusable.Focused() {
-		//This is a very naive way of retrieving a character to type in and will work incorrectly for e.g. Escape key
-		character := []rune(event.Name)[0]
-		focusable.TypedRune(character)
-	}
-}
-
 func SimulateKeyPressOnTestCanvas(key fyne.KeyName) {
 	SimulateKeyPressOn(test.Canvas(), key)
 }
