@@ -17,7 +17,7 @@ func (app *App) createEntriesTable(entryType data.EntryType, entries []data.Entr
 		row := createEntriesTableRow(i, entry)
 		rowData = append(rowData, row)
 	}
-	table := widget.NewTable(app.mainWindow.Canvas(), columnData, rowData)
+	table := widget.NewTable(app.mainWindow.Canvas(), app.inputHandler, columnData, rowData)
 	app.entriesTables[entryType] = table
 }
 
