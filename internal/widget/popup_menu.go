@@ -2,6 +2,7 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	"fyne.io/fyne/container"
 	fyneWidget "fyne.io/fyne/widget"
 	"wirwl/internal/input"
 )
@@ -20,7 +21,7 @@ type PopUpMenu struct {
 
 func NewPopUpMenu(canvas fyne.Canvas, handler input.Handler, choicesNames ...string) *PopUpMenu {
 	choices := generateChoicesFromNames(choicesNames...)
-	content := fyneWidget.NewVBox(choicesAsCanvasObjects(choices)...)
+	content := container.NewVBox(choicesAsCanvasObjects(choices)...)
 	menu := &PopUpMenu{
 		PopUp: fyneWidget.PopUp{
 			Content: content,
