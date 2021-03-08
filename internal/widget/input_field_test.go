@@ -44,7 +44,7 @@ func TestEnteringIntoInputMode(t *testing.T) {
 	inputField := NewInputField(test.Canvas(), getInputHandlerForTesting())
 	inputField.EnterInputMode()
 	assert.Equal(t, inputField.bgRenderer.BackgroundColor(), theme.BackgroundColor())
-	assert.True(t, inputField.Focused())
+	assert.Equal(t, inputField, test.Canvas().Focused())
 	assert.Equal(t, inputField, inputField.canvas.Focused())
 }
 
