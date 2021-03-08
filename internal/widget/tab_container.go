@@ -2,6 +2,7 @@ package widget
 
 import (
 	"fyne.io/fyne"
+	fyneContainer "fyne.io/fyne/container"
 	fyneWidget "fyne.io/fyne/widget"
 	"sort"
 )
@@ -12,7 +13,7 @@ It allows to switch tab to next/previous which is done cyclically, setting next 
 The way selected items display graphically should be controlled by onElementSelected and onElementUnselected functions e.g. labels becoming bold on selection.
 */
 type TabContainer struct {
-	fyneWidget.TabContainer
+	fyneContainer.AppTabs
 	selectedElementIndex int
 	tabsContent          map[string][]fyne.CanvasObject
 	onElementSelected    func(element *fyne.CanvasObject)
@@ -39,17 +40,17 @@ func newTabContainer(
 		onElementSelected:    onElementSelected,
 		onElementUnselected:  onElementUnselected,
 	}
-	container.TabContainer.Items = getTabsFromData(tabsData)
+	container.AppTabs.Items = getTabsFromData(tabsData)
 	container.selectElement(0)
 	container.SelectTabIndex(0)
 	return container
 }
 
-func getTabsFromData(tabsData map[string][]fyne.CanvasObject) []*fyneWidget.TabItem {
-	var tabs []*fyneWidget.TabItem
+func getTabsFromData(tabsData map[string][]fyne.CanvasObject) []*fyneContainer.TabItem {
+	var tabs []*fyneContainer.TabItem
 	sortedTabsNames := getAlphabeticallySortedTabsNames(tabsData)
 	for _, tabName := range sortedTabsNames {
-		formItem := fyneWidget.NewTabItem(tabName, fyneWidget.NewVBox(tabsData[tabName]...))
+		formItem := fyneWidget.NewTabItem(tabName, fyneContainer.NewVBox(tabsData[tabName]...))
 		tabs = append(tabs, formItem)
 	}
 	return tabs
@@ -112,6 +113,6 @@ func (container *TabContainer) setTabTo(index int) {
 	container.selectElement(0)
 }
 
-func (container *TabContainer) Items() []*fyneWidget.TabItem {
-	return container.TabContainer.Items
+func (container *TabContainer) Items() []*fyneContainer.TabItem {
+	return container.AppTabs.Items
 }
